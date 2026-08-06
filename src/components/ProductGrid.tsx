@@ -1,0 +1,63 @@
+"use client";
+
+import { useMemo } from "react";
+import { useRegion } from "@/context/RegionContext";
+import ProductCard from "./ProductCard";
+import type { Product, Variant } from "@/lib/types";
+
+interface Props {
+  products: Product[];
+  variantsByProduct: Record<string, Variant[]>;
+  limit?: number;
+  showRegionBadge?: boolean;
+}
+
+export default function ProductGrid({
+  products,
+  variantsByProduct,
+  limit,
+  showRegionBadge = true,
+}: Props) {
+  const { region, detected } = useRegion();
+
+  const sorted = useMemo(() => {
+    const ranked = products.map((p) => {
+      let rank = 3;
+      if (p.region && p.region.code === region) rank = 0;
+      else if (p.region && p.region.code === "global") rank = 2;
+      else if (p.region) rank = 1;
+      if (p.featured) rank -= 0.5;
+      return { p, rank };
+    });
+    ranked.sort((a, b) => a.rank - b.rank);
+    return ranked.map((r) => r.p);
+  }, [products, region]);
+
+  const visible = limit ? sorted.slice(0, limit) : sorted;
+
+  if (visible.length === 0) {
+    return (
+      <p className="rounded-xl border border-slate-800 bg-slate-900 p-10 text-center text-slate-400">
+        No products found.
+      </p>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
+      {visible.map((p) => (
+        <ProductCard
+          key={p.id}
+          product={p}
+          variants={variantsByProduct[p.id] ?? []}
+          highlight={detected && p.region?.code === region}
+          regionBadge={
+            showRegionBadge && detected && p.region && p.region.code === region
+              ? `Popular in ${p.region.name}`
+              : null
+          }
+        />
+      ))}
+    </div>
+  );
+}

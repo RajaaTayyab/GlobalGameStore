@@ -1,0 +1,188 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Plus, Loader2, Shield } from "lucide-react";
+import { formatPrice } from "@/lib/order";
+import type { CreditTransaction, Profile } from "@/lib/types";
+
+export default function AdminUsers() {
+  const [users, setUsers] = useState<Profile[]>([]);
+  const [transactions, setTransactions] = useState<CreditTransaction[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<Profile | null>(null);
+  const [amount, setAmount] = useState("");
+  const [reason, setReason] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState("");
+
+  const load = () => {
+    fetch("/api/admin/users")
+      .then((r) => r.json())
+      .then((d) => {
+        setUsers(d.users ?? []);
+        setTransactions(d.transactions ?? []);
+        setLoading(false);
+      });
+  };
+
+  useEffect(load, []);
+
+  const addCredits = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selected) return;
+    setBusy(true);
+    const res = await fetch(`/api/admin/users/${selected.id}/credits`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: Number(amount), reason }),
+    });
+    const data = await res.json();
+    setBusy(false);
+    if (!res.ok) {
+      setNotice(data.error ?? "Failed");
+      return;
+    }
+    setNotice(`Credits updated for ${selected.email} — new balance ${formatPrice(Number(data.profile.credits_balance))}`);
+    setAmount("");
+    setReason("");
+    setSelected(null);
+    setTimeout(() => setNotice(""), 4000);
+    load();
+  };
+
+  if (loading)
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+      </div>
+    );
+
+  return (
+    <div className="space-y-6">
+      {notice && (
+        <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
+          {notice}
+        </p>
+      )}
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* User list */}
+        <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 lg:col-span-2">
+          <div className="border-b border-slate-800 px-5 py-4">
+            <p className="font-bold text-white">{users.length} users</p>
+          </div>
+          <div className="divide-y divide-slate-800">
+            {users.map((u) => (
+              <div key={u.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
+                <div className="min-w-0">
+                  <p className="flex items-center gap-2 text-sm font-semibold text-white">
+                    {u.email}
+                    {u.role === "admin" && (
+                      <span className="flex items-center gap-1 rounded-full bg-cyan-500/15 px-2 py-0.5 text-[10px] font-bold uppercase text-cyan-400">
+                        <Shield className="h-3 w-3" /> Admin
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {u.full_name || "—"} · joined {new Date(u.created_at).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-emerald-400">
+                    {formatPrice(Number(u.credits_balance ?? 0))}
+                  </span>
+                  <button
+                    onClick={() => {
+                      setSelected(u);
+                      setAmount("");
+                      setReason("");
+                    }}
+                    className="flex items-center gap-1.5 rounded-lg bg-cyan-500 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-cyan-400"
+                  >
+                    <Plus className="h-3.5 w-3.5" /> Add Credits
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Add credits modal inline */}
+        {selected && (
+          <form onSubmit={addCredits} className="h-fit rounded-2xl border border-cyan-500/40 bg-slate-900 p-5">
+            <p className="font-bold text-white">Add credits to</p>
+            <p className="mb-4 text-sm text-slate-400">{selected.email}</p>
+            <p className="mb-1 text-xs text-slate-500">Current balance</p>
+            <p className="mb-4 text-2xl font-bold text-emerald-400">
+              {formatPrice(Number(selected.credits_balance ?? 0))}
+            </p>
+            <label className="mb-1.5 block text-sm text-slate-400">Amount (USD)</label>
+            <input
+              type="number"
+              required
+              min="0.01"
+              step="0.01"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="50.00"
+              className="mb-3 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
+            />
+            <label className="mb-1.5 block text-sm text-slate-400">Reason</label>
+            <input
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="e.g. Bank transfer received"
+              className="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
+            />
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                disabled={busy || !amount}
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 py-2.5 text-sm font-bold text-slate-950 hover:bg-cyan-400 disabled:opacity-60"
+              >
+                {busy && <Loader2 className="h-4 w-4 animate-spin" />} Add
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelected(null)}
+                className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm text-slate-300 hover:border-slate-500"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
+
+        {/* Recent transactions */}
+        <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 lg:col-span-3">
+          <div className="border-b border-slate-800 px-5 py-4">
+            <p className="font-bold text-white">Recent credit movements</p>
+          </div>
+          {transactions.length === 0 ? (
+            <p className="p-8 text-center text-sm text-slate-500">No movements yet.</p>
+          ) : (
+            <div className="max-h-96 overflow-y-auto divide-y divide-slate-800">
+              {transactions.slice(0, 50).map((t) => (
+                <div key={t.id} className="flex items-center justify-between px-5 py-3">
+                  <div>
+                    <p className="text-sm text-white">
+                      {t.reason || "Movement"}
+                      <span className="ml-2 text-xs text-slate-500">
+                        {users.find((u) => u.id === t.user_id)?.email ?? t.user_id.slice(0, 8)}
+                      </span>
+                    </p>
+                    <p className="text-xs text-slate-500">{new Date(t.created_at).toLocaleString()}</p>
+                  </div>
+                  <span className={`font-bold ${Number(t.amount) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                    {Number(t.amount) >= 0 ? "+" : ""}
+                    {formatPrice(Number(t.amount))}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,23 @@
+
+> globalgamestore@0.1.0 dev
+> next dev -p 3000
+
+▲ Next.js 16.3.0 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.18.38:3000
+- Environments: .env.local
+✓ Ready in 3.0s
+✓ Running next.config.ts took 447ms
+
+✓ Generated AGENTS.md and CLAUDE.md for AI agents. Set `agentRules: false` in next.config to disable.
+○ Compiling /account ...
+ GET /account 200 in 9.8s (next.js: 7.8s, proxy.ts: 769ms, application-code: 1242ms)
+ GET /api/auth/me 200 in 1686ms (next.js: 1280ms, application-code: 406ms)
+ GET /api/auth/me 200 in 432ms (next.js: 365ms, application-code: 67ms)
+ GET / 200 in 8.6s (next.js: 4.6s, proxy.ts: 22ms, application-code: 3.9s)
+ GET /api/auth/me 200 in 69ms (next.js: 30ms, application-code: 39ms)
+ GET / 200 in 12.2s (next.js: 8.2s, proxy.ts: 18ms, application-code: 4.1s)
+ GET /api/auth/me 200 in 61ms (next.js: 28ms, application-code: 33ms)
+ GET /api/auth/me 200 in 47ms (next.js: 14ms, application-code: 33ms)
+ GET /api/auth/me 200 in 41ms (next.js: 11ms, application-code: 30ms)
+ GET / 200 in 2.1s (next.js: 69ms, proxy.ts: 48ms, application-code: 2.0s)

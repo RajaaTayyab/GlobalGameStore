@@ -1,0 +1,45 @@
+import { requireAdmin, authError } from "@/lib/auth";
+import { requireAdminClient } from "@/lib/supabase/admin";
+
+export const dynamic = "force-dynamic";
+
+interface RouteContext {
+  params: Promise<{ id: string }>;
+}
+
+export async function PUT(req: Request, ctx: RouteContext) {
+  try {
+    await requireAdmin();
+    const { id } = await ctx.params;
+    const admin = requireAdminClient();
+    const body = await req.json();
+
+    const allowed: Record<string, unknown> = {};
+    for (const key of ["name", "price", "original_price", "active"]) {
+      if (key in body) allowed[key] = body[key];
+    }
+
+    const { data, error } = await admin
+      .from("product_variants")
+      .update(allowed)
+      .eq("id", id)
+      .select()
+      .single();
+    if (error) throw error;
+    return Response.json({ variant: data });
+  } catch (e) {
+    return authError(e);
+  }
+}
+
+export async function DELETE(_req: Request, ctx: RouteContext) {
+  try {
+    await requireAdmin();
+    const { id } = await ctx.params;
+    const admin = requireAdminClient();
+    await admin.from("product_variants").delete().eq("id", id);
+    return Response.json({ ok: true });
+  } catch (e) {
+    return authError(e);
+  }
+}
