@@ -43,12 +43,6 @@ async function detectRegion(): Promise<RegionCode> {
   }
 }
 
-function readStoredRegion(): RegionCode | null {
-  if (typeof window === "undefined") return null;
-  const stored = localStorage.getItem(STORAGE_KEY) as RegionCode | null;
-  return stored && ["pk", "mena", "us", "global"].includes(stored) ? stored : null;
-}
-
 export function RegionProvider({
   children,
   initialRegion = null,
@@ -63,12 +57,8 @@ export function RegionProvider({
     let cancelled = false;
     Promise.resolve().then(() => {
       if (cancelled) return;
-      const stored = readStoredRegion();
-      if (stored !== null && stored !== initialRegion) {
-        setRegionState(stored);
-        setDetected(true);
-        return;
-      }
+      // Region is IP-driven (server cookie). Only fall back to client-side
+      // geolocation when no server region was provided (e.g. local dev).
       if (initialRegion) return;
       detectRegion().then((r) => {
         if (!cancelled) {
@@ -83,7 +73,6 @@ export function RegionProvider({
   }, [initialRegion]);
 
   const setRegion = useCallback((r: RegionCode) => {
-    localStorage.setItem(STORAGE_KEY, r);
     document.cookie = `${STORAGE_KEY}=${r};path=/;max-age=2592000;samesite=lax`;
     setRegionState(r);
   }, []);

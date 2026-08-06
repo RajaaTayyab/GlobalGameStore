@@ -1,15 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Loader2, Shield } from "lucide-react";
+import { Plus, Minus, Loader2, Shield } from "lucide-react";
 import { formatPrice } from "@/lib/order";
 import type { CreditTransaction, Profile } from "@/lib/types";
+
+type CreditMode = "add" | "remove";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState<Profile[]>([]);
   const [transactions, setTransactions] = useState<CreditTransaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Profile | null>(null);
+  const [mode, setMode] = useState<CreditMode>("add");
   const [amount, setAmount] = useState("");
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
@@ -27,14 +30,22 @@ export default function AdminUsers() {
 
   useEffect(load, []);
 
-  const addCredits = async (e: React.FormEvent) => {
+  const openPanel = (u: Profile, m: CreditMode) => {
+    setSelected(u);
+    setMode(m);
+    setAmount("");
+    setReason("");
+  };
+
+  const updateCredits = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selected) return;
     setBusy(true);
+    const signed = mode === "remove" ? -Math.abs(Number(amount)) : Math.abs(Number(amount));
     const res = await fetch(`/api/admin/users/${selected.id}/credits`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: Number(amount), reason }),
+      body: JSON.stringify({ amount: signed, reason }),
     });
     const data = await res.json();
     setBusy(false);
@@ -42,7 +53,11 @@ export default function AdminUsers() {
       setNotice(data.error ?? "Failed");
       return;
     }
-    setNotice(`Credits updated for ${selected.email} — new balance ${formatPrice(Number(data.profile.credits_balance))}`);
+    setNotice(
+      `${mode === "add" ? "Added" : "Deducted"} credits for ${selected.email} — new balance ${formatPrice(
+        Number(data.profile.credits_balance)
+      )}`
+    );
     setAmount("");
     setReason("");
     setSelected(null);
@@ -92,14 +107,16 @@ export default function AdminUsers() {
                     {formatPrice(Number(u.credits_balance ?? 0))}
                   </span>
                   <button
-                    onClick={() => {
-                      setSelected(u);
-                      setAmount("");
-                      setReason("");
-                    }}
+                    onClick={() => openPanel(u, "add")}
                     className="flex items-center gap-1.5 rounded-lg bg-cyan-500 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-cyan-400"
                   >
-                    <Plus className="h-3.5 w-3.5" /> Add Credits
+                    <Plus className="h-3.5 w-3.5" /> Add
+                  </button>
+                  <button
+                    onClick={() => openPanel(u, "remove")}
+                    className="flex items-center gap-1.5 rounded-lg border border-red-500/40 px-3 py-1.5 text-xs font-bold text-red-400 hover:bg-red-500/10"
+                  >
+                    <Minus className="h-3.5 w-3.5" /> Deduct
                   </button>
                 </div>
               </div>
@@ -107,11 +124,34 @@ export default function AdminUsers() {
           </div>
         </div>
 
-        {/* Add credits modal inline */}
+        {/* Add / deduct credits panel */}
         {selected && (
-          <form onSubmit={addCredits} className="h-fit rounded-2xl border border-cyan-500/40 bg-slate-900 p-5">
-            <p className="font-bold text-white">Add credits to</p>
+          <form onSubmit={updateCredits} className="h-fit rounded-2xl border border-cyan-500/40 bg-slate-900 p-5">
+            <p className="font-bold text-white">
+              {mode === "add" ? "Add credits to" : "Deduct credits from"}
+            </p>
             <p className="mb-4 text-sm text-slate-400">{selected.email}</p>
+
+            <div className="mb-4 flex rounded-xl border border-slate-700 p-1">
+              {(["add", "remove"] as CreditMode[]).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => setMode(m)}
+                  className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-bold transition ${
+                    mode === m
+                      ? m === "add"
+                        ? "bg-cyan-500 text-slate-950"
+                        : "bg-red-500 text-white"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  {m === "add" ? <Plus className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
+                  {m === "add" ? "Add" : "Deduct"}
+                </button>
+              ))}
+            </div>
+
             <p className="mb-1 text-xs text-slate-500">Current balance</p>
             <p className="mb-4 text-2xl font-bold text-emerald-400">
               {formatPrice(Number(selected.credits_balance ?? 0))}
@@ -124,23 +164,28 @@ export default function AdminUsers() {
               step="0.01"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="50.00"
+              placeholder={mode === "add" ? "50.00" : "10.00"}
               className="mb-3 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
             />
             <label className="mb-1.5 block text-sm text-slate-400">Reason</label>
             <input
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              placeholder="e.g. Bank transfer received"
+              placeholder={mode === "add" ? "e.g. Bank transfer received" : "e.g. Refund / correction"}
               className="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
             />
             <div className="flex gap-2">
               <button
                 type="submit"
                 disabled={busy || !amount}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 py-2.5 text-sm font-bold text-slate-950 hover:bg-cyan-400 disabled:opacity-60"
+                className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60 ${
+                  mode === "add"
+                    ? "bg-cyan-500 text-slate-950 hover:bg-cyan-400"
+                    : "bg-red-600 hover:bg-red-500"
+                }`}
               >
-                {busy && <Loader2 className="h-4 w-4 animate-spin" />} Add
+                {busy && <Loader2 className="h-4 w-4 animate-spin" />}
+                {mode === "add" ? "Add Credits" : "Deduct Credits"}
               </button>
               <button
                 type="button"

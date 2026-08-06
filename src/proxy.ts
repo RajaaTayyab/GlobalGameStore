@@ -1,32 +1,32 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { COUNTRY_TO_REGION } from "@/lib/constants";
-import { REGION_COOKIE, isValidRegion } from "@/lib/region";
+import { REGION_COOKIE } from "@/lib/region";
 
 /**
  * Geo-route by the visitor's IP country (Vercel sets `x-vercel-ip-country`).
- * Maps the country to a region and persists it in a cookie so the server can
- * render the region-specific experience (hero, recommendations) before
- * hydration. A user's manual override is respected by leaving the cookie alone.
+ * The region is re-evaluated on every request so it always follows the current
+ * IP — e.g. when a visitor connects via a VPN in another country, the region
+ * (and the hero/recommendations) update accordingly.
  */
 export function proxy(request: NextRequest) {
-  const existing = request.cookies.get(REGION_COOKIE)?.value;
-  if (isValidRegion(existing)) {
-    return NextResponse.next();
-  }
-
   const country = request.headers.get("x-vercel-ip-country");
   const region = country ? COUNTRY_TO_REGION[country] : undefined;
+
+  // No usable country header (e.g. local dev): leave existing cookie or nothing.
   if (!region) {
     return NextResponse.next();
   }
 
+  const existing = request.cookies.get(REGION_COOKIE)?.value;
   const res = NextResponse.next();
-  res.cookies.set(REGION_COOKIE, region, {
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30,
-    sameSite: "lax",
-  });
+  if (existing !== region) {
+    res.cookies.set(REGION_COOKIE, region, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30,
+      sameSite: "lax",
+    });
+  }
   return res;
 }
 
