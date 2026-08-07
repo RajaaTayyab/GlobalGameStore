@@ -3,6 +3,39 @@ import { requireAdminClient } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
+export async function GET() {
+  try {
+    await requireAdmin();
+    const admin = requireAdminClient();
+
+    const [
+      { data: products },
+      { data: categories },
+      { data: regions },
+      { data: codes },
+    ] = await Promise.all([
+      admin
+        .from("products")
+        .select(
+          "*, category:categories(name), region:regions(code, name), variants:product_variants(*)"
+        )
+        .order("created_at", { ascending: false }),
+      admin.from("categories").select("*").order("sort_order"),
+      admin.from("regions").select("*").order("sort_order"),
+      admin.from("codes").select("variant_id").eq("status", "available"),
+    ]);
+
+    const available_codes: Record<string, number> = {};
+    for (const row of codes ?? []) {
+      available_codes[row.variant_id] = (available_codes[row.variant_id] ?? 0) + 1;
+    }
+
+    return Response.json({ products, categories, regions, available_codes });
+  } catch (e) {
+    return authError(e);
+  }
+}
+
 function slugify(s: string) {
   return s
     .toLowerCase()
@@ -19,6 +52,7 @@ interface CreateBody {
   category_id?: string | null;
   region_id?: string | null;
   featured?: boolean;
+  sold_out?: boolean;
   variants?: { name: string; price: number; original_price?: number | null; codes?: string[] }[];
 }
 
@@ -50,6 +84,7 @@ export async function POST(req: Request) {
         category_id: body.category_id || null,
         region_id: body.region_id || null,
         featured: !!body.featured,
+        sold_out: !!body.sold_out,
       })
       .select()
       .single();

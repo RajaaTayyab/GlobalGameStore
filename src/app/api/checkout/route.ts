@@ -27,12 +27,22 @@ export async function POST(req: Request) {
   const variantIds = body.items.map((i) => i.variantId);
   const { data: variants, error: vErr } = await admin
     .from("product_variants")
-    .select("*, product:products(id, name, slug, image_url, active)")
+    .select("*, product:products(id, name, slug, image_url, active, sold_out)")
     .in("id", variantIds)
     .eq("active", true);
 
   if (vErr || !variants || variants.length !== variantIds.length) {
     return Response.json({ error: "One or more items are no longer available" }, { status: 400 });
+  }
+
+  const soldOut = (variants as unknown as { product: { sold_out?: boolean } }[]).some(
+    (v) => v.product?.sold_out
+  );
+  if (soldOut) {
+    return Response.json(
+      { error: "One or more items are sold out and cannot be ordered" },
+      { status: 400 }
+    );
   }
 
   const items: CartItem[] = body.items.map((raw) => {

@@ -23,6 +23,7 @@ export async function PUT(req: Request, ctx: RouteContext) {
       "region_id",
       "featured",
       "active",
+      "sold_out",
     ]) {
       if (key in body) allowed[key] = body[key];
     }

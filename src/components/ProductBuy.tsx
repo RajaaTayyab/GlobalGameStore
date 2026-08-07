@@ -19,6 +19,7 @@ interface Props {
   productSlug: string;
   productName: string;
   productImage: string | null;
+  soldOut?: boolean;
   variants: BuyVariant[];
 }
 
@@ -27,12 +28,24 @@ export default function ProductBuy({
   productSlug,
   productName,
   productImage,
+  soldOut,
   variants,
 }: Props) {
   const router = useRouter();
   const { addItem } = useCart();
   const [selected, setSelected] = useState<BuyVariant | null>(variants[0] ?? null);
   const [qty, setQty] = useState(1);
+
+  if (soldOut) {
+    return (
+      <div className="mt-8 rounded-2xl border border-red-500/30 bg-slate-900 p-6">
+        <p className="text-lg font-bold text-red-400">Sold Out</p>
+        <p className="mt-1 text-sm text-slate-400">
+          This product is currently unavailable. Please check back later.
+        </p>
+      </div>
+    );
+  }
 
   if (variants.length === 0) {
     return (

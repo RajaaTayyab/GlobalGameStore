@@ -39,6 +39,7 @@ export default function AdminProducts() {
     region_id: "",
     featured: false,
     active: true,
+    sold_out: false,
   });
 
   // variant forms
@@ -98,7 +99,7 @@ interface ApiResponse {
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ name: "", description: "", image_url: "", category_id: "", region_id: "", featured: false, active: true });
+    setForm({ name: "", description: "", image_url: "", category_id: "", region_id: "", featured: false, active: true, sold_out: false });
     setModalOpen(true);
   };
 
@@ -112,6 +113,7 @@ interface ApiResponse {
       region_id: p.region_id ?? "",
       featured: p.featured,
       active: p.active,
+      sold_out: !!p.sold_out,
     });
     setModalOpen(true);
   };
@@ -146,6 +148,22 @@ interface ApiResponse {
     await fetch(`/api/admin/products/${p.id}`, { method: "DELETE" });
     load();
     showNotice("Product deleted");
+  };
+
+  const toggleSoldOut = async (p: ProductRow) => {
+    const next = !p.sold_out;
+    const res = await fetch(`/api/admin/products/${p.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sold_out: next }),
+    });
+    if (res.ok) {
+      load();
+      showNotice(next ? `"${p.name}" marked as sold out` : `"${p.name}" is back in stock`);
+    } else {
+      const d = await res.json();
+      setError(d.error ?? "Failed to update");
+    }
   };
 
   const addVariant = async (productId: string) => {
@@ -249,6 +267,7 @@ interface ApiResponse {
                   <p className="font-semibold text-white">
                     {p.name}
                     {!p.active && <span className="ml-2 rounded-full bg-slate-700 px-2 py-0.5 text-xs text-slate-300">inactive</span>}
+                    {p.sold_out && <span className="ml-2 rounded-full bg-red-500/20 px-2 py-0.5 text-xs font-bold text-red-400">sold out</span>}
                     {p.featured && <span className="ml-2 rounded-full bg-amber-500/20 px-2 py-0.5 text-xs font-bold text-amber-400">sale</span>}
                   </p>
                   <p className="mt-0.5 text-xs text-slate-500">
@@ -262,6 +281,17 @@ interface ApiResponse {
                 {expanded === p.id ? <ChevronUp className="h-5 w-5 text-slate-500" /> : <ChevronDown className="h-5 w-5 text-slate-500" />}
               </button>
               <div className="flex gap-2">
+                <button
+                  onClick={() => toggleSoldOut(p)}
+                  className={`rounded-lg border px-2.5 py-2 text-xs font-bold transition ${
+                    p.sold_out
+                      ? "border-red-500/50 bg-red-500/10 text-red-400 hover:bg-red-500/20"
+                      : "border-slate-700 text-slate-300 hover:border-red-500/50 hover:text-red-400"
+                  }`}
+                  aria-label="Toggle sold out"
+                >
+                  {p.sold_out ? "In stock" : "Sold out"}
+                </button>
                 <button
                   onClick={() => openEdit(p)}
                   className="rounded-lg border border-slate-700 p-2 text-slate-300 hover:border-cyan-500 hover:text-cyan-400"
@@ -400,6 +430,10 @@ interface ApiResponse {
               <label className="flex items-center gap-2 text-sm text-slate-300">
                 <input type="checkbox" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} className="accent-cyan-500" />
                 Active
+              </label>
+              <label className="flex items-center gap-2 text-sm text-slate-300">
+                <input type="checkbox" checked={form.sold_out} onChange={(e) => setForm({ ...form, sold_out: e.target.checked })} className="accent-red-500" />
+                Sold out
               </label>
             </div>
             <div className="flex justify-end gap-3 pt-2">

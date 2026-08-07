@@ -25,6 +25,7 @@ export interface Product {
   region_id: string | null;
   featured: boolean;
   active: boolean;
+  sold_out?: boolean;
   category?: { name: string } | null;
   region?: { code: RegionCode; name: string } | null;
 }

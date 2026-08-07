@@ -64,6 +64,13 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
             Sale
           </span>
         )}
+        {product.sold_out && (
+          <span className="absolute inset-0 flex items-center justify-center bg-slate-950/60">
+            <span className="rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white shadow">
+              Sold Out
+            </span>
+          </span>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col p-4">
@@ -91,11 +98,11 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
           </span>
           <button
             onClick={handleAdd}
-            disabled={!first}
+            disabled={!first || !!product.sold_out}
             className="flex items-center gap-1.5 rounded-lg bg-slate-800 px-3 py-2 text-xs font-semibold text-white transition hover:bg-cyan-500 hover:text-slate-950 disabled:opacity-40"
           >
             <ShoppingCart className="h-3.5 w-3.5" />
-            Add to Cart
+            {product.sold_out ? "Sold out" : "Add to Cart"}
           </button>
         </div>
       </div>

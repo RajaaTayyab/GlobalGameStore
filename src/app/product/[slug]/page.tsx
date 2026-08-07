@@ -67,8 +67,13 @@ export default async function ProductPage({ params }: Props) {
             {product.category?.name ?? "Digital Product"}
             {product.region ? ` · ${product.region.name}` : ""}
           </p>
-          <h1 className="mt-2 text-3xl font-extrabold text-white sm:text-4xl">
+          <h1 className="mt-2 flex items-center gap-3 text-3xl font-extrabold text-white sm:text-4xl">
             {product.name}
+            {!!product.sold_out && (
+              <span className="rounded-full bg-red-500/20 px-3 py-1 text-xs font-bold text-red-400">
+                Sold Out
+              </span>
+            )}
           </h1>
           {product.description && (
             <p className="mt-4 leading-relaxed text-slate-400">{product.description}</p>
@@ -87,6 +92,7 @@ export default async function ProductPage({ params }: Props) {
             productSlug={product.slug}
             productName={product.name}
             productImage={product.image_url}
+            soldOut={!!product.sold_out}
             variants={variants.map((v) => ({
               id: v.id,
               name: v.name,

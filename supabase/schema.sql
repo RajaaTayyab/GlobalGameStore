@@ -56,6 +56,7 @@ create table if not exists public.products (
   region_id uuid references public.regions (id) on delete set null, -- NULL = global
   featured boolean not null default false,
   active boolean not null default true,
+  sold_out boolean not null default false,   -- admin can mark product as sold out
   created_at timestamptz not null default now()
 );
 
