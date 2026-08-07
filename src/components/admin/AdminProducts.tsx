@@ -216,19 +216,19 @@ interface ApiResponse {
   };
 
   const inputCls =
-    "w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none";
+    "w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none";
 
   if (loading)
     return (
       <div className="flex justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent-chrome" />
       </div>
     );
 
   return (
     <div className="space-y-6">
       {notice && (
-        <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
+        <p className="rounded-xl border border-instock/30 bg-instock/10 px-4 py-3 text-sm text-instock">
           {notice}
         </p>
       )}
@@ -239,10 +239,10 @@ interface ApiResponse {
       )}
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-400">{products.length} products</p>
+        <p className="text-sm text-text-muted">{products.length} products</p>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 rounded-xl bg-cyan-500 px-4 py-2.5 text-sm font-bold text-slate-950 hover:bg-cyan-400"
+          className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-4 py-2.5 text-sm font-bold text-white hover:bg-accent-oxblood/90"
         >
           <Plus className="h-4 w-4" /> New Product
         </button>
@@ -250,13 +250,13 @@ interface ApiResponse {
 
       <div className="space-y-3">
         {products.map((p) => (
-          <div key={p.id} className="rounded-2xl border border-slate-800 bg-slate-900">
+          <div key={p.id} className="rounded-lg border border-border bg-surface">
             <div className="flex flex-wrap items-center gap-4 p-4">
               <button
                 onClick={() => setExpanded(expanded === p.id ? null : p.id)}
                 className="flex flex-1 items-center gap-4 text-left"
               >
-                <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-slate-800">
+                <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-bg">
                   {p.image_url ? (
                     <Image src={p.image_url} alt={p.name} width={56} height={56} className="h-full w-full object-cover" />
                   ) : (
@@ -264,21 +264,21 @@ interface ApiResponse {
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-white">
+                  <p className="font-semibold text-text-primary">
                     {p.name}
-                    {!p.active && <span className="ml-2 rounded-full bg-slate-700 px-2 py-0.5 text-xs text-slate-300">inactive</span>}
+                    {!p.active && <span className="ml-2 rounded-full bg-border px-2 py-0.5 text-xs text-text-muted">inactive</span>}
                     {p.sold_out && <span className="ml-2 rounded-full bg-red-500/20 px-2 py-0.5 text-xs font-bold text-red-400">sold out</span>}
-                    {p.featured && <span className="ml-2 rounded-full bg-amber-500/20 px-2 py-0.5 text-xs font-bold text-amber-400">sale</span>}
+                    {p.featured && <span className="ml-2 rounded-full bg-accent-chrome px-2 py-0.5 font-mono text-xs font-bold text-bg">sale</span>}
                   </p>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="mt-0.5 text-xs text-text-muted">
                     {p.category?.name ?? "No category"} · {p.region?.name ?? "Global"} ·{" "}
                     {p.variants?.length ?? 0} variant(s) ·{" "}
-                    <span className={p.available > 0 ? "text-emerald-400" : "text-red-400"}>
+                    <span className={p.available > 0 ? "text-instock" : "text-red-400"}>
                       {p.available} code(s) in stock
                     </span>
                   </p>
                 </div>
-                {expanded === p.id ? <ChevronUp className="h-5 w-5 text-slate-500" /> : <ChevronDown className="h-5 w-5 text-slate-500" />}
+                {expanded === p.id ? <ChevronUp className="h-5 w-5 text-text-muted" /> : <ChevronDown className="h-5 w-5 text-text-muted" />}
               </button>
               <div className="flex gap-2">
                 <button
@@ -286,7 +286,7 @@ interface ApiResponse {
                   className={`rounded-lg border px-2.5 py-2 text-xs font-bold transition ${
                     p.sold_out
                       ? "border-red-500/50 bg-red-500/10 text-red-400 hover:bg-red-500/20"
-                      : "border-slate-700 text-slate-300 hover:border-red-500/50 hover:text-red-400"
+                      : "border-border text-text-muted hover:border-red-500/50 hover:text-red-400"
                   }`}
                   aria-label="Toggle sold out"
                 >
@@ -294,14 +294,14 @@ interface ApiResponse {
                 </button>
                 <button
                   onClick={() => openEdit(p)}
-                  className="rounded-lg border border-slate-700 p-2 text-slate-300 hover:border-cyan-500 hover:text-cyan-400"
+                  className="rounded-lg border border-border p-2 text-text-muted hover:border-accent-chrome hover:text-accent-chrome"
                   aria-label="Edit product"
                 >
                   <Pencil className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => deleteProduct(p)}
-                  className="rounded-lg border border-slate-700 p-2 text-slate-300 hover:border-red-500 hover:text-red-400"
+                  className="rounded-lg border border-border p-2 text-text-muted hover:border-red-500 hover:text-red-400"
                   aria-label="Delete product"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -310,19 +310,19 @@ interface ApiResponse {
             </div>
 
             {expanded === p.id && (
-              <div className="space-y-5 border-t border-slate-800 p-4">
+              <div className="space-y-5 border-t border-border p-4">
                 {p.variants?.map((v) => (
-                  <div key={v.id} className="rounded-xl border border-slate-800 bg-slate-950 p-4">
+                  <div key={v.id} className="rounded-xl border border-border bg-bg p-4">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
-                        <p className="font-medium text-white">{v.name}</p>
-                        <p className="text-sm text-slate-400">
-                          {formatPrice(Number(v.price))}
+                        <p className="font-medium text-text-primary">{v.name}</p>
+                        <p className="text-sm text-text-muted">
+                          <span className="font-mono text-price">{formatPrice(Number(v.price))}</span>
                           {v.original_price && (
-                            <span className="ml-2 line-through">{formatPrice(Number(v.original_price))}</span>
+                            <span className="ml-2 font-mono text-old-price line-through">{formatPrice(Number(v.original_price))}</span>
                           )}
                           {" · "}
-                          <span className={v.available > 0 ? "text-emerald-400" : "text-red-400"}>
+                          <span className={v.available > 0 ? "text-instock" : "text-red-400"}>
                             {v.available} available
                           </span>
                         </p>
@@ -330,14 +330,14 @@ interface ApiResponse {
                       <div className="flex gap-2">
                         <button
                           onClick={() => addCodes(v.id)}
-                          className="rounded-lg bg-cyan-500 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-cyan-400"
+                          className="rounded-lg bg-accent-oxblood px-3 py-1.5 text-xs font-bold text-white hover:bg-accent-oxblood/90"
                           disabled={!codesInput.trim()}
                         >
                           Add codes
                         </button>
                         <button
                           onClick={() => deleteVariant(v.id)}
-                          className="rounded-lg border border-slate-700 p-1.5 text-slate-400 hover:border-red-500 hover:text-red-400"
+                          className="rounded-lg border border-border p-1.5 text-text-muted hover:border-red-500 hover:text-red-400"
                           aria-label="Delete variant"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -347,22 +347,22 @@ interface ApiResponse {
                   </div>
                 ))}
 
-                <div className="grid gap-3 rounded-xl border border-slate-800 bg-slate-950 p-4 sm:grid-cols-4">
+                <div className="grid gap-3 rounded-xl border border-border bg-bg p-4 sm:grid-cols-4">
                   <input value={vName} onChange={(e) => setVName(e.target.value)} placeholder="Variant name (e.g. 100 UC)" className={inputCls} />
                   <input value={vPrice} onChange={(e) => setVPrice(e.target.value)} type="number" min="0" step="0.01" placeholder="Price" className={inputCls} />
                   <input value={vOrig} onChange={(e) => setVOrig(e.target.value)} type="number" min="0" step="0.01" placeholder="Old price (optional)" className={inputCls} />
                   <button
                     onClick={() => addVariant(p.id)}
                     disabled={!vName || !vPrice}
-                    className="rounded-xl bg-slate-700 px-3 py-2.5 text-sm font-semibold text-white hover:bg-slate-600 disabled:opacity-50"
+                    className="rounded-xl bg-accent-oxblood px-3 py-2.5 text-sm font-semibold text-white hover:bg-accent-oxblood/90 disabled:opacity-50"
                   >
                     <Plus className="mr-1 inline h-4 w-4" /> Add Variant
                   </button>
                 </div>
 
-                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">
-                  <label className="mb-1.5 flex items-center gap-2 text-sm font-medium text-slate-300">
-                    <KeyRound className="h-4 w-4 text-cyan-400" /> Add codes for a variant
+                <div className="rounded-xl border border-border bg-bg p-4">
+                  <label className="mb-1.5 flex items-center gap-2 text-sm font-medium text-text-primary">
+                    <KeyRound className="h-4 w-4 text-accent-chrome" /> Add codes for a variant
                   </label>
                   <textarea
                     value={codesInput}
@@ -371,7 +371,7 @@ interface ApiResponse {
                     rows={3}
                     className={`${inputCls} font-mono`}
                   />
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-text-muted">
                     Click &quot;Add codes&quot; on the variant you want to stock.
                   </p>
                 </div>
@@ -387,24 +387,24 @@ interface ApiResponse {
           <form
             onSubmit={saveProduct}
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[90vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-2xl border border-slate-700 bg-slate-900 p-6"
+            className="max-h-[90vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-lg border border-border bg-surface p-6"
           >
-            <h2 className="text-lg font-bold text-white">{editing ? "Edit product" : "New product"}</h2>
+            <h2 className="font-serif text-lg font-bold text-text-primary">{editing ? "Edit product" : "New product"}</h2>
             <div>
-              <label className="mb-1.5 block text-sm text-slate-400">Name *</label>
+              <label className="mb-1.5 block text-sm text-text-muted">Name *</label>
               <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm text-slate-400">Description</label>
+              <label className="mb-1.5 block text-sm text-text-muted">Description</label>
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className={inputCls} />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm text-slate-400">Image URL</label>
+              <label className="mb-1.5 block text-sm text-text-muted">Image URL</label>
               <input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="https://…" className={inputCls} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="mb-1.5 block text-sm text-slate-400">Category</label>
+                <label className="mb-1.5 block text-sm text-text-muted">Category</label>
                 <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} className={inputCls}>
                   <option value="">None</option>
                   {categories.map((c) => (
@@ -413,7 +413,7 @@ interface ApiResponse {
                 </select>
               </div>
               <div>
-                <label className="mb-1.5 block text-sm text-slate-400">Region (recommendations)</label>
+                <label className="mb-1.5 block text-sm text-text-muted">Region (recommendations)</label>
                 <select value={form.region_id} onChange={(e) => setForm({ ...form, region_id: e.target.value })} className={inputCls}>
                   <option value="">Global</option>
                   {regions.map((r) => (
@@ -423,24 +423,24 @@ interface ApiResponse {
               </div>
             </div>
             <div className="flex gap-6">
-              <label className="flex items-center gap-2 text-sm text-slate-300">
-                <input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} className="accent-cyan-500" />
+              <label className="flex items-center gap-2 text-sm text-text-muted">
+                <input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} className="accent-accent-chrome" />
                 Featured (Sale badge)
               </label>
-              <label className="flex items-center gap-2 text-sm text-slate-300">
-                <input type="checkbox" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} className="accent-cyan-500" />
+              <label className="flex items-center gap-2 text-sm text-text-muted">
+                <input type="checkbox" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} className="accent-accent-chrome" />
                 Active
               </label>
-              <label className="flex items-center gap-2 text-sm text-slate-300">
+              <label className="flex items-center gap-2 text-sm text-text-muted">
                 <input type="checkbox" checked={form.sold_out} onChange={(e) => setForm({ ...form, sold_out: e.target.checked })} className="accent-red-500" />
                 Sold out
               </label>
             </div>
             <div className="flex justify-end gap-3 pt-2">
-              <button type="button" onClick={() => setModalOpen(false)} className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-300 hover:border-slate-500">
+              <button type="button" onClick={() => setModalOpen(false)} className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-text-muted hover:border-accent-chrome/50">
                 Cancel
               </button>
-              <button type="submit" disabled={busy} className="flex items-center gap-2 rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-bold text-slate-950 hover:bg-cyan-400 disabled:opacity-60">
+              <button type="submit" disabled={busy} className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-5 py-2.5 text-sm font-bold text-white hover:bg-accent-oxblood/90 disabled:opacity-60">
                 {busy && <Loader2 className="h-4 w-4 animate-spin" />}
                 {editing ? "Save Changes" : "Create Product"}
               </button>

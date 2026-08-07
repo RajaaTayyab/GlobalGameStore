@@ -22,8 +22,8 @@ type Tab = "overview" | "orders" | "credits" | "profile";
 
 const STATUS_COLORS: Record<string, string> = {
   pending: "bg-amber-500/15 text-amber-400",
-  paid: "bg-blue-500/15 text-blue-400",
-  completed: "bg-emerald-500/15 text-emerald-400",
+  paid: "bg-accent-chrome/15 text-accent-chrome",
+  completed: "bg-instock/15 text-instock",
   cancelled: "bg-red-500/15 text-red-400",
 };
 
@@ -74,11 +74,11 @@ export default function AccountPage() {
   if (notAuthed) {
     return (
       <div className="mx-auto max-w-xl px-4 py-24 text-center">
-        <h1 className="text-2xl font-bold text-white">Please log in</h1>
-        <p className="mt-2 text-slate-400">You need an account to view your panel.</p>
+        <h1 className="font-serif text-2xl font-bold text-text-primary">Please log in</h1>
+        <p className="mt-2 text-text-muted">You need an account to view your panel.</p>
         <Link
           href="/login"
-          className="mt-6 inline-block rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 hover:bg-cyan-400"
+          className="mt-6 inline-block rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white hover:bg-accent-oxblood/90"
         >
           Log In
         </Link>
@@ -157,7 +157,7 @@ export default function AccountPage() {
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent-chrome" />
       </div>
     );
   }
@@ -166,21 +166,21 @@ export default function AccountPage() {
     <div className="mx-auto max-w-7xl px-4 py-10">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="font-serif text-3xl font-bold text-text-primary">
             {profile?.full_name ? `Hi, ${profile.full_name.split(" ")[0]}` : "My Account"}
           </h1>
-          <p className="mt-1 text-sm text-slate-400">{profile?.email}</p>
+          <p className="mt-1 text-sm text-text-muted">{profile?.email}</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-3">
-            <p className="text-xs text-emerald-300/80">Store Credits</p>
-            <p className="text-xl font-bold text-emerald-400">
+          <div className="rounded-xl border border-instock/30 bg-instock/10 px-5 py-3">
+            <p className="text-xs text-instock/80">Store Credits</p>
+            <p className="font-mono text-xl font-bold text-instock">
               {formatPrice(Number(profile?.credits_balance ?? 0))}
             </p>
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 rounded-xl border border-slate-700 px-4 py-3 text-sm font-medium text-slate-300 hover:border-red-500/50 hover:text-red-400"
+            className="flex items-center gap-2 rounded-xl border border-border px-4 py-3 text-sm font-medium text-text-muted hover:border-red-500/50 hover:text-red-400"
           >
             <LogOut className="h-4 w-4" /> Logout
           </button>
@@ -194,8 +194,8 @@ export default function AccountPage() {
             onClick={() => setTab(t.id)}
             className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
               tab === t.id
-                ? "bg-cyan-500 text-slate-950"
-                : "border border-slate-700 text-slate-300 hover:border-slate-500"
+                ? "bg-accent-chrome text-bg"
+                : "border border-border text-text-muted hover:border-accent-chrome/50"
             }`}
           >
             <t.icon className="h-4 w-4" />
@@ -207,43 +207,43 @@ export default function AccountPage() {
       {/* ---------------- Overview ---------------- */}
       {tab === "overview" && (
         <div className="grid gap-6 sm:grid-cols-3">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-            <CreditCard className="h-6 w-6 text-cyan-400" />
-            <p className="mt-3 text-3xl font-bold text-white">
+          <div className="rounded-lg border border-border bg-surface p-6">
+            <CreditCard className="h-6 w-6 text-accent-chrome" />
+            <p className="mt-3 font-mono text-3xl font-bold text-text-primary">
               {formatPrice(Number(profile?.credits_balance ?? 0))}
             </p>
-            <p className="mt-1 text-sm text-slate-400">Available credits</p>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-1 text-sm text-text-muted">Available credits</p>
+            <p className="mt-2 text-xs text-text-muted">
               Codes are emailed after you pay with credits.
             </p>
           </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-            <Package className="h-6 w-6 text-cyan-400" />
-            <p className="mt-3 text-3xl font-bold text-white">{orders.length}</p>
-            <p className="mt-1 text-sm text-slate-400">Total orders</p>
-            <p className="mt-2 text-xs text-slate-500">
+          <div className="rounded-lg border border-border bg-surface p-6">
+            <Package className="h-6 w-6 text-accent-chrome" />
+            <p className="mt-3 font-mono text-3xl font-bold text-text-primary">{orders.length}</p>
+            <p className="mt-1 text-sm text-text-muted">Total orders</p>
+            <p className="mt-2 text-xs text-text-muted">
               {orders.filter((o) => o.status === "completed").length} completed
             </p>
           </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-            <Wallet className="h-6 w-6 text-cyan-400" />
-            <p className="mt-3 text-3xl font-bold text-white">{transactions.length}</p>
-            <p className="mt-1 text-sm text-slate-400">Credit movements</p>
-            <p className="mt-2 text-xs text-slate-500">
+          <div className="rounded-lg border border-border bg-surface p-6">
+            <Wallet className="h-6 w-6 text-accent-chrome" />
+            <p className="mt-3 font-mono text-3xl font-bold text-text-primary">{transactions.length}</p>
+            <p className="mt-1 text-sm text-text-muted">Credit movements</p>
+            <p className="mt-2 text-xs text-text-muted">
               Top-ups and purchases tracked here.
             </p>
           </div>
           {orders.slice(0, 3).map((o) => (
-            <div key={o.id} className="rounded-2xl border border-slate-800 bg-slate-900 p-6 sm:col-span-3">
+            <div key={o.id} className="rounded-lg border border-border bg-surface p-6 sm:col-span-3">
               <div className="flex items-center justify-between">
-                <span className="font-semibold text-white">#{o.order_number}</span>
-                <span className={`rounded-full px-3 py-1 text-xs font-semibold ${STATUS_COLORS[o.status]}`}>
+                <span className="font-mono font-semibold text-text-primary">#{o.order_number}</span>
+                <span className={`rounded-full px-3 py-1 font-mono text-xs font-semibold ${STATUS_COLORS[o.status]}`}>
                   {ORDER_STATUS_LABELS[o.status]}
                 </span>
               </div>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-text-muted">
                 {new Date(o.created_at).toLocaleDateString()} · {o.items?.length ?? 0} item(s) ·{" "}
-                {formatPrice(o.total)}
+                <span className="font-mono text-price">{formatPrice(o.total)}</span>
               </p>
             </div>
           ))}
@@ -254,30 +254,30 @@ export default function AccountPage() {
       {tab === "orders" && (
         <div className="space-y-4">
           {orders.length === 0 && (
-            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-10 text-center">
-              <p className="text-slate-400">No orders yet.</p>
-              <Link href="/shop" className="mt-3 inline-block text-sm font-semibold text-cyan-400 hover:underline">
+            <div className="rounded-lg border border-border bg-surface p-10 text-center">
+              <p className="text-text-muted">No orders yet.</p>
+              <Link href="/shop" className="mt-3 inline-block text-sm font-semibold text-accent-chrome hover:underline">
                 Start shopping
               </Link>
             </div>
           )}
           {orders.map((o) => (
-            <div key={o.id} className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+            <div key={o.id} className="rounded-lg border border-border bg-surface p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="font-bold text-white">
+                  <p className="font-mono font-bold text-text-primary">
                     #{o.order_number}
-                    <span className="ml-3 text-sm font-normal text-slate-500">
+                    <span className="ml-3 font-mono text-sm font-normal text-text-muted">
                       {new Date(o.created_at).toLocaleString()}
                     </span>
                   </p>
-                  <p className="mt-1 text-sm text-slate-400">
+                  <p className="mt-1 text-sm text-text-muted">
                     {o.payment_method === "credits" ? "Paid with credits" : "WhatsApp order"} ·{" "}
-                    {formatPrice(o.total)}
+                    <span className="font-mono text-price">{formatPrice(o.total)}</span>
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${STATUS_COLORS[o.status]}`}>
+                  <span className={`rounded-full px-3 py-1 font-mono text-xs font-semibold ${STATUS_COLORS[o.status]}`}>
                     {ORDER_STATUS_LABELS[o.status]}
                   </span>
                   {o.whatsapp_link && o.status !== "completed" && (
@@ -285,7 +285,7 @@ export default function AccountPage() {
                       href={o.whatsapp_link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-500"
+                      className="rounded-lg bg-instock px-3 py-1.5 text-xs font-bold text-white hover:bg-instock/90"
                     >
                       WhatsApp
                     </a>
@@ -297,20 +297,20 @@ export default function AccountPage() {
                 <div className="mt-4 overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="text-left text-xs uppercase tracking-wider text-slate-500">
+                      <tr className="font-mono text-left text-xs uppercase tracking-wider text-text-muted">
                         <th className="pb-2">Item</th>
                         <th className="pb-2">Qty</th>
                         <th className="pb-2">Price</th>
                         <th className="pb-2">Total</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800">
+                    <tbody className="divide-y divide-border">
                       {o.items!.map((it) => (
                         <tr key={it.id}>
-                          <td className="py-2.5 text-white">{it.product_name}</td>
-                          <td className="py-2.5 text-slate-400">{it.variant_name} × {it.quantity}</td>
-                          <td className="py-2.5 text-slate-400">{formatPrice(it.unit_price)}</td>
-                          <td className="py-2.5 font-semibold text-slate-200">{formatPrice(it.total)}</td>
+                          <td className="py-2.5 text-text-primary">{it.product_name}</td>
+                          <td className="py-2.5 text-text-muted">{it.variant_name} × {it.quantity}</td>
+                          <td className="py-2.5 font-mono text-text-muted">{formatPrice(it.unit_price)}</td>
+                          <td className="py-2.5 font-mono font-semibold text-text-primary">{formatPrice(it.total)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -319,27 +319,27 @@ export default function AccountPage() {
               )}
 
               {(o.delivered_codes?.length ?? 0) > 0 && (
-                <div className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
-                  <p className="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-400">
+                <div className="mt-4 rounded-xl border border-instock/20 bg-instock/5 p-4">
+                  <p className="mb-2 flex items-center gap-2 text-sm font-bold text-instock">
                     <CheckCircle2 className="h-4 w-4" /> Delivered codes
                   </p>
                   <div className="space-y-2">
                     {o.delivered_codes!.map((c, i) => (
                       <div key={i} className="flex items-center justify-between gap-3">
-                        <span className="text-sm text-slate-300">
+                        <span className="text-sm text-text-muted">
                           {c.product_name} {c.variant_name}
                         </span>
                         <span className="flex items-center gap-2">
-                          <code className="rounded-lg bg-slate-950 px-3 py-1 font-mono text-sm text-cyan-300">
+                          <code className="rounded-lg bg-bg px-3 py-1 font-mono text-sm text-accent-chrome">
                             {c.code}
                           </code>
                           <button
                             onClick={() => copyCode(c.code)}
-                            className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-800 hover:text-white"
+                            className="rounded-lg p-1.5 text-text-muted hover:bg-surface hover:text-text-primary"
                             aria-label="Copy code"
                           >
                             {copied === c.code ? (
-                              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                              <CheckCircle2 className="h-4 w-4 text-instock" />
                             ) : (
                               <Copy className="h-4 w-4" />
                             )}
@@ -357,30 +357,30 @@ export default function AccountPage() {
 
       {/* ---------------- Credits ---------------- */}
       {tab === "credits" && (
-        <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900">
-          <div className="border-b border-slate-800 px-6 py-4">
-            <p className="font-bold text-white">Credit history</p>
-            <p className="text-sm text-slate-500">
+        <div className="overflow-hidden rounded-lg border border-border bg-surface">
+          <div className="border-b border-border px-6 py-4">
+            <p className="font-bold text-text-primary">Credit history</p>
+            <p className="text-sm text-text-muted">
               Balance:{" "}
-              <span className="font-semibold text-emerald-400">
+              <span className="font-mono font-semibold text-instock">
                 {formatPrice(Number(profile?.credits_balance ?? 0))}
               </span>
             </p>
           </div>
           {transactions.length === 0 ? (
-            <p className="p-10 text-center text-slate-400">No credit movements yet.</p>
+            <p className="p-10 text-center text-text-muted">No credit movements yet.</p>
           ) : (
-            <ul className="divide-y divide-slate-800">
+            <ul className="divide-y divide-border">
               {transactions.map((t) => (
                 <li key={t.id} className="flex items-center justify-between px-6 py-4">
                   <div>
-                    <p className="text-sm font-medium text-white">{t.reason || "Credit movement"}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-sm font-medium text-text-primary">{t.reason || "Credit movement"}</p>
+                    <p className="font-mono text-xs text-text-muted">
                       {new Date(t.created_at).toLocaleString()}
                     </p>
                   </div>
                   <span
-                    className={`font-bold ${Number(t.amount) >= 0 ? "text-emerald-400" : "text-red-400"}`}
+                    className={`font-mono font-bold ${Number(t.amount) >= 0 ? "text-instock" : "text-red-400"}`}
                   >
                     {Number(t.amount) >= 0 ? "+" : ""}
                     {formatPrice(Number(t.amount))}
@@ -395,101 +395,101 @@ export default function AccountPage() {
       {/* ---------------- Profile ---------------- */}
       {tab === "profile" && (
         <>
-        <form onSubmit={handleSaveProfile} className="max-w-lg space-y-4 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+        <form onSubmit={handleSaveProfile} className="max-w-lg space-y-4 rounded-lg border border-border bg-surface p-6">
           <div>
-            <label className="mb-1.5 block text-sm text-slate-400">Full name</label>
+            <label className="mb-1.5 block text-sm text-text-muted">Full name</label>
             <input
               value={form.full_name}
               onChange={(e) => setForm({ ...form, full_name: e.target.value })}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm text-slate-400">Phone</label>
+            <label className="mb-1.5 block text-sm text-text-muted">Phone</label>
             <input
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm text-slate-400">WhatsApp number</label>
+            <label className="mb-1.5 block text-sm text-text-muted">WhatsApp number</label>
             <input
               value={form.whatsapp}
               onChange={(e) => setForm({ ...form, whatsapp: e.target.value })}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm text-slate-400">Country</label>
+            <label className="mb-1.5 block text-sm text-text-muted">Country</label>
             <input
               value={form.country}
               onChange={(e) => setForm({ ...form, country: e.target.value })}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
             />
           </div>
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 rounded-xl bg-cyan-500 px-6 py-2.5 font-semibold text-slate-950 hover:bg-cyan-400 disabled:opacity-60"
+            className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-2.5 font-semibold text-white hover:bg-accent-oxblood/90 disabled:opacity-60"
           >
             {saving && <Loader2 className="h-4 w-4 animate-spin" />}
             Save Changes
           </button>
-          {saved && <p className="text-sm text-emerald-400">Profile updated!</p>}
+          {saved && <p className="text-sm text-instock">Profile updated!</p>}
         </form>
 
         <form
           onSubmit={handleChangePassword}
-          className="mt-6 max-w-lg space-y-4 rounded-2xl border border-slate-800 bg-slate-900 p-6"
+          className="mt-6 max-w-lg space-y-4 rounded-lg border border-border bg-surface p-6"
         >
           <div>
-            <p className="font-bold text-white">Change password</p>
-            <p className="text-sm text-slate-500">Enter your current password to update.</p>
+            <p className="font-bold text-text-primary">Change password</p>
+            <p className="text-sm text-text-muted">Enter your current password to update.</p>
           </div>
           <div>
-            <label className="mb-1.5 block text-sm text-slate-400">Current password</label>
+            <label className="mb-1.5 block text-sm text-text-muted">Current password</label>
             <input
               type="password"
               value={pw.currentPassword}
               onChange={(e) => setPw({ ...pw, currentPassword: e.target.value })}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm text-slate-400">New password</label>
+            <label className="mb-1.5 block text-sm text-text-muted">New password</label>
             <input
               type="password"
               value={pw.password}
               onChange={(e) => setPw({ ...pw, password: e.target.value })}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm text-slate-400">Confirm new password</label>
+            <label className="mb-1.5 block text-sm text-text-muted">Confirm new password</label>
             <input
               type="password"
               value={pw.confirm}
               onChange={(e) => setPw({ ...pw, confirm: e.target.value })}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
             />
           </div>
           <button
             type="submit"
             disabled={pwSaving}
-            className="flex items-center gap-2 rounded-xl bg-cyan-500 px-6 py-2.5 font-semibold text-slate-950 hover:bg-cyan-400 disabled:opacity-60"
+            className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-2.5 font-semibold text-white hover:bg-accent-oxblood/90 disabled:opacity-60"
           >
             {pwSaving && <Loader2 className="h-4 w-4 animate-spin" />}
             Update Password
           </button>
           {pwMsg && (
-            <p className={`text-sm ${pwMsg.ok ? "text-emerald-400" : "text-red-400"}`}>{pwMsg.text}</p>
+            <p className={`text-sm ${pwMsg.ok ? "text-instock" : "text-red-400"}`}>{pwMsg.text}</p>
           )}
         </form>
 
         <div className="mt-8 max-w-lg rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
           <p className="font-bold text-red-300">Danger zone</p>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-red-400/70">
             Permanently delete your account and personal data. This cannot be undone.
           </p>
           {deleteMsg && <p className="mt-2 text-sm text-red-400">{deleteMsg}</p>}

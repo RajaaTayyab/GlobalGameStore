@@ -43,18 +43,18 @@ export default function RegisterPage() {
   if (confirmed) {
     return (
       <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-16">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600">
+        <div className="rounded-lg border border-border bg-surface p-8 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-instock">
             <MailCheck className="h-6 w-6 text-white" />
           </div>
-          <h1 className="text-xl font-bold text-white">Check your email</h1>
-          <p className="mt-2 text-sm text-slate-400">
-            We sent a confirmation link to <span className="text-slate-200">{email}</span>. Click
+          <h1 className="font-serif text-xl font-bold text-text-primary">Check your email</h1>
+          <p className="mt-2 text-sm text-text-muted">
+            We sent a confirmation link to <span className="text-text-primary">{email}</span>. Click
             it to activate your account, then log in.
           </p>
           <Link
             href="/login"
-            className="mt-6 inline-block rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 hover:bg-cyan-400"
+            className="mt-6 inline-block rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white hover:bg-accent-oxblood/90"
           >
             Go to Login
           </Link>
@@ -66,44 +66,44 @@ export default function RegisterPage() {
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-16">
       <div className="mb-8 text-center">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600">
-          <Gamepad2 className="h-6 w-6 text-white" />
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-chrome">
+          <Gamepad2 className="h-6 w-6 text-bg" />
         </div>
-        <h1 className="text-2xl font-bold text-white">Create your account</h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <h1 className="font-serif text-2xl font-bold text-text-primary">Create your account</h1>
+        <p className="mt-1 text-sm text-text-muted">
           Track orders, view delivered codes, and pay with store credits.
         </p>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 rounded-2xl border border-slate-800 bg-slate-900 p-6"
+        className="space-y-4 rounded-lg border border-border bg-surface p-6"
       >
         {error && (
           <p className="rounded-lg bg-red-500/10 px-4 py-2.5 text-sm text-red-400">{error}</p>
         )}
         <div>
-          <label className="mb-1.5 block text-sm text-slate-400">Full name</label>
+          <label className="mb-1.5 block text-sm text-text-muted">Full name</label>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="John Doe"
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-cyan-500 focus:outline-none"
+            className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-chrome focus:outline-none"
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm text-slate-400">Email</label>
+          <label className="mb-1.5 block text-sm text-text-muted">Email</label>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@email.com"
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-cyan-500 focus:outline-none"
+            className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-chrome focus:outline-none"
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm text-slate-400">Password</label>
+          <label className="mb-1.5 block text-sm text-text-muted">Password</label>
           <input
             type="password"
             required
@@ -111,20 +111,20 @@ export default function RegisterPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="At least 6 characters"
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-cyan-500 focus:outline-none"
+            className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-chrome focus:outline-none"
           />
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 py-3 font-bold text-white shadow-lg shadow-cyan-500/25 transition hover:shadow-cyan-500/40 disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-oxblood py-3 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90 disabled:opacity-60"
         >
           {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <UserPlus className="h-5 w-5" />}
           Create Account
         </button>
-        <p className="text-center text-sm text-slate-400">
+        <p className="text-center text-sm text-text-muted">
           Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-cyan-400 hover:underline">
+          <Link href="/login" className="font-semibold text-accent-chrome hover:underline">
             Log in
           </Link>
         </p>

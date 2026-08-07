@@ -79,47 +79,47 @@ export default function AdminUsers() {
   if (loading)
     return (
       <div className="flex justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent-chrome" />
       </div>
     );
 
   return (
     <div className="space-y-6">
       {notice && (
-        <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
+        <p className="rounded-xl border border-instock/30 bg-instock/10 px-4 py-3 text-sm text-instock">
           {notice}
         </p>
       )}
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* User list */}
-        <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 lg:col-span-2">
-          <div className="border-b border-slate-800 px-5 py-4">
-            <p className="font-bold text-white">{users.length} users</p>
+        <div className="overflow-hidden rounded-lg border border-border bg-surface lg:col-span-2">
+          <div className="border-b border-border px-5 py-4">
+            <p className="font-bold text-text-primary">{users.length} users</p>
           </div>
-          <div className="divide-y divide-slate-800">
+          <div className="divide-y divide-border">
             {users.map((u) => (
               <div key={u.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
                 <div className="min-w-0">
-                  <p className="flex items-center gap-2 text-sm font-semibold text-white">
+                  <p className="flex items-center gap-2 text-sm font-semibold text-text-primary">
                     {u.email}
                     {u.role === "admin" && (
-                      <span className="flex items-center gap-1 rounded-full bg-cyan-500/15 px-2 py-0.5 text-[10px] font-bold uppercase text-cyan-400">
+                      <span className="flex items-center gap-1 rounded-full bg-accent-chrome/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-accent-chrome">
                         <Shield className="h-3 w-3" /> Admin
                       </span>
                     )}
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-text-muted">
                     {u.full_name || "—"} · joined {new Date(u.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="font-bold text-emerald-400">
+                  <span className="font-mono font-bold text-instock">
                     {formatPrice(Number(u.credits_balance ?? 0))}
                   </span>
                   <button
                     onClick={() => openPanel(u, "add")}
-                    className="flex items-center gap-1.5 rounded-lg bg-cyan-500 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-cyan-400"
+                    className="flex items-center gap-1.5 rounded-lg bg-accent-oxblood px-3 py-1.5 text-xs font-bold text-white hover:bg-accent-oxblood/90"
                   >
                     <Plus className="h-3.5 w-3.5" /> Add
                   </button>
@@ -133,7 +133,7 @@ export default function AdminUsers() {
                     onClick={() => deleteUser(u)}
                     disabled={busy}
                     title="Delete user"
-                    className="flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-bold text-slate-400 hover:border-red-500/50 hover:text-red-400 disabled:opacity-50"
+                    className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-text-muted hover:border-red-500/50 hover:text-red-400 disabled:opacity-50"
                   >
                     <Trash2 className="h-3.5 w-3.5" /> Delete
                   </button>
@@ -145,13 +145,13 @@ export default function AdminUsers() {
 
         {/* Add / deduct credits panel */}
         {selected && (
-          <form onSubmit={updateCredits} className="h-fit rounded-2xl border border-cyan-500/40 bg-slate-900 p-5">
-            <p className="font-bold text-white">
+          <form onSubmit={updateCredits} className="h-fit rounded-lg border border-accent-chrome/40 bg-surface p-5">
+            <p className="font-bold text-text-primary">
               {mode === "add" ? "Add credits to" : "Deduct credits from"}
             </p>
-            <p className="mb-4 text-sm text-slate-400">{selected.email}</p>
+            <p className="mb-4 text-sm text-text-muted">{selected.email}</p>
 
-            <div className="mb-4 flex rounded-xl border border-slate-700 p-1">
+            <div className="mb-4 flex rounded-xl border border-border p-1">
               {(["add", "remove"] as CreditMode[]).map((m) => (
                 <button
                   key={m}
@@ -160,9 +160,9 @@ export default function AdminUsers() {
                   className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-bold transition ${
                     mode === m
                       ? m === "add"
-                        ? "bg-cyan-500 text-slate-950"
+                        ? "bg-accent-oxblood text-white"
                         : "bg-red-500 text-white"
-                      : "text-slate-400 hover:text-white"
+                      : "text-text-muted hover:text-text-primary"
                   }`}
                 >
                   {m === "add" ? <Plus className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
@@ -171,11 +171,11 @@ export default function AdminUsers() {
               ))}
             </div>
 
-            <p className="mb-1 text-xs text-slate-500">Current balance</p>
-            <p className="mb-4 text-2xl font-bold text-emerald-400">
+            <p className="mb-1 text-xs text-text-muted">Current balance</p>
+            <p className="mb-4 font-mono text-2xl font-bold text-instock">
               {formatPrice(Number(selected.credits_balance ?? 0))}
             </p>
-            <label className="mb-1.5 block text-sm text-slate-400">Amount (USD)</label>
+            <label className="mb-1.5 block text-sm text-text-muted">Amount (USD)</label>
             <input
               type="number"
               required
@@ -184,14 +184,14 @@ export default function AdminUsers() {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder={mode === "add" ? "50.00" : "10.00"}
-              className="mb-3 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
+              className="mb-3 w-full rounded-xl border border-border bg-bg px-4 py-2.5 font-mono text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
             />
-            <label className="mb-1.5 block text-sm text-slate-400">Reason</label>
+            <label className="mb-1.5 block text-sm text-text-muted">Reason</label>
             <input
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder={mode === "add" ? "e.g. Bank transfer received" : "e.g. Refund / correction"}
-              className="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
+              className="mb-4 w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
             />
             <div className="flex gap-2">
               <button
@@ -199,7 +199,7 @@ export default function AdminUsers() {
                 disabled={busy || !amount}
                 className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60 ${
                   mode === "add"
-                    ? "bg-cyan-500 text-slate-950 hover:bg-cyan-400"
+                    ? "bg-accent-oxblood hover:bg-accent-oxblood/90"
                     : "bg-red-600 hover:bg-red-500"
                 }`}
               >
@@ -209,7 +209,7 @@ export default function AdminUsers() {
               <button
                 type="button"
                 onClick={() => setSelected(null)}
-                className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm text-slate-300 hover:border-slate-500"
+                className="rounded-xl border border-border px-4 py-2.5 text-sm text-text-muted hover:border-accent-chrome/50"
               >
                 Cancel
               </button>
@@ -218,26 +218,26 @@ export default function AdminUsers() {
         )}
 
         {/* Recent transactions */}
-        <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 lg:col-span-3">
-          <div className="border-b border-slate-800 px-5 py-4">
-            <p className="font-bold text-white">Recent credit movements</p>
+        <div className="overflow-hidden rounded-lg border border-border bg-surface lg:col-span-3">
+          <div className="border-b border-border px-5 py-4">
+            <p className="font-bold text-text-primary">Recent credit movements</p>
           </div>
           {transactions.length === 0 ? (
-            <p className="p-8 text-center text-sm text-slate-500">No movements yet.</p>
+            <p className="p-8 text-center text-sm text-text-muted">No movements yet.</p>
           ) : (
-            <div className="max-h-96 overflow-y-auto divide-y divide-slate-800">
+            <div className="max-h-96 overflow-y-auto divide-y divide-border">
               {transactions.slice(0, 50).map((t) => (
                 <div key={t.id} className="flex items-center justify-between px-5 py-3">
                   <div>
-                    <p className="text-sm text-white">
+                    <p className="text-sm text-text-primary">
                       {t.reason || "Movement"}
-                      <span className="ml-2 text-xs text-slate-500">
+                      <span className="ml-2 text-xs text-text-muted">
                         {users.find((u) => u.id === t.user_id)?.email ?? t.user_id.slice(0, 8)}
                       </span>
                     </p>
-                    <p className="text-xs text-slate-500">{new Date(t.created_at).toLocaleString()}</p>
+                    <p className="text-xs text-text-muted">{new Date(t.created_at).toLocaleString()}</p>
                   </div>
-                  <span className={`font-bold ${Number(t.amount) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                  <span className={`font-mono font-bold ${Number(t.amount) >= 0 ? "text-instock" : "text-red-400"}`}>
                     {Number(t.amount) >= 0 ? "+" : ""}
                     {formatPrice(Number(t.amount))}
                   </span>

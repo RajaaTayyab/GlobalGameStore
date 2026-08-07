@@ -47,7 +47,7 @@ export default function AdminPage() {
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent-chrome" />
       </div>
     );
   }
@@ -56,13 +56,13 @@ export default function AdminPage() {
     return (
       <div className="mx-auto max-w-xl px-4 py-24 text-center">
         <ShieldAlert className="mx-auto h-16 w-16 text-red-400" />
-        <h1 className="mt-4 text-2xl font-bold text-white">Admins only</h1>
-        <p className="mt-2 text-slate-400">
+        <h1 className="mt-4 font-serif text-2xl font-bold text-text-primary">Admins only</h1>
+        <p className="mt-2 text-text-muted">
           This area is restricted. Ask the store admin to promote your account.
         </p>
         <Link
           href="/"
-          className="mt-6 inline-block rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 hover:bg-cyan-400"
+          className="mt-6 inline-block rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white hover:bg-accent-oxblood/90"
         >
           Go Home
         </Link>
@@ -82,14 +82,14 @@ export default function AdminPage() {
     <div className="mx-auto max-w-7xl px-4 py-10">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white">Admin Panel</h1>
-          <p className="mt-1 text-sm text-slate-400">
+          <h1 className="font-serif text-3xl font-bold text-text-primary">Admin Panel</h1>
+          <p className="mt-1 text-sm text-text-muted">
             {profile.full_name || profile.email} · Store management
           </p>
         </div>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-300 hover:border-red-500/50 hover:text-red-400"
+          className="flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-text-muted hover:border-red-500/50 hover:text-red-400"
         >
           <LogOut className="h-4 w-4" /> Logout
         </button>
@@ -102,8 +102,8 @@ export default function AdminPage() {
             onClick={() => setTab(t.id)}
             className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
               tab === t.id
-                ? "bg-cyan-500 text-slate-950"
-                : "border border-slate-700 text-slate-300 hover:border-slate-500"
+                ? "bg-accent-chrome text-bg"
+                : "border border-border text-text-muted hover:border-accent-chrome/50"
             }`}
           >
             <t.icon className="h-4 w-4" />

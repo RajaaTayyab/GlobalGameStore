@@ -37,25 +37,25 @@ export default function AdminSettings() {
   };
 
   const inputCls =
-    "w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none";
+    "w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none";
 
   if (loading)
     return (
       <div className="flex justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent-chrome" />
       </div>
     );
 
   return (
     <form onSubmit={save} className="max-w-lg space-y-5">
       {notice && (
-        <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
+        <p className="rounded-xl border border-instock/30 bg-instock/10 px-4 py-3 text-sm text-instock">
           {notice}
         </p>
       )}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-        <label className="mb-1.5 flex items-center gap-2 text-sm font-medium text-slate-300">
-          <MessageCircle className="h-4 w-4 text-emerald-400" />
+      <div className="rounded-lg border border-border bg-surface p-6">
+        <label className="mb-1.5 flex items-center gap-2 text-sm font-medium text-text-primary">
+          <MessageCircle className="h-4 w-4 text-instock" />
           WhatsApp number for orders
         </label>
         <input
@@ -64,21 +64,21 @@ export default function AdminSettings() {
           placeholder="15551234567"
           className={inputCls}
         />
-        <p className="mt-1.5 text-xs text-slate-500">
+        <p className="mt-1.5 text-xs text-text-muted">
           Guest carts send their order to this number via wa.me. Digits only, with country code
           (no + or spaces).
         </p>
       </div>
 
-      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-        <label className="mb-1.5 block text-sm font-medium text-slate-300">Store name</label>
+      <div className="rounded-lg border border-border bg-surface p-6">
+        <label className="mb-1.5 block text-sm font-medium text-text-primary">Store name</label>
         <input
           value={storeName}
           onChange={(e) => setStoreName(e.target.value)}
           placeholder="GlobalGameStore"
           className={inputCls}
         />
-        <p className="mt-1.5 text-xs text-slate-500">
+        <p className="mt-1.5 text-xs text-text-muted">
           Used in order emails and WhatsApp messages.
         </p>
       </div>
@@ -86,7 +86,7 @@ export default function AdminSettings() {
       <button
         type="submit"
         disabled={saving}
-        className="flex items-center gap-2 rounded-xl bg-cyan-500 px-6 py-2.5 font-bold text-slate-950 hover:bg-cyan-400 disabled:opacity-60"
+        className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-2.5 font-bold text-white hover:bg-accent-oxblood/90 disabled:opacity-60"
       >
         {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
         Save Settings

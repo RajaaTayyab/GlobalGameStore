@@ -27,29 +27,29 @@ export default async function ContactPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-white">Contact Us</h1>
-        <p className="mt-2 text-slate-400">
+        <h1 className="font-serif text-3xl font-bold text-text-primary">Contact Us</h1>
+        <p className="mt-2 text-text-muted">
           Questions about an order? Our team replies 24/7 on WhatsApp.
         </p>
       </div>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-3">
         <ContactWhatsApp phone={storePhone} />
-        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 text-center">
-          <Mail className="mx-auto h-6 w-6 text-cyan-400" />
-          <p className="mt-3 font-semibold text-white">Email</p>
-          <p className="mt-1 text-sm text-slate-400">support@globalgamestore.com</p>
+        <div className="rounded-lg border border-border bg-surface p-6 text-center">
+          <Mail className="mx-auto h-6 w-6 text-accent-chrome" />
+          <p className="mt-3 font-semibold text-text-primary">Email</p>
+          <p className="mt-1 font-mono text-sm text-text-muted">support@globalgamestore.com</p>
         </div>
-        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 text-center">
-          <Globe className="mx-auto h-6 w-6 text-cyan-400" />
-          <p className="mt-3 font-semibold text-white">Worldwide</p>
-          <p className="mt-1 text-sm text-slate-400">Serving gamers in 50+ countries</p>
+        <div className="rounded-lg border border-border bg-surface p-6 text-center">
+          <Globe className="mx-auto h-6 w-6 text-accent-chrome" />
+          <p className="mt-3 font-semibold text-text-primary">Worldwide</p>
+          <p className="mt-1 text-sm text-text-muted">Serving gamers in 50+ countries</p>
         </div>
       </div>
 
-      <div className="mt-10 rounded-2xl border border-slate-800 bg-slate-900 p-6">
-        <h2 className="mb-3 font-bold text-white">WhatsApp order flow</h2>
-        <ol className="list-inside list-decimal space-y-2 text-sm text-slate-400">
+      <div className="mt-10 rounded-lg border border-border bg-surface p-6">
+        <h2 className="mb-3 font-serif font-bold text-text-primary">WhatsApp order flow</h2>
+        <ol className="list-inside list-decimal space-y-2 text-sm text-text-muted">
           <li>Add products to your cart.</li>
           <li>Checkout and choose &quot;Order via WhatsApp&quot;.</li>
           <li>Send the prefilled order summary to our WhatsApp number.</li>

@@ -37,7 +37,7 @@ export default function ProductGrid({
 
   if (visible.length === 0) {
     return (
-      <p className="rounded-xl border border-slate-800 bg-slate-900 p-10 text-center text-slate-400">
+      <p className="rounded-xl border border-border bg-surface p-10 text-center text-text-muted">
         No products found.
       </p>
     );

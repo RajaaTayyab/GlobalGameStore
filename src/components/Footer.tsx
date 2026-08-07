@@ -8,40 +8,40 @@ export default function Footer() {
   const router = useRouter();
 
   return (
-    <footer className="border-t border-slate-800 bg-slate-950">
+    <footer className="border-t border-border bg-bg">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600">
-              <Gamepad2 className="h-5 w-5 text-white" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-chrome">
+              <Gamepad2 className="h-5 w-5 text-bg" />
             </div>
-            <span className="text-lg font-bold text-white">
-              Global<span className="text-cyan-400">GameStore</span>
+            <span className="font-serif text-lg font-bold text-text-primary">
+              Global<span className="text-accent-chrome">GameStore</span>
             </span>
           </Link>
-          <p className="mt-4 text-sm leading-relaxed text-slate-400">
+          <p className="mt-4 text-sm leading-relaxed text-text-muted">
             Your trusted source for game top-ups, gift cards, and digital gaming
             products with fast and secure delivery.
           </p>
         </div>
 
         <div>
-          <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-300">
+          <h4 className="mb-4 font-mono text-sm font-semibold uppercase tracking-wider text-text-muted">
             Quick Links
           </h4>
-          <ul className="space-y-2 text-sm text-slate-400">
-            <li><Link href="/" className="hover:text-cyan-400">Home</Link></li>
-            <li><Link href="/shop" className="hover:text-cyan-400">Shop</Link></li>
-            <li><Link href="/cart" className="hover:text-cyan-400">Cart</Link></li>
-            <li><Link href="/login" className="hover:text-cyan-400">My Account</Link></li>
+          <ul className="space-y-2 text-sm text-text-muted">
+            <li><Link href="/" className="hover:text-accent-chrome">Home</Link></li>
+            <li><Link href="/shop" className="hover:text-accent-chrome">Shop</Link></li>
+            <li><Link href="/cart" className="hover:text-accent-chrome">Cart</Link></li>
+            <li><Link href="/login" className="hover:text-accent-chrome">My Account</Link></li>
           </ul>
         </div>
 
         <div>
-          <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-300">
+          <h4 className="mb-4 font-mono text-sm font-semibold uppercase tracking-wider text-text-muted">
             Why Us
           </h4>
-          <ul className="space-y-2 text-sm text-slate-400">
+          <ul className="space-y-2 text-sm text-text-muted">
             <li>Instant game code delivery</li>
             <li>Money back guarantee</li>
             <li>24/7 gamer support</li>
@@ -50,15 +50,15 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-300">
+          <h4 className="mb-4 font-mono text-sm font-semibold uppercase tracking-wider text-text-muted">
             Get In Touch
           </h4>
-          <p className="mb-4 text-sm text-slate-400">
+          <p className="mb-4 text-sm text-text-muted">
             Have questions? Chat with us on WhatsApp.
           </p>
           <button
             onClick={() => router.push("/contact")}
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
+            className="inline-flex items-center gap-2 rounded-lg bg-instock px-4 py-2 text-sm font-semibold text-white transition hover:bg-instock/90"
           >
             <MessageCircle className="h-4 w-4" />
             WhatsApp Support
@@ -66,7 +66,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-slate-800 py-5 text-center text-xs text-slate-500">
+      <div className="border-t border-border py-5 text-center text-xs text-text-muted">
         © {new Date().getFullYear()} GlobalGameStore. All Rights Reserved.
       </div>
     </footer>

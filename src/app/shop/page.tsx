@@ -21,8 +21,8 @@ export default async function ShopPage(props: PageProps<"/shop">) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white">Shop</h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <h1 className="font-serif text-3xl font-bold text-text-primary">Shop</h1>
+        <p className="mt-1 text-sm text-text-muted">
           All products — recommended picks for your location appear on top.
         </p>
       </div>

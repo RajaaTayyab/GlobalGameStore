@@ -17,8 +17,8 @@ const STATUS_OPTIONS = ["pending", "paid", "completed", "cancelled"];
 
 const STATUS_STYLES: Record<string, string> = {
   pending: "bg-amber-500/15 text-amber-400",
-  paid: "bg-blue-500/15 text-blue-400",
-  completed: "bg-emerald-500/15 text-emerald-400",
+  paid: "bg-accent-chrome/15 text-accent-chrome",
+  completed: "bg-instock/15 text-instock",
   cancelled: "bg-red-500/15 text-red-400",
 };
 
@@ -85,52 +85,52 @@ export default function AdminOrders() {
   if (loading)
     return (
       <div className="flex justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent-chrome" />
       </div>
     );
 
   return (
     <div className="space-y-4">
       {notice && (
-        <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
+        <p className="rounded-xl border border-instock/30 bg-instock/10 px-4 py-3 text-sm text-instock">
           {notice}
         </p>
       )}
       {orders.length === 0 && (
-        <p className="rounded-2xl border border-slate-800 bg-slate-900 p-10 text-center text-slate-400">
+        <p className="rounded-lg border border-border bg-surface p-10 text-center text-text-muted">
           No orders yet.
         </p>
       )}
       {orders.map((o) => (
-        <div key={o.id} className="rounded-2xl border border-slate-800 bg-slate-900">
+        <div key={o.id} className="rounded-lg border border-border bg-surface">
           <div className="flex flex-wrap items-center gap-3 p-4">
             <button
               onClick={() => setExpanded(expanded === o.id ? null : o.id)}
               className="flex flex-1 items-center gap-3 text-left"
             >
               <div className="min-w-0">
-                <p className="font-bold text-white">
+                <p className="font-mono font-bold text-text-primary">
                   #{o.order_number}
-                  <span className="ml-2 text-xs font-normal text-slate-500">
+                  <span className="ml-2 font-mono text-xs font-normal text-text-muted">
                     {new Date(o.created_at).toLocaleString()}
                   </span>
                 </p>
-                <p className="mt-0.5 text-xs text-slate-400">
+                <p className="mt-0.5 text-xs text-text-muted">
                   {o.customer_name || "Guest"} · {o.payment_method === "credits" ? "Credits" : "WhatsApp"} ·{" "}
-                  <span className="font-semibold text-cyan-400">{formatPrice(o.total)}</span>
+                  <span className="font-mono font-semibold text-price">{formatPrice(o.total)}</span>
                   {o.customer_email ? ` · ${o.customer_email}` : ""}
                 </p>
               </div>
             </button>
 
-            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${STATUS_STYLES[o.status]}`}>
+            <span className={`rounded-full px-3 py-1 font-mono text-xs font-semibold ${STATUS_STYLES[o.status]}`}>
               {ORDER_STATUS_LABELS[o.status]}
             </span>
 
             <select
               value={o.status}
               onChange={(e) => setStatus(o.id, e.target.value)}
-              className="rounded-lg border border-slate-700 bg-slate-950 px-2.5 py-1.5 text-xs text-white focus:outline-none"
+              className="rounded-lg border border-border bg-bg px-2.5 py-1.5 font-mono text-xs text-text-primary focus:border-accent-chrome focus:outline-none"
             >
               {STATUS_OPTIONS.map((s) => (
                 <option key={s} value={s}>
@@ -142,33 +142,33 @@ export default function AdminOrders() {
             {o.payment_method === "whatsapp" && (
               <button
                 onClick={() => deliver(o)}
-                className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-500"
+                className="flex items-center gap-1.5 rounded-lg bg-instock px-3 py-1.5 text-xs font-bold text-white hover:bg-instock/90"
               >
                 <CheckCircle2 className="h-3.5 w-3.5" /> Deliver Codes
               </button>
             )}
-            {expanded === o.id ? <ChevronUp className="h-5 w-5 text-slate-500" /> : <ChevronDown className="h-5 w-5 text-slate-500" />}
+            {expanded === o.id ? <ChevronUp className="h-5 w-5 text-text-muted" /> : <ChevronDown className="h-5 w-5 text-text-muted" />}
           </div>
 
           {expanded === o.id && (
-            <div className="space-y-4 border-t border-slate-800 p-4">
+            <div className="space-y-4 border-t border-border p-4">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-left text-xs uppercase tracking-wider text-slate-500">
+                    <tr className="font-mono text-left text-xs uppercase tracking-wider text-text-muted">
                       <th className="pb-2">Product</th>
                       <th className="pb-2">Variant</th>
                       <th className="pb-2">Qty</th>
                       <th className="pb-2">Total</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800">
+                  <tbody className="divide-y divide-border">
                     {o.items?.map((i) => (
                       <tr key={i.id}>
-                        <td className="py-2.5 text-white">{i.product_name}</td>
-                        <td className="py-2.5 text-slate-400">{i.variant_name}</td>
-                        <td className="py-2.5 text-slate-400">{i.quantity}</td>
-                        <td className="py-2.5 font-semibold text-slate-200">{formatPrice(i.total)}</td>
+                        <td className="py-2.5 text-text-primary">{i.product_name}</td>
+                        <td className="py-2.5 text-text-muted">{i.variant_name}</td>
+                        <td className="py-2.5 text-text-muted">{i.quantity}</td>
+                        <td className="py-2.5 font-mono font-semibold text-text-primary">{formatPrice(i.total)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -176,8 +176,8 @@ export default function AdminOrders() {
               </div>
 
               {(o.delivered_codes?.length ?? 0) > 0 && (
-                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
-                  <p className="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-400">
+                <div className="rounded-xl border border-instock/20 bg-instock/5 p-4">
+                  <p className="mb-2 flex items-center gap-2 text-sm font-bold text-instock">
                     <Mail className="h-4 w-4" /> Delivered codes ({o.delivered_codes!.length})
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -185,10 +185,10 @@ export default function AdminOrders() {
                       <button
                         key={i}
                         onClick={() => copy(c.code)}
-                        className="flex items-center gap-2 rounded-lg bg-slate-950 px-3 py-1.5 font-mono text-sm text-cyan-300 hover:bg-slate-800"
+                        className="flex items-center gap-2 rounded-lg bg-bg px-3 py-1.5 font-mono text-sm text-accent-chrome hover:border hover:border-accent-chrome/30"
                         title="Click to copy"
                       >
-                        {c.code} <Copy className="h-3.5 w-3.5 text-slate-500" />
+                        {c.code} <Copy className="h-3.5 w-3.5 text-text-muted" />
                       </button>
                     ))}
                   </div>
@@ -200,7 +200,7 @@ export default function AdminOrders() {
                   href={o.whatsapp_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block text-sm text-emerald-400 hover:underline"
+                  className="inline-block text-sm text-instock hover:underline"
                 >
                   Open prefilled WhatsApp message ↗
                 </a>

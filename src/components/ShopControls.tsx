@@ -39,15 +39,15 @@ export default function ShopControls({
     <div className="mb-8 space-y-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <form onSubmit={submitSearch} className="relative w-full sm:max-w-xs">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search products…"
-            className="w-full rounded-xl border border-slate-700 bg-slate-900 py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+            className="w-full rounded-xl border border-border bg-surface py-2.5 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-chrome focus:outline-none"
           />
         </form>
-        <p className="flex items-center gap-2 text-sm text-slate-400">
+        <p className="flex items-center gap-2 text-sm text-text-muted">
           <LayoutGrid className="h-4 w-4" />
           {total} product{total === 1 ? "" : "s"}
         </p>
@@ -60,10 +60,10 @@ export default function ShopControls({
             params.delete("category");
             navigate(params);
           }}
-          className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+          className={`rounded-full px-4 py-2 font-mono text-sm font-medium transition ${
             !activeCategory
-              ? "bg-cyan-500 text-slate-950"
-              : "border border-slate-700 text-slate-300 hover:border-slate-500"
+              ? "bg-accent-chrome text-bg"
+              : "border border-border text-text-muted hover:border-accent-chrome/50"
           }`}
         >
           All
@@ -77,10 +77,10 @@ export default function ShopControls({
               else params.set("category", c.slug);
               navigate(params);
             }}
-            className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+            className={`rounded-full px-4 py-2 font-mono text-sm font-medium transition ${
               activeCategory === c.slug
-                ? "bg-cyan-500 text-slate-950"
-                : "border border-slate-700 text-slate-300 hover:border-slate-500"
+                ? "bg-accent-chrome text-bg"
+                : "border border-border text-text-muted hover:border-accent-chrome/50"
             }`}
           >
             {c.name}

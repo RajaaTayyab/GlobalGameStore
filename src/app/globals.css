@@ -1,39 +1,71 @@
 @import "tailwindcss";
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  /* ============ Vault & Chrome tokens (dark is default) ============ */
+  --color-bg: #15191a;
+  --color-surface: #1d2325;
+  --color-border: #29302f;
+  --color-text-primary: #e7e5e0;
+  --color-text-muted: #8b948f;
+  --color-accent-oxblood: #a8465a;
+  --color-accent-evergreen: #3e7a5d;
+  --color-accent-chrome: #c9af8c;
+  --color-price: #c9af8c;
+  --color-instock: #5fae87;
+  --color-old-price: #565c5a;
+
+  /* Back-compat aliases so existing bg-background / text-foreground keep working */
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text-primary);
+
+  /* ============ Font roles ============ */
+  --font-sans: var(--font-karla), system-ui, sans-serif;
+  --font-mono: var(--font-spline-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
 }
 
-:root {
-  --background: #0b1120;
-  --foreground: #e2e8f0;
+/* Light mode override (default is dark, so no attribute = dark) */
+html[data-mode="light"] {
+  --color-bg: #f3efe7;
+  --color-surface: #fdfbf7;
+  --color-border: #e4ddcf;
+  --color-text-primary: #221e1a;
+  --color-text-muted: #766f63;
+  --color-accent-oxblood: #7a2432;
+  --color-accent-evergreen: #24402f;
+  --color-accent-chrome: #8a6b45;
+  --color-price: #7a2432;
+  --color-instock: #2b6e4c;
+  --color-old-price: #b0a895;
 }
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+html[data-mode="light"] {
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
 }
 
-/* Custom scrollbar for dark theme */
+/* Custom scrollbar themed with Vault & Chrome tokens */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: var(--color-surface);
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: var(--color-border);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: var(--color-text-muted);
 }

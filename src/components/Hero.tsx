@@ -40,36 +40,36 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(34,211,238,0.15),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(59,130,246,0.12),transparent_55%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,175,140,0.10),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(201,175,140,0.08),transparent_55%)]" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 lg:grid-cols-2 lg:py-28">
         <div>
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-sm font-medium text-cyan-300">
+          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent-chrome/30 bg-accent-chrome/10 px-4 py-1.5 text-sm font-medium text-accent-chrome">
             <Zap className="h-4 w-4" />
             {detected
               ? `Instant Delivery · Featured for ${REGION_LABELS[region]}`
               : "Instant Delivery on All Game Codes"}
           </p>
-          <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+          <h1 className="font-serif text-4xl font-extrabold leading-tight tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
             Level Up Your{" "}
-            <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+            <span className="text-text-primary">
               Gaming Experience
             </span>
           </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-400">
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-text-muted">
             Buy game top-ups, gift cards, and digital keys instantly with fast
             and secure delivery. Play more, wait less — anywhere, anytime.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/shop"
-              className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-3 font-semibold text-white shadow-lg shadow-cyan-500/25 transition hover:shadow-cyan-500/40"
+              className="group inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90"
             >
               Explore Deals
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-700 px-6 py-3 font-semibold text-slate-200 transition hover:border-slate-500"
+              className="inline-flex items-center gap-2 rounded-xl border border-border px-6 py-3 font-semibold text-text-primary transition hover:border-accent-chrome/50"
             >
               <Globe className="h-4 w-4" />
               Contact Us
@@ -82,7 +82,7 @@ export default function Hero() {
             <Link
               key={f.slug}
               href={`/product/${f.slug}`}
-              className="group relative overflow-hidden rounded-2xl border border-slate-800 shadow-lg transition hover:border-cyan-500/50"
+              className="group relative overflow-hidden rounded-2xl border border-border shadow-lg transition hover:border-accent-chrome/50"
             >
               <Image
                 src={f.image}
@@ -91,10 +91,10 @@ export default function Hero() {
                 height={300}
                 className="aspect-square w-full object-cover transition duration-300 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-bg/95 via-bg/20 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-4">
-                <p className="font-bold text-white">{f.alt}</p>
-                <p className="mt-0.5 flex items-center gap-1 text-xs font-semibold text-cyan-400 opacity-0 transition group-hover:opacity-100">
+                <p className="font-bold text-text-primary">{f.alt}</p>
+                <p className="mt-0.5 flex items-center gap-1 text-xs font-semibold text-accent-chrome opacity-0 transition group-hover:opacity-100">
                   Shop now <ArrowRight className="h-3 w-3" />
                 </p>
               </div>
