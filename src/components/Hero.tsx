@@ -42,16 +42,16 @@ export default function Hero() {
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,175,140,0.10),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(201,175,140,0.08),transparent_55%)]" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 lg:grid-cols-2 lg:py-28">
-        <div>
+        <div className="animate-fade-up">
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent-chrome/30 bg-accent-chrome/10 px-4 py-1.5 text-sm font-medium text-accent-chrome">
             <Zap className="h-4 w-4" />
             {detected
               ? `Instant Delivery · Featured for ${REGION_LABELS[region]}`
               : "Instant Delivery on All Game Codes"}
           </p>
-          <h1 className="font-serif text-4xl font-extrabold leading-tight tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+          <h1 className="font-serif text-4xl leading-tight tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
             Level Up Your{" "}
-            <span className="text-text-primary">
+            <span className="text-accent-chrome italic">
               Gaming Experience
             </span>
           </h1>
@@ -62,14 +62,14 @@ export default function Hero() {
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/shop"
-              className="group inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90"
+              className="group inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
             >
               Explore Deals
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-xl border border-border px-6 py-3 font-semibold text-text-primary transition hover:border-accent-chrome/50"
+              className="inline-flex items-center gap-2 rounded-xl border border-border px-6 py-3 font-semibold text-text-primary transition hover:border-accent-chrome/50 hover:bg-surface active:scale-[0.98]"
             >
               <Globe className="h-4 w-4" />
               Contact Us
@@ -78,11 +78,12 @@ export default function Hero() {
         </div>
 
         <div className={`grid gap-4 ${cols}`}>
-          {featured.map((f) => (
+          {featured.map((f, i) => (
             <Link
               key={f.slug}
               href={`/product/${f.slug}`}
-              className="group relative overflow-hidden rounded-2xl border border-border shadow-lg transition hover:border-accent-chrome/50"
+              style={{ animationDelay: `${i * 90}ms` }}
+              className="group relative animate-fade-up overflow-hidden rounded-2xl border border-border shadow-lg transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
             >
               <Image
                 src={f.image}
@@ -91,10 +92,10 @@ export default function Hero() {
                 height={300}
                 className="aspect-square w-full object-cover transition duration-300 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-bg/95 via-bg/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/20 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-4">
                 <p className="font-bold text-text-primary">{f.alt}</p>
-                <p className="mt-0.5 flex items-center gap-1 text-xs font-semibold text-accent-chrome opacity-0 transition group-hover:opacity-100">
+                <p className="mt-0.5 flex items-center gap-1 text-xs font-semibold text-accent-chrome opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100 -translate-x-1">
                   Shop now <ArrowRight className="h-3 w-3" />
                 </p>
               </div>

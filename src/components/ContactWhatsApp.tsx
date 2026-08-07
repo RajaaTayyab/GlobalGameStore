@@ -13,7 +13,7 @@ export default function ContactWhatsApp({ phone }: { phone: string }) {
       href={link}
       target="_blank"
       rel="noopener noreferrer"
-      className="rounded-2xl border border-border bg-surface p-6 text-center transition hover:border-instock/50"
+      className="rounded-2xl border border-border bg-surface p-6 text-center transition duration-300 hover:-translate-y-1 hover:border-instock/50 hover:shadow-lg hover:shadow-instock/10"
     >
       <MessageCircle className="mx-auto h-6 w-6 text-instock" />
       <p className="mt-3 font-semibold text-text-primary">WhatsApp</p>

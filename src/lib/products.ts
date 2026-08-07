@@ -19,17 +19,41 @@ export async function getCatalog(
     return { products: [], variantsByProduct: {}, categories: [], regions: [] };
   }
 
+  const [{ data: categories }, { data: regions }] = await Promise.all([
+    supabase
+      .from("categories")
+      .select("*")
+      .eq("active", true)
+      .order("sort_order"),
+    supabase.from("regions").select("*").order("sort_order"),
+  ]);
+
+  // Resolve the category slug to its id first — PostgREST silently ignores
+  // filters on embedded resource columns (e.g. `category.slug`), so we filter
+  // on the products FK directly (products.category_id).
+  const categoryId = opts.categorySlug
+    ? (categories ?? []).find((c) => c.slug === opts.categorySlug)?.id
+    : undefined;
+
+  if (opts.categorySlug && !categoryId) {
+    return {
+      products: [],
+      variantsByProduct: {},
+      categories: (categories ?? []) as Category[],
+      regions: (regions ?? []) as Region[],
+    };
+  }
+
   let query = supabase
     .from("products")
     .select(
-      "*, category:categories(name), region:regions(code, name), variants:product_variants(*)",
-      { count: "exact" }
+      "*, category:categories(name), region:regions(code, name), variants:product_variants(*)"
     );
 
   if (!opts.includeInactive) query = query.eq("active", true);
 
-  if (opts.categorySlug) {
-    query = query.eq("category.slug", opts.categorySlug);
+  if (categoryId) {
+    query = query.eq("category_id", categoryId);
   }
   if (opts.search) {
     query = query.ilike("name", `%${opts.search}%`);
@@ -39,7 +63,12 @@ export async function getCatalog(
 
   if (error) {
     console.error("getCatalog error:", error.message);
-    return { products: [], variantsByProduct: {}, categories: [], regions: [] };
+    return {
+      products: [],
+      variantsByProduct: {},
+      categories: (categories ?? []) as Category[],
+      regions: (regions ?? []) as Region[],
+    };
   }
 
   const products = (data ?? []) as unknown as Product[];
@@ -50,15 +79,6 @@ export async function getCatalog(
     };
     variantsByProduct[p.id] = row.variants ?? [];
   }
-
-  const [{ data: categories }, { data: regions }] = await Promise.all([
-    supabase
-      .from("categories")
-      .select("*")
-      .eq("active", true)
-      .order("sort_order"),
-    supabase.from("regions").select("*").order("sort_order"),
-  ]);
 
   return {
     products,

@@ -44,7 +44,7 @@ export default function ShopControls({
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search products…"
-            className="w-full rounded-xl border border-border bg-surface py-2.5 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-chrome focus:outline-none"
+            className="w-full rounded-xl border border-border bg-surface py-2.5 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-muted transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
           />
         </form>
         <p className="flex items-center gap-2 text-sm text-text-muted">
@@ -60,10 +60,10 @@ export default function ShopControls({
             params.delete("category");
             navigate(params);
           }}
-          className={`rounded-full px-4 py-2 font-mono text-sm font-medium transition ${
+          className={`rounded-full px-4 py-2 font-mono text-sm font-medium transition duration-200 active:scale-[0.97] ${
             !activeCategory
               ? "bg-accent-chrome text-bg"
-              : "border border-border text-text-muted hover:border-accent-chrome/50"
+              : "border border-border text-text-muted hover:border-accent-chrome/50 hover:text-text-primary"
           }`}
         >
           All
@@ -77,10 +77,10 @@ export default function ShopControls({
               else params.set("category", c.slug);
               navigate(params);
             }}
-            className={`rounded-full px-4 py-2 font-mono text-sm font-medium transition ${
+            className={`rounded-full px-4 py-2 font-mono text-sm font-medium transition duration-200 active:scale-[0.97] ${
               activeCategory === c.slug
                 ? "bg-accent-chrome text-bg"
-                : "border border-border text-text-muted hover:border-accent-chrome/50"
+                : "border border-border text-text-muted hover:border-accent-chrome/50 hover:text-text-primary"
             }`}
           >
             {c.name}

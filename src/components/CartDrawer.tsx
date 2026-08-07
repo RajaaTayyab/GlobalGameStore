@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { X, Plus, Minus, Trash2, ShoppingCart } from "lucide-react";
+import { X, Plus, Minus, Trash2, ShoppingCart, Gamepad2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/order";
 
@@ -30,7 +30,7 @@ export default function CartDrawer() {
           </h2>
           <button
             onClick={closeCart}
-            className="rounded-lg p-1.5 text-text-muted hover:bg-surface"
+            className="rounded-lg p-1.5 text-text-muted transition duration-200 hover:bg-surface hover:text-text-primary active:scale-90"
             aria-label="Close cart"
           >
             <X className="h-5 w-5" />
@@ -67,8 +67,8 @@ export default function CartDrawer() {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-text-muted">
-                        ?
+                      <div className="flex h-full w-full items-center justify-center bg-bg/40">
+                        <Gamepad2 className="h-6 w-6 text-border" />
                       </div>
                     )}
                   </div>
@@ -83,19 +83,18 @@ export default function CartDrawer() {
                           onClick={() =>
                             updateQuantity(item.variantId, item.quantity - 1)
                           }
-                          className="p-0.5 text-text-muted hover:text-text-primary"
+                          disabled={item.quantity <= 1}
+                          className="p-0.5 text-text-muted transition hover:text-text-primary disabled:opacity-30"
                           aria-label="Decrease"
                         >
                           <Minus className="h-3.5 w-3.5" />
                         </button>
-                        <span className="w-5 text-center text-sm text-text-primary">
+                        <span className="w-5 text-center font-mono text-sm text-text-primary">
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() =>
-                            updateQuantity(item.variantId, item.quantity + 1)
-                          }
-                          className="p-0.5 text-text-muted hover:text-text-primary"
+                          onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
+                          className="p-0.5 text-text-muted transition hover:text-text-primary"
                           aria-label="Increase"
                         >
                           <Plus className="h-3.5 w-3.5" />
@@ -123,7 +122,7 @@ export default function CartDrawer() {
           <div className="border-t border-border px-5 py-4">
             <div className="mb-3 flex items-center justify-between">
               <span className="text-sm text-text-muted">Total</span>
-              <span className="font-mono text-xl font-bold text-text-primary">
+              <span className="font-mono text-xl font-bold text-price">
                 {formatPrice(total)}
               </span>
             </div>
@@ -131,14 +130,14 @@ export default function CartDrawer() {
               <Link
                 href="/cart"
                 onClick={closeCart}
-                className="flex-1 rounded-lg border border-border px-4 py-2.5 text-center text-sm font-semibold text-text-primary hover:border-accent-chrome/50"
+                className="flex-1 rounded-lg border border-border px-4 py-2.5 text-center text-sm font-semibold text-text-primary transition duration-200 hover:border-accent-chrome/50 hover:bg-surface active:scale-[0.98]"
               >
                 View Cart
               </Link>
               <Link
                 href="/checkout"
                 onClick={closeCart}
-                className="flex-1 rounded-lg bg-accent-oxblood px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-accent-oxblood/90"
+                className="flex-1 rounded-lg bg-accent-oxblood px-4 py-2.5 text-center text-sm font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98]"
               >
                 Checkout
               </Link>

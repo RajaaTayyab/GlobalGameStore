@@ -58,11 +58,11 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-chrome">
+        <Link href="/" className="group flex items-center gap-2" aria-label="GlobalGameStore home">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-chrome transition duration-300 group-hover:rounded-xl group-hover:brightness-110">
             <Gamepad2 className="h-5 w-5 text-bg" />
           </div>
-          <span className="font-serif text-lg font-bold tracking-tight text-text-primary">
+          <span className="font-serif text-lg tracking-tight text-text-primary">
             Global<span className="text-accent-chrome">GameStore</span>
           </span>
         </Link>
@@ -97,7 +97,7 @@ export default function Navbar() {
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
-            className="rounded-lg border border-border p-2 text-text-muted transition hover:border-accent-chrome/50 hover:text-text-primary"
+            className="rounded-lg border border-border p-2 text-text-muted transition duration-200 hover:border-accent-chrome/50 hover:text-text-primary active:scale-90"
             aria-label="Toggle light/dark mode"
           >
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -106,12 +106,12 @@ export default function Navbar() {
           {/* Cart */}
           <button
             onClick={openCart}
-            className="relative rounded-lg border border-border p-2 text-text-muted transition hover:border-accent-chrome/50 hover:text-text-primary"
+            className="relative rounded-lg border border-border p-2 text-text-muted transition duration-200 hover:border-accent-chrome/50 hover:text-text-primary active:scale-90"
             aria-label="Cart"
           >
             <ShoppingCart className="h-5 w-5" />
             {count > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-accent-oxblood text-xs font-bold text-white">
+              <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 animate-fade-in items-center justify-center rounded-full bg-accent-oxblood font-mono text-xs font-bold text-white">
                 {count}
               </span>
             )}
@@ -120,7 +120,7 @@ export default function Navbar() {
           {/* Account */}
           <Link
             href={user ? "/account" : "/login"}
-            className="rounded-lg border border-border p-2 text-text-muted transition hover:border-accent-chrome/50 hover:text-text-primary"
+            className="rounded-lg border border-border p-2 text-text-muted transition duration-200 hover:border-accent-chrome/50 hover:text-text-primary active:scale-90"
             aria-label="Account"
           >
             <User className="h-5 w-5" />
@@ -144,13 +144,13 @@ export default function Navbar() {
 
       {/* Mobile nav */}
       {mobileOpen && (
-        <nav className="border-t border-border bg-bg px-4 py-3 md:hidden">
+        <nav className="animate-fade-in border-t border-border bg-bg px-4 py-3 md:hidden">
           {NAV_LINKS.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               onClick={() => setMobileOpen(false)}
-              className="block rounded-lg px-3 py-2 text-sm font-medium text-text-muted hover:bg-surface"
+              className="block rounded-lg px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-surface hover:text-text-primary"
             >
               {l.label}
             </Link>
@@ -159,7 +159,7 @@ export default function Navbar() {
             <Link
               href="/admin"
               onClick={() => setMobileOpen(false)}
-              className="block rounded-lg px-3 py-2 text-sm font-medium text-accent-chrome hover:bg-surface"
+              className="block rounded-lg px-3 py-2 text-sm font-medium text-accent-chrome transition-colors hover:bg-surface"
             >
               Admin Panel
             </Link>
@@ -167,7 +167,7 @@ export default function Navbar() {
           <Link
             href={user ? "/account" : "/login"}
             onClick={() => setMobileOpen(false)}
-            className="block rounded-lg px-3 py-2 text-sm font-medium text-text-muted hover:bg-surface"
+            className="block rounded-lg px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-surface hover:text-text-primary"
           >
             {user ? "My Account" : "Login / Register"}
           </Link>

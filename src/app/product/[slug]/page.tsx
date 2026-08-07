@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ShieldCheck, Zap, Truck, ChevronRight } from "lucide-react";
+import { ShieldCheck, Zap, Truck, ChevronRight, Gamepad2 } from "lucide-react";
 import { getProductBySlug, getAvailableCodeCounts } from "@/lib/products";
 import ProductBuy from "@/components/ProductBuy";
 
@@ -35,11 +35,11 @@ export default async function ProductPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">
       <nav className="mb-6 flex items-center gap-1.5 font-mono text-sm text-text-muted">
-        <Link href="/" className="hover:text-accent-chrome">Home</Link>
+        <Link href="/" className="transition-colors hover:text-accent-chrome">Home</Link>
         <ChevronRight className="h-3.5 w-3.5" />
-        <Link href="/shop" className="hover:text-accent-chrome">Shop</Link>
+        <Link href="/shop" className="transition-colors hover:text-accent-chrome">Shop</Link>
         <ChevronRight className="h-3.5 w-3.5" />
-        <span className="text-text-primary">{product.name}</span>
+        <span className="line-clamp-1 text-text-primary">{product.name}</span>
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-2">
@@ -55,8 +55,8 @@ export default async function ProductPage({ params }: Props) {
               className="aspect-square w-full object-cover"
             />
           ) : (
-            <div className="flex aspect-square w-full items-center justify-center text-8xl">
-              🎮
+            <div className="flex aspect-square w-full items-center justify-center bg-bg/40">
+              <Gamepad2 className="h-24 w-24 text-border" />
             </div>
           )}
         </div>
@@ -67,7 +67,7 @@ export default async function ProductPage({ params }: Props) {
             {product.category?.name ?? "Digital Product"}
             {product.region ? ` · ${product.region.name}` : ""}
           </p>
-          <h1 className="mt-2 flex items-center gap-3 font-serif text-3xl font-extrabold text-text-primary sm:text-4xl">
+          <h1 className="mt-2 flex items-center gap-3 font-serif text-3xl font-bold text-text-primary sm:text-4xl">
             {product.name}
             {!!product.sold_out && (
               <span className="rounded-full bg-red-500/20 px-3 py-1 text-xs font-bold text-red-400">

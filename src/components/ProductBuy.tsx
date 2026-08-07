@@ -94,10 +94,10 @@ export default function ProductBuy({
           <button
             key={v.id}
             onClick={() => setSelected(v)}
-            className={`rounded-xl border px-4 py-3 text-left transition ${
+            className={`rounded-xl border px-4 py-3 text-left transition duration-200 active:scale-[0.99] ${
               selected?.id === v.id
-                ? "border-accent-chrome bg-accent-chrome/10"
-                : "border-border hover:border-accent-chrome/50"
+                ? "border-accent-chrome bg-accent-chrome/10 shadow-sm shadow-accent-chrome/10"
+                : "border-border hover:border-accent-chrome/50 hover:bg-surface"
             }`}
           >
             <span className="block text-sm font-semibold text-text-primary">{v.name}</span>
@@ -119,15 +119,17 @@ export default function ProductBuy({
             <div className="flex items-center gap-2 rounded-xl border border-border px-2 py-2">
               <button
                 onClick={() => setQty((n) => Math.max(1, n - 1))}
-                className="rounded-lg p-1 text-text-muted hover:text-text-primary"
+                disabled={qty <= 1}
+                className="rounded-lg p-1 text-text-muted transition hover:text-text-primary disabled:opacity-30"
                 aria-label="Decrease quantity"
               >
                 <Minus className="h-4 w-4" />
               </button>
-              <span className="w-8 text-center font-semibold text-text-primary">{qty}</span>
+              <span className="w-8 text-center font-mono font-semibold text-text-primary">{qty}</span>
               <button
                 onClick={() => setQty((n) => Math.min(stock > 0 ? stock : 99, n + 1))}
-                className="rounded-lg p-1 text-text-muted hover:text-text-primary"
+                disabled={stock > 0 && qty >= stock}
+                className="rounded-lg p-1 text-text-muted transition hover:text-text-primary disabled:opacity-30"
                 aria-label="Increase quantity"
               >
                 <Plus className="h-4 w-4" />
@@ -147,13 +149,13 @@ export default function ProductBuy({
           <div className="mt-6 flex flex-wrap gap-3">
             <button
               onClick={handleAdd}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-accent-oxblood px-5 py-3 font-semibold text-white transition hover:bg-accent-oxblood/90"
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-accent-chrome/60 px-5 py-3 font-semibold text-accent-chrome transition duration-200 hover:bg-accent-chrome/10 active:scale-[0.98]"
             >
               <ShoppingCart className="h-4 w-4" /> Add to Cart
             </button>
             <button
               onClick={handleBuyNow}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-accent-oxblood px-5 py-3 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90"
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-accent-oxblood px-5 py-3 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
             >
               <Zap className="h-4 w-4" /> Buy Now
             </button>

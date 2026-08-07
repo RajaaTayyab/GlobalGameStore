@@ -142,7 +142,7 @@ export default function AdminOrders() {
             {o.payment_method === "whatsapp" && (
               <button
                 onClick={() => deliver(o)}
-                className="flex items-center gap-1.5 rounded-lg bg-instock px-3 py-1.5 text-xs font-bold text-white hover:bg-instock/90"
+                className="flex items-center gap-1.5 rounded-lg bg-instock px-3 py-1.5 text-xs font-bold text-white transition duration-200 hover:bg-instock/90 active:scale-[0.97]"
               >
                 <CheckCircle2 className="h-3.5 w-3.5" /> Deliver Codes
               </button>

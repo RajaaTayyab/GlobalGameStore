@@ -103,19 +103,19 @@ export default async function HomePage() {
               <Link
                 key={c.id}
                 href={`/shop?category=${c.slug}`}
-                className="group relative overflow-hidden rounded-lg border border-border bg-surface"
+                className="group relative overflow-hidden rounded-lg border border-border bg-surface transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
               >
                 <Image
                   src={c.image_url || CATEGORY_FALLBACKS[c.slug] || "/images/razer-gold.webp"}
                   alt={c.name}
                   width={400}
                   height={300}
-                  className="aspect-[4/3] w-full object-cover transition duration-300 group-hover:scale-105"
+                  className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-bg/90 via-bg/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/30 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <p className="font-bold text-text-primary">{c.name}</p>
-                  <p className="mt-0.5 flex items-center gap-1 font-mono text-xs font-medium text-accent-chrome opacity-0 transition group-hover:opacity-100">
+                  <p className="mt-0.5 flex items-center gap-1 font-mono text-xs font-medium text-accent-chrome opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100 -translate-x-1">
                     View all <ArrowRight className="h-3 w-3" />
                   </p>
                 </div>
@@ -150,9 +150,9 @@ export default async function HomePage() {
             {whyUs.map((w) => (
               <div
                 key={w.title}
-                className="rounded-lg border border-border bg-surface p-6 transition hover:border-accent-chrome/40"
+                className="group rounded-lg border border-border bg-surface p-6 transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/40 hover:shadow-lg hover:shadow-accent-chrome/10"
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-accent-chrome/10 text-accent-chrome">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-accent-chrome/10 text-accent-chrome transition duration-300 group-hover:bg-accent-chrome group-hover:text-bg">
                   <w.icon className="h-6 w-6" />
                 </div>
                 <h3 className="font-serif font-semibold text-text-primary">{w.title}</h3>
@@ -166,7 +166,7 @@ export default async function HomePage() {
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-4 py-16">
         <div className="overflow-hidden rounded-3xl border border-accent-chrome/30 bg-surface px-8 py-14 text-center">
-          <h2 className="font-serif text-3xl font-extrabold text-text-primary">
+          <h2 className="font-serif text-3xl font-bold text-text-primary">
             Ready to level up?
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-text-muted">
@@ -175,7 +175,7 @@ export default async function HomePage() {
           </p>
           <Link
             href="/shop"
-            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-8 py-3.5 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90"
+            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-8 py-3.5 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
           >
             View All Products <ArrowRight className="h-4 w-4" />
           </Link>

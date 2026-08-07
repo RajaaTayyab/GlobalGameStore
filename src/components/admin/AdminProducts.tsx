@@ -10,6 +10,9 @@ import {
   ChevronUp,
   Loader2,
   KeyRound,
+  UploadCloud,
+  X,
+  Gamepad2,
 } from "lucide-react";
 import { formatPrice } from "@/lib/order";
 import type { Category, Product, Region, Variant } from "@/lib/types";
@@ -48,6 +51,7 @@ export default function AdminProducts() {
   const [vOrig, setVOrig] = useState("");
   const [codesInput, setCodesInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
 interface ApiVariant extends Variant {
   available?: number;
@@ -215,8 +219,40 @@ interface ApiResponse {
     showNotice("Variant deleted");
   };
 
+  const handleImageFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setError("Only image files are allowed");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image must be under 5 MB");
+      return;
+    }
+    setUploading(true);
+    setError("");
+    const fd = new FormData();
+    fd.append("file", file);
+    try {
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? "Could not upload image");
+        return;
+      }
+      setForm((f) => ({ ...f, image_url: data.url }));
+      showNotice("Image uploaded");
+    } catch {
+      setError("Could not upload image");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const inputCls =
-    "w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none";
+    "w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15";
 
   if (loading)
     return (
@@ -242,7 +278,7 @@ interface ApiResponse {
         <p className="text-sm text-text-muted">{products.length} products</p>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-4 py-2.5 text-sm font-bold text-white hover:bg-accent-oxblood/90"
+          className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-4 py-2.5 text-sm font-bold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98]"
         >
           <Plus className="h-4 w-4" /> New Product
         </button>
@@ -260,7 +296,9 @@ interface ApiResponse {
                   {p.image_url ? (
                     <Image src={p.image_url} alt={p.name} width={56} height={56} className="h-full w-full object-cover" />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center text-xl">🎮</div>
+                    <div className="flex h-full w-full items-center justify-center">
+                      <Gamepad2 className="h-6 w-6 text-border" />
+                    </div>
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -330,7 +368,7 @@ interface ApiResponse {
                       <div className="flex gap-2">
                         <button
                           onClick={() => addCodes(v.id)}
-                          className="rounded-lg bg-accent-oxblood px-3 py-1.5 text-xs font-bold text-white hover:bg-accent-oxblood/90"
+                          className="rounded-lg bg-accent-oxblood px-3 py-1.5 text-xs font-bold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.97]"
                           disabled={!codesInput.trim()}
                         >
                           Add codes
@@ -354,7 +392,7 @@ interface ApiResponse {
                   <button
                     onClick={() => addVariant(p.id)}
                     disabled={!vName || !vPrice}
-                    className="rounded-xl bg-accent-oxblood px-3 py-2.5 text-sm font-semibold text-white hover:bg-accent-oxblood/90 disabled:opacity-50"
+                    className="rounded-xl bg-accent-oxblood px-3 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98] disabled:opacity-50"
                   >
                     <Plus className="mr-1 inline h-4 w-4" /> Add Variant
                   </button>
@@ -399,7 +437,45 @@ interface ApiResponse {
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className={inputCls} />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm text-text-muted">Image URL</label>
+              <label className="mb-1.5 block text-sm text-text-muted">Product image</label>
+              {form.image_url && (
+                <div className="mb-3 flex items-start justify-between gap-3">
+                  <Image
+                    src={form.image_url}
+                    alt="Preview"
+                    width={96}
+                    height={64}
+                    className="h-16 w-24 rounded-xl border border-border object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, image_url: "" })}
+                    className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-text-muted hover:border-red-500/50 hover:text-red-400"
+                  >
+                    <X className="h-3.5 w-3.5" /> Remove
+                  </button>
+                </div>
+              )}
+              <label
+                className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed px-4 py-6 text-sm transition ${
+                  uploading
+                    ? "cursor-wait opacity-50"
+                    : "border-border hover:border-accent-chrome/50 hover:text-accent-chrome"
+                }`}
+              >
+                <UploadCloud className={`h-6 w-6 ${uploading ? "animate-pulse" : "text-accent-chrome"}`} />
+                {uploading ? "Uploading…" : "Click to upload image"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageFile}
+                  disabled={uploading}
+                />
+              </label>
+              <p className="mt-1.5 text-xs text-text-muted">
+                PNG, JPG, WebP, GIF or AVIF · max 5 MB — or paste a URL below.
+              </p>
               <input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="https://…" className={inputCls} />
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -440,7 +516,7 @@ interface ApiResponse {
               <button type="button" onClick={() => setModalOpen(false)} className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-text-muted hover:border-accent-chrome/50">
                 Cancel
               </button>
-              <button type="submit" disabled={busy} className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-5 py-2.5 text-sm font-bold text-white hover:bg-accent-oxblood/90 disabled:opacity-60">
+              <button type="submit" disabled={busy} className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-5 py-2.5 text-sm font-bold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98] disabled:opacity-60">
                 {busy && <Loader2 className="h-4 w-4 animate-spin" />}
                 {editing ? "Save Changes" : "Create Product"}
               </button>

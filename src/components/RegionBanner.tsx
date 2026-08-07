@@ -45,7 +45,7 @@ export default function RegionBanner() {
           ))}
           <Link
             href="/shop"
-            className="rounded-full bg-accent-oxblood px-4 py-1.5 text-xs font-bold text-white transition hover:bg-accent-oxblood/90"
+            className="rounded-full bg-accent-oxblood px-4 py-1.5 text-xs font-bold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.97]"
           >
             Shop Now
           </Link>

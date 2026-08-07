@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   ShoppingCart,
   ArrowRight,
+  Gamepad2,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/order";
@@ -122,13 +123,13 @@ export default function CheckoutPage() {
           <div className="mt-8 flex justify-center gap-3">
             <Link
               href="/account"
-              className="rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white hover:bg-accent-oxblood/90"
+              className="rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98]"
             >
               View My Orders
             </Link>
             <Link
               href="/shop"
-              className="rounded-xl border border-border px-6 py-3 font-semibold text-text-primary hover:border-accent-chrome/50"
+              className="rounded-xl border border-border px-6 py-3 font-semibold text-text-primary transition duration-200 hover:border-accent-chrome/50 hover:bg-surface active:scale-[0.98]"
             >
               Continue Shopping
             </Link>
@@ -151,11 +152,11 @@ export default function CheckoutPage() {
             href={result.order?.whatsapp_link}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-instock px-6 py-3 font-bold text-white transition hover:bg-instock/90"
+            className="inline-flex items-center gap-2 rounded-xl bg-instock px-6 py-3 font-bold text-white shadow-lg shadow-instock/25 transition duration-200 hover:bg-instock/90 active:scale-[0.98]"
           >
             <MessageCircle className="h-5 w-5" /> Send Order on WhatsApp
           </a>
-          <Link href="/shop" className="text-sm text-text-muted hover:text-accent-chrome">
+          <Link href="/shop" className="text-sm text-text-muted transition-colors hover:text-accent-chrome">
             Continue shopping
           </Link>
         </div>
@@ -170,7 +171,7 @@ export default function CheckoutPage() {
         <p className="mt-2 text-red-400">{result.error}</p>
         <button
           onClick={() => setResult(null)}
-          className="mt-6 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white hover:bg-accent-oxblood/90"
+          className="mt-6 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98]"
         >
           Try Again
         </button>
@@ -186,7 +187,7 @@ export default function CheckoutPage() {
         <h1 className="mt-4 font-serif text-2xl font-bold text-text-primary">Nothing to check out</h1>
         <Link
           href="/shop"
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white hover:bg-accent-oxblood/90"
+          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98]"
         >
           Browse Products <ArrowRight className="h-4 w-4" />
         </Link>
@@ -211,7 +212,7 @@ export default function CheckoutPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
-                  className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-chrome focus:outline-none"
+                  className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
                 />
               </div>
               <div>
@@ -222,7 +223,7 @@ export default function CheckoutPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@email.com"
-                  className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-chrome focus:outline-none"
+                  className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
                 />
               </div>
               <div>
@@ -234,7 +235,7 @@ export default function CheckoutPage() {
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(e.target.value)}
                   placeholder="15551234567"
-                  className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-chrome focus:outline-none"
+                  className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
                 />
               </div>
               <div>
@@ -243,7 +244,7 @@ export default function CheckoutPage() {
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
                   placeholder="Pakistan / UAE / USA…"
-                  className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-chrome focus:outline-none"
+                  className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
                 />
               </div>
             </div>
@@ -260,14 +261,14 @@ export default function CheckoutPage() {
                     : "border-border hover:border-accent-chrome/50"
                 } ${!user ? "opacity-50" : ""}`}
               >
-                <input
-                  type="radio"
-                  name="method"
-                  checked={effectiveMethod === "credits"}
-                  onChange={() => setMethod("credits")}
-                  disabled={!canPayCredits}
-                  className="mt-1 accent-oxblood"
-                />
+<input
+                    type="radio"
+                    name="method"
+                    checked={effectiveMethod === "credits"}
+                    onChange={() => setMethod("credits")}
+                    disabled={!canPayCredits}
+                    className="mt-1 accent-accent-oxblood"
+                  />
                 <div className="flex-1">
                   <p className="flex items-center gap-2 font-semibold text-text-primary">
                     <Wallet className="h-4 w-4 text-accent-chrome" />
@@ -332,7 +333,9 @@ export default function CheckoutPage() {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center">🎮</div>
+                    <div className="flex h-full w-full items-center justify-center bg-bg/40">
+                      <Gamepad2 className="h-5 w-5 text-border" />
+                    </div>
                   )}
                 </div>
                 <div className="flex-1">
@@ -354,7 +357,7 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-accent-oxblood py-3 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90 disabled:opacity-60"
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-accent-oxblood py-3 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98] disabled:opacity-60 disabled:hover:bg-accent-oxblood disabled:active:scale-100"
           >
             {submitting ? (
               <>

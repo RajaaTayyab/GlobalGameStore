@@ -119,7 +119,7 @@ export default function AdminUsers() {
                   </span>
                   <button
                     onClick={() => openPanel(u, "add")}
-                    className="flex items-center gap-1.5 rounded-lg bg-accent-oxblood px-3 py-1.5 text-xs font-bold text-white hover:bg-accent-oxblood/90"
+                    className="flex items-center gap-1.5 rounded-lg bg-accent-oxblood px-3 py-1.5 text-xs font-bold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.97]"
                   >
                     <Plus className="h-3.5 w-3.5" /> Add
                   </button>
@@ -184,20 +184,20 @@ export default function AdminUsers() {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder={mode === "add" ? "50.00" : "10.00"}
-              className="mb-3 w-full rounded-xl border border-border bg-bg px-4 py-2.5 font-mono text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
+              className="mb-3 w-full rounded-xl border border-border bg-bg px-4 py-2.5 font-mono text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
             />
             <label className="mb-1.5 block text-sm text-text-muted">Reason</label>
             <input
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder={mode === "add" ? "e.g. Bank transfer received" : "e.g. Refund / correction"}
-              className="mb-4 w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
+              className="mb-4 w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
             />
             <div className="flex gap-2">
               <button
                 type="submit"
                 disabled={busy || !amount}
-                className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60 ${
+                className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white transition duration-200 active:scale-[0.98] disabled:opacity-60 ${
                   mode === "add"
                     ? "bg-accent-oxblood hover:bg-accent-oxblood/90"
                     : "bg-red-600 hover:bg-red-500"

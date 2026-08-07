@@ -37,7 +37,7 @@ export default function AdminSettings() {
   };
 
   const inputCls =
-    "w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none";
+    "w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15";
 
   if (loading)
     return (
@@ -86,7 +86,7 @@ export default function AdminSettings() {
       <button
         type="submit"
         disabled={saving}
-        className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-2.5 font-bold text-white hover:bg-accent-oxblood/90 disabled:opacity-60"
+        className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-2.5 font-bold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98] disabled:opacity-60"
       >
         {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
         Save Settings

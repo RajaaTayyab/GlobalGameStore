@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Plus, Minus, Trash2, ShoppingCart, ArrowRight } from "lucide-react";
+import { Plus, Minus, Trash2, ShoppingCart, ArrowRight, Gamepad2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/order";
 
@@ -19,7 +19,7 @@ export default function CartPage() {
         <p className="mt-2 text-text-muted">Add some game top-ups and gift cards.</p>
         <Link
           href="/shop"
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white hover:bg-accent-oxblood/90"
+          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98]"
         >
           Browse Products <ArrowRight className="h-4 w-4" />
         </Link>
@@ -52,7 +52,9 @@ export default function CartPage() {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-2xl">🎮</div>
+                  <div className="flex h-full w-full items-center justify-center bg-bg/40">
+                    <Gamepad2 className="h-8 w-8 text-border" />
+                  </div>
                 )}
               </Link>
               <div className="flex-1">
@@ -67,17 +69,18 @@ export default function CartPage() {
                   <div className="flex items-center gap-2 rounded-lg border border-border px-2 py-1">
                     <button
                       onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
-                      className="p-1 text-text-muted hover:text-text-primary"
+                      disabled={item.quantity <= 1}
+                      className="p-1 text-text-muted transition hover:text-text-primary disabled:opacity-30"
                       aria-label="Decrease"
                     >
                       <Minus className="h-3.5 w-3.5" />
                     </button>
-                    <span className="w-6 text-center text-sm font-semibold text-text-primary">
+                    <span className="w-6 text-center font-mono text-sm font-semibold text-text-primary">
                       {item.quantity}
                     </span>
                     <button
                       onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
-                      className="p-1 text-text-muted hover:text-text-primary"
+                      className="p-1 text-text-muted transition hover:text-text-primary"
                       aria-label="Increase"
                     >
                       <Plus className="h-3.5 w-3.5" />
@@ -119,13 +122,13 @@ export default function CartPage() {
           </div>
           <button
             onClick={() => router.push("/checkout")}
-            className="mt-6 w-full rounded-xl bg-accent-oxblood py-3 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90"
+            className="mt-6 w-full rounded-xl bg-accent-oxblood py-3 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
           >
             Proceed to Checkout
           </button>
           <Link
             href="/shop"
-            className="mt-3 block text-center text-sm text-text-muted hover:text-accent-chrome"
+            className="mt-3 block text-center text-sm text-text-muted transition-colors hover:text-accent-chrome"
           >
             Continue shopping
           </Link>

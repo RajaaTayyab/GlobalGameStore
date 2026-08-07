@@ -401,7 +401,7 @@ export default function AccountPage() {
             <input
               value={form.full_name}
               onChange={(e) => setForm({ ...form, full_name: e.target.value })}
-              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
             />
           </div>
           <div>
@@ -409,7 +409,7 @@ export default function AccountPage() {
             <input
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
             />
           </div>
           <div>
@@ -417,7 +417,7 @@ export default function AccountPage() {
             <input
               value={form.whatsapp}
               onChange={(e) => setForm({ ...form, whatsapp: e.target.value })}
-              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
             />
           </div>
           <div>
@@ -425,13 +425,13 @@ export default function AccountPage() {
             <input
               value={form.country}
               onChange={(e) => setForm({ ...form, country: e.target.value })}
-              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
             />
           </div>
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-2.5 font-semibold text-white hover:bg-accent-oxblood/90 disabled:opacity-60"
+            className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-2.5 font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98] disabled:opacity-60"
           >
             {saving && <Loader2 className="h-4 w-4 animate-spin" />}
             Save Changes
@@ -453,7 +453,7 @@ export default function AccountPage() {
               type="password"
               value={pw.currentPassword}
               onChange={(e) => setPw({ ...pw, currentPassword: e.target.value })}
-              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
             />
           </div>
           <div>
@@ -462,7 +462,7 @@ export default function AccountPage() {
               type="password"
               value={pw.password}
               onChange={(e) => setPw({ ...pw, password: e.target.value })}
-              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
             />
           </div>
           <div>
@@ -471,13 +471,13 @@ export default function AccountPage() {
               type="password"
               value={pw.confirm}
               onChange={(e) => setPw({ ...pw, confirm: e.target.value })}
-              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none"
+              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
             />
           </div>
           <button
             type="submit"
             disabled={pwSaving}
-            className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-2.5 font-semibold text-white hover:bg-accent-oxblood/90 disabled:opacity-60"
+            className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-2.5 font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98] disabled:opacity-60"
           >
             {pwSaving && <Loader2 className="h-4 w-4 animate-spin" />}
             Update Password

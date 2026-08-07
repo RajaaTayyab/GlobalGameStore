@@ -35,12 +35,12 @@ export default async function ContactPage() {
 
       <div className="mt-10 grid gap-4 sm:grid-cols-3">
         <ContactWhatsApp phone={storePhone} />
-        <div className="rounded-lg border border-border bg-surface p-6 text-center">
+        <div className="rounded-lg border border-border bg-surface p-6 text-center transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/40">
           <Mail className="mx-auto h-6 w-6 text-accent-chrome" />
           <p className="mt-3 font-semibold text-text-primary">Email</p>
           <p className="mt-1 font-mono text-sm text-text-muted">support@globalgamestore.com</p>
         </div>
-        <div className="rounded-lg border border-border bg-surface p-6 text-center">
+        <div className="rounded-lg border border-border bg-surface p-6 text-center transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/40">
           <Globe className="mx-auto h-6 w-6 text-accent-chrome" />
           <p className="mt-3 font-semibold text-text-primary">Worldwide</p>
           <p className="mt-1 text-sm text-text-muted">Serving gamers in 50+ countries</p>

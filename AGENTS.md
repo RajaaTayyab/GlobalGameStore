@@ -41,6 +41,9 @@ All app pages use this theme, including the admin panel (`src/app/admin/*`, `src
 - Destructive actions (danger zone, delete, cancelled/error states) keep semantic red (`red-*`); warnings keep `amber-*`; positive/credit/success keep `--color-instock` — no tokens exist for these.
 - Admin panel follows the same tokens: primary actions = oxblood, active tab = solid chrome (`bg-accent-chrome text-bg`), admin badges = chrome, prices/order numbers = mono, destructive (delete/deduct) = red.
 - Text on oxblood buttons = white; text on chrome tile = `text-bg`.
+- Micro-interactions: interactive elements get `transition duration-200` (or 300) + `active:scale-[0.98]` (small buttons `.97`, tiny icon buttons `scale-90`). Card hover = `hover:-translate-y-1` + `hover:border-accent-chrome/40-50` + soft chrome/instock shadow. Image zoom = `group-hover:scale-105` (duration-500). Steppers grey out (`disabled:opacity-30`) at min/max. Focus rings = `focus:ring-2 focus:ring-accent-chrome/15` on inputs; global `:focus-visible` outline in `globals.css`.
+- Motion: `--animate-fade-up` / `fade-in`/`slide-in-right` tokens in `globals.css` (used by Hero stagger, mobile menu, cart badge). `prefers-reduced-motion` disabled in globals.
+- No emoji icons — always lucide-react (placeholder art = `Gamepad2`). Headlines never request weights above what's loaded (Instrument Serif is 400-only; use `font-bold` max, not `font-extrabold`).
 - Search `slate-|cyan-|emerald-|amber-|bg-white|text-white` before adding UI — those are legacy leftovers from the pre-theme pass.
 
 # Project Facts
