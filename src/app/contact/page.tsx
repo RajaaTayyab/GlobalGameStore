@@ -42,8 +42,8 @@ export default async function ContactPage() {
         </div>
         <div className="rounded-lg border border-border bg-surface p-6 text-center transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/40">
           <Globe className="mx-auto h-6 w-6 text-accent-chrome" />
-          <p className="mt-3 font-semibold text-text-primary">Worldwide</p>
-          <p className="mt-1 text-sm text-text-muted">Serving gamers in 50+ countries</p>
+          <p className="mt-3 font-semibold text-text-primary">Digital only</p>
+          <p className="mt-1 text-sm text-text-muted">No shipping — everything delivers online</p>
         </div>
       </div>
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Zap, ArrowRight, Globe } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
 import { useRegion } from "@/context/RegionContext";
 import { REGION_LABELS } from "@/lib/constants";
 import type { RegionCode } from "@/lib/types";
@@ -43,36 +43,32 @@ export default function Hero() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,175,140,0.10),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(201,175,140,0.08),transparent_55%)]" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 lg:grid-cols-2 lg:py-28">
         <div className="animate-fade-up">
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent-chrome/30 bg-accent-chrome/10 px-4 py-1.5 text-sm font-medium text-accent-chrome">
-            <Zap className="h-4 w-4" />
-            {detected
-              ? `Instant Delivery · Featured for ${REGION_LABELS[region]}`
-              : "Instant Delivery on All Game Codes"}
+          <p className="mb-5 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent-chrome">
+            <span className="h-1.5 w-1.5 rounded-full bg-instock" />
+            {detected ? `Ranked for ${REGION_LABELS[region]}` : "Full global catalog"}
           </p>
-          <h1 className="font-serif text-4xl leading-tight tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
-            Level Up Your{" "}
-            <span className="text-accent-chrome italic">
-              Gaming Experience
-            </span>
+          <h1 className="font-serif text-4xl leading-[1.05] tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+            The vault for{" "}
+            <span className="text-accent-chrome italic">game credit</span>.
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-text-muted">
-            Buy game top-ups, gift cards, and digital keys instantly with fast
-            and secure delivery. Play more, wait less — anywhere, anytime.
+            PUBG, Free Fire, PlayStation, Xbox, Razer Gold and more —
+            top-ups and gift cards, released the moment your payment clears.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/shop"
               className="group inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
             >
-              Explore Deals
+              Browse the catalog
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 rounded-xl border border-border px-6 py-3 font-semibold text-text-primary transition hover:border-accent-chrome/50 hover:bg-surface active:scale-[0.98]"
             >
-              <Globe className="h-4 w-4" />
-              Contact Us
+              <MessageCircle className="h-4 w-4" />
+              Order on WhatsApp
             </Link>
           </div>
         </div>

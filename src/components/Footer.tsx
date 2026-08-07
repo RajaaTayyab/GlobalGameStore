@@ -20,8 +20,8 @@ export default function Footer() {
             </span>
           </Link>
           <p className="mt-4 text-sm leading-relaxed text-text-muted">
-            Your trusted source for game top-ups, gift cards, and digital gaming
-            products with fast and secure delivery.
+            Game top-ups, gift cards and digital keys. Pay with store credit
+            or order straight from WhatsApp.
           </p>
         </div>
 
@@ -39,13 +39,13 @@ export default function Footer() {
 
         <div>
           <h4 className="mb-4 font-mono text-sm font-semibold uppercase tracking-wider text-text-muted">
-            Why Us
+            Categories
           </h4>
           <ul className="space-y-2 text-sm text-text-muted">
-            <li>Instant game code delivery</li>
-            <li>Money back guarantee</li>
-            <li>24/7 gamer support</li>
-            <li>Best market prices</li>
+            <li><Link href="/shop?category=pubg-mobile" className="transition-colors hover:text-accent-chrome">PUBG Mobile</Link></li>
+            <li><Link href="/shop?category=playstation" className="transition-colors hover:text-accent-chrome">PlayStation</Link></li>
+            <li><Link href="/shop?category=xbox" className="transition-colors hover:text-accent-chrome">Xbox</Link></li>
+            <li><Link href="/shop?category=razer-gold" className="transition-colors hover:text-accent-chrome">Razer Gold</Link></li>
           </ul>
         </div>
 

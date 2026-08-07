@@ -1,14 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Zap,
-  ShieldCheck,
-  Headphones,
-  BadgeDollarSign,
-  ArrowRight,
-  Truck,
-  RotateCcw,
-} from "lucide-react";
+import { ArrowRight, Wallet, MessageCircle } from "lucide-react";
 import { getCatalog } from "@/lib/products";
 import ProductGrid from "@/components/ProductGrid";
 import RegionBanner from "@/components/RegionBanner";
@@ -33,57 +25,10 @@ export default async function HomePage() {
     catalog.products.some((p) => p.category_id === c.id)
   );
 
-  const whyUs = [
-    {
-      icon: Zap,
-      title: "Instant Code Delivery",
-      text: "Get your game codes instantly after payment. No delays, no waiting.",
-    },
-    {
-      icon: BadgeDollarSign,
-      title: "Best Market Prices",
-      text: "Affordable rates with regular discounts and special offers.",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Safe & Secure",
-      text: "Safe payments, easy refunds, and a trusted gaming platform.",
-    },
-    {
-      icon: Headphones,
-      title: "24/7 Support",
-      text: "A dedicated gamer support team whenever you need help.",
-    },
-  ];
-
-  const perks = [
-    { icon: Truck, title: "Shipping Perks", text: "Instant game codes delivery" },
-    { icon: RotateCcw, title: "Money Back Guarantee", text: "Safe payments, easy refunds" },
-    { icon: Headphones, title: "Customer Service", text: "24/7 gamer support team" },
-    { icon: ShieldCheck, title: "Safe Platform", text: "Secure trusted gaming store" },
-  ];
-
   return (
     <div>
       {/* Hero (region-aware via IP) */}
       <Hero />
-
-      {/* Perks strip */}
-      <section className="border-y border-border bg-bg/60">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 py-8 lg:grid-cols-4">
-          {perks.map((p) => (
-            <div key={p.title} className="flex items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-chrome/10 text-accent-chrome">
-                <p.icon className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-text-primary">{p.title}</p>
-                <p className="text-xs text-text-muted">{p.text}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Categories */}
       {categories.length > 0 && (
@@ -135,51 +80,56 @@ export default async function HomePage() {
         />
       </section>
 
-      {/* Why choose us */}
+      {/* How checkout works — the store's actual point of difference */}
       <section className="border-y border-border bg-bg/60">
-        <div className="mx-auto max-w-7xl px-4 py-16">
-          <div className="mb-10 text-center">
-            <p className="font-mono text-sm font-semibold uppercase tracking-widest text-accent-chrome">
-              Why Choose Us
-            </p>
-            <h2 className="mt-2 font-serif text-3xl font-bold text-text-primary">
-              The Gamer&apos;s Trusted Store
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <h2 className="font-serif text-3xl font-bold text-text-primary">
+              Two ways to check out
             </h2>
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-text-muted">
+              No forced sign-ups. Pick store credit for one-click reorders, or
+              settle it on WhatsApp if you&apos;d rather not make an account.
+            </p>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {whyUs.map((w) => (
-              <div
-                key={w.title}
-                className="group rounded-lg border border-border bg-surface p-6 transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/40 hover:shadow-lg hover:shadow-accent-chrome/10"
-              >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-accent-chrome/10 text-accent-chrome transition duration-300 group-hover:bg-accent-chrome group-hover:text-bg">
-                  <w.icon className="h-6 w-6" />
-                </div>
-                <h3 className="font-serif font-semibold text-text-primary">{w.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-text-muted">{w.text}</p>
-              </div>
-            ))}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-lg border border-border bg-surface p-6">
+              <Wallet className="h-6 w-6 text-accent-chrome" />
+              <h3 className="mt-4 font-serif text-lg font-semibold text-text-primary">
+                Store credit
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                Top up your balance once. After that, checkout is a single
+                click — your code appears on screen and in your inbox the
+                second payment clears.
+              </p>
+            </div>
+            <div className="rounded-lg border border-border bg-surface p-6">
+              <MessageCircle className="h-6 w-6 text-instock" />
+              <h3 className="mt-4 font-serif text-lg font-semibold text-text-primary">
+                WhatsApp order
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                Send us your cart, no account required. We confirm payment and
+                hand-deliver your keys directly in the chat.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="mx-auto max-w-7xl px-4 py-16">
-        <div className="overflow-hidden rounded-3xl border border-accent-chrome/30 bg-surface px-8 py-14 text-center">
-          <h2 className="font-serif text-3xl font-bold text-text-primary">
-            Ready to level up?
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-text-muted">
-            Browse hundreds of game top-ups, gift cards and digital keys with
-            instant delivery.
-          </p>
-          <Link
-            href="/shop"
-            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-8 py-3.5 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
-          >
-            View All Products <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
+      {/* Closing CTA */}
+      <section className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-6 px-4 py-16">
+        <h2 className="font-serif text-2xl font-bold text-text-primary sm:text-3xl">
+          Find your game&apos;s catalog.
+        </h2>
+        <Link
+          href="/shop"
+          className="group inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
+        >
+          Browse the catalog
+          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+        </Link>
       </section>
     </div>
   );

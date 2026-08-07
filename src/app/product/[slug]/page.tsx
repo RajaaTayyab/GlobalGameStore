@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ShieldCheck, Zap, Truck, ChevronRight, Gamepad2 } from "lucide-react";
+import { PackageCheck, Wallet, MessageCircle, ChevronRight, Gamepad2 } from "lucide-react";
 import { getProductBySlug, getAvailableCodeCounts } from "@/lib/products";
 import ProductBuy from "@/components/ProductBuy";
 
@@ -25,11 +25,18 @@ export default async function ProductPage({ params }: Props) {
   if (!product) notFound();
 
   const stock = await getAvailableCodeCounts(variants.map((v) => v.id));
+  const totalStock = Object.values(stock).reduce((sum, n) => sum + n, 0);
 
   const perks = [
-    { icon: Zap, text: "Instant code delivery" },
-    { icon: ShieldCheck, text: "Safe & secure payment" },
-    { icon: Truck, text: "Money back guarantee" },
+    {
+      icon: PackageCheck,
+      text:
+        totalStock > 0
+          ? `${totalStock} code${totalStock === 1 ? "" : "s"} in stock, ready to send`
+          : "Restocking — check back shortly",
+    },
+    { icon: Wallet, text: "Store credit for one-click checkout" },
+    { icon: MessageCircle, text: "Or order the whole cart on WhatsApp" },
   ];
 
   return (
@@ -80,9 +87,12 @@ export default async function ProductPage({ params }: Props) {
           )}
 
           <div className="mt-6 space-y-2">
-            {perks.map((p) => (
+            {perks.map((p, i) => (
               <p key={p.text} className="flex items-center gap-2 text-sm text-text-muted">
-                <p.icon className="h-4 w-4 text-instock" /> {p.text}
+                <p.icon
+                  className={`h-4 w-4 ${i === 0 && totalStock === 0 ? "text-old-price" : "text-instock"}`}
+                />
+                {p.text}
               </p>
             ))}
           </div>
