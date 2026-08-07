@@ -73,6 +73,9 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (items.length === 0) return;
     setSubmitting(true);
+    // Stable per-attempt key so network retries don't double-charge.
+    const idempotencyKey =
+      globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -84,6 +87,7 @@ export default function CheckoutPage() {
           })),
           paymentMethod: effectiveMethod,
           customer: { name, email, whatsapp, country },
+          idempotencyKey,
         }),
       });
       const data: CheckoutResult = await res.json();

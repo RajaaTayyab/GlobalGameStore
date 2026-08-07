@@ -41,9 +41,10 @@ export default function AccountPage() {
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
 
-  const [pw, setPw] = useState({ password: "", confirm: "" });
+  const [pw, setPw] = useState({ currentPassword: "", password: "", confirm: "" });
   const [pwSaving, setPwSaving] = useState(false);
   const [pwMsg, setPwMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [deleteMsg, setDeleteMsg] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -109,6 +110,18 @@ export default function AccountPage() {
     router.refresh();
   };
 
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Delete your account permanently? This cannot be undone.")) return;
+    const res = await fetch("/api/account/delete", { method: "DELETE" });
+    const data = await res.json();
+    if (data.ok) {
+      router.push("/");
+      router.refresh();
+    } else {
+      setDeleteMsg(data.error ?? "Could not delete account");
+    }
+  };
+
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setPwSaving(true);
@@ -120,7 +133,7 @@ export default function AccountPage() {
     });
     const data = await res.json();
     if (data.ok) {
-      setPw({ password: "", confirm: "" });
+      setPw({ currentPassword: "", password: "", confirm: "" });
       setPwMsg({ ok: true, text: "Password updated!" });
     } else {
       setPwMsg({ ok: false, text: data.error ?? "Could not update password" });
@@ -432,7 +445,16 @@ export default function AccountPage() {
         >
           <div>
             <p className="font-bold text-white">Change password</p>
-            <p className="text-sm text-slate-500">At least 6 characters.</p>
+            <p className="text-sm text-slate-500">Enter your current password to update.</p>
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm text-slate-400">Current password</label>
+            <input
+              type="password"
+              value={pw.currentPassword}
+              onChange={(e) => setPw({ ...pw, currentPassword: e.target.value })}
+              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-cyan-500 focus:outline-none"
+            />
           </div>
           <div>
             <label className="mb-1.5 block text-sm text-slate-400">New password</label>
@@ -464,6 +486,20 @@ export default function AccountPage() {
             <p className={`text-sm ${pwMsg.ok ? "text-emerald-400" : "text-red-400"}`}>{pwMsg.text}</p>
           )}
         </form>
+
+        <div className="mt-8 max-w-lg rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
+          <p className="font-bold text-red-300">Danger zone</p>
+          <p className="mt-1 text-sm text-slate-500">
+            Permanently delete your account and personal data. This cannot be undone.
+          </p>
+          {deleteMsg && <p className="mt-2 text-sm text-red-400">{deleteMsg}</p>}
+          <button
+            onClick={handleDeleteAccount}
+            className="mt-4 rounded-xl border border-red-500/40 px-6 py-2.5 font-semibold text-red-300 hover:bg-red-500/10"
+          >
+            Delete my account
+          </button>
+        </div>
         </>
       )}
     </div>

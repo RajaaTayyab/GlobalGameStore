@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { UserPlus, Loader2, Gamepad2 } from "lucide-react";
+import { UserPlus, Loader2, Gamepad2, MailCheck } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -12,6 +12,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,12 +29,39 @@ export default function RegisterPage() {
         setError(data.error ?? "Registration failed");
         return;
       }
+      if (data.requires_confirmation) {
+        setConfirmed(true);
+        return;
+      }
       router.push(data.profile?.role === "admin" ? "/admin" : "/account");
       router.refresh();
     } finally {
       setLoading(false);
     }
   };
+
+  if (confirmed) {
+    return (
+      <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-16">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600">
+            <MailCheck className="h-6 w-6 text-white" />
+          </div>
+          <h1 className="text-xl font-bold text-white">Check your email</h1>
+          <p className="mt-2 text-sm text-slate-400">
+            We sent a confirmation link to <span className="text-slate-200">{email}</span>. Click
+            it to activate your account, then log in.
+          </p>
+          <Link
+            href="/login"
+            className="mt-6 inline-block rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 hover:bg-cyan-400"
+          >
+            Go to Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-16">

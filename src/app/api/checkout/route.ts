@@ -2,7 +2,7 @@ import { requireAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { generateOrderNumber, buildWhatsAppLink, buildWhatsAppOrderMessage } from "@/lib/order";
 import { sendOrderCodesEmail } from "@/lib/email";
-import { STORE_NAME } from "@/lib/constants";
+import { clientIp, rateLimit } from "@/lib/ratelimit";
 import type { CartItem } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -11,9 +11,19 @@ interface CheckoutBody {
   items: { variantId: string; quantity: number }[];
   paymentMethod: "credits" | "whatsapp";
   customer: { name: string; email: string; whatsapp: string; country?: string };
+  idempotencyKey?: string;
 }
 
 export async function POST(req: Request) {
+  const ip = clientIp(req);
+  const rl = await rateLimit(`checkout:${ip}`, 20, 3600);
+  if (!rl.allowed) {
+    return Response.json(
+      { error: "Too many checkout attempts. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   const body: CheckoutBody = await req.json().catch(() => null);
   if (!body || !Array.isArray(body.items) || body.items.length === 0) {
     return Response.json({ error: "Cart is empty" }, { status: 400 });
@@ -143,7 +153,7 @@ export async function POST(req: Request) {
     });
   }
 
-  // ================= CREDITS ORDER =================
+  // ================= CREDITS ORDER (atomic) =================
   const supabase = await createClient();
   const {
     data: { user },
@@ -166,101 +176,74 @@ export async function POST(req: Request) {
     );
   }
 
-  const { data: order, error: orderErr } = await admin
-    .from("orders")
-    .insert({
-      order_number: orderNumber,
-      user_id: user.id,
-      customer_name: c.name || profile?.full_name || null,
-      customer_email: c.email || user.email || null,
-      customer_whatsapp: c.whatsapp || null,
-      country: c.country || null,
-      total,
-      payment_method: "credits",
-      status: "paid",
-    })
-    .select()
-    .single();
+  // Idempotency key: client-generated so retries reuse the same key.
+  const idempotencyKey = body.idempotencyKey ?? `credits:${user.id}:${orderNumber}`;
 
-  if (orderErr || !order) {
-    console.error("checkout credits order error:", orderErr);
-    return Response.json({ error: "Could not create order" }, { status: 500 });
-  }
+  const itemsPayload = items.map((i) => ({
+    product_id: i.productId,
+    product_name: i.productName,
+    variant_id: i.variantId,
+    variant_name: i.variantName,
+    quantity: i.quantity,
+    unit_price: i.unitPrice,
+  }));
 
-  const { data: orderItems } = await admin
-    .from("order_items")
-    .insert(
-      items.map((i) => ({
-        order_id: order.id,
-        product_id: i.productId,
-        product_name: i.productName,
-        variant_id: i.variantId,
-        variant_name: i.variantName,
-        quantity: i.quantity,
-        unit_price: i.unitPrice,
-        total: i.unitPrice * i.quantity,
-      }))
-    )
-    .select();
-
-  // ---- Assign codes from stock ----
-  const lines: { productName: string; variantName: string; quantity: number; codes: string[] }[] =
-    [];
-  let delivered = 0;
-
-  for (const item of items) {
-    const { data: available } = await admin
-      .from("codes")
-      .select("id, code")
-      .eq("variant_id", item.variantId)
-      .eq("status", "available")
-      .limit(item.quantity);
-
-    const picked = (available ?? []).slice(0, item.quantity);
-    const codes = picked.map((p) => p.code);
-
-    if (picked.length > 0) {
-      await admin
-        .from("codes")
-        .update({ status: "assigned", order_id: order.id })
-        .in(
-          "id",
-          picked.map((p) => p.id)
-        );
-      await admin.from("order_codes").insert(
-        codes.map((code) => ({
-          order_id: order.id,
-          order_item_id:
-            orderItems?.find(
-              (oi) => oi.variant_id === item.variantId && oi.product_name === item.productName
-            )?.id ?? null,
-          product_name: item.productName,
-          variant_name: item.variantName,
-          code,
-        }))
-      );
-    }
-
-    delivered += codes.length;
-    lines.push({
-      productName: item.productName,
-      variantName: item.variantName,
-      quantity: item.quantity,
-      codes,
-    });
-  }
-
-  // ---- Deduct credits & log transaction ----
-  await admin
-    .from("profiles")
-    .update({ credits_balance: balance - total })
-    .eq("id", user.id);
-  await admin.from("credit_transactions").insert({
-    user_id: user.id,
-    amount: -total,
-    reason: `Order #${orderNumber} - ${STORE_NAME}`,
-    order_id: order.id,
+  const { data: result, error: rpcErr } = await admin.rpc("place_credits_order", {
+    p_user_id: user.id,
+    p_order_number: orderNumber,
+    p_customer_name: c.name || profile?.full_name || null,
+    p_customer_email: c.email || user.email || null,
+    p_customer_whatsapp: c.whatsapp || null,
+    p_country: c.country || null,
+    p_idempotency_key: idempotencyKey,
+    p_items: JSON.stringify(itemsPayload),
+    p_total: total,
   });
+
+  if (rpcErr) {
+    const msg = String(rpcErr.message ?? "Could not complete order");
+    console.error("checkout rpc error:", rpcErr);
+    if (/not enough stock/i.test(msg)) {
+      return Response.json({ error: msg }, { status: 400 });
+    }
+    return Response.json({ error: msg }, { status: 500 });
+  }
+
+  if (!result?.ok) {
+    if (result?.duplicate) {
+      // Already placed under this key: treat as success and return the existing order.
+      return Response.json({ ok: true, order: { id: result.order_id, duplicate: true } });
+    }
+    return Response.json({ error: result?.error ?? "Could not complete order" }, { status: 400 });
+  }
+
+  const orderId = result.order_id as string;
+
+  // ---- Load delivered codes for the email ----
+  const { data: oc } = await admin
+    .from("order_codes")
+    .select("product_name, variant_name, code")
+    .eq("order_id", orderId);
+
+  const grouped = new Map<string, { productName: string; variantName: string; codes: string[] }>();
+  for (const row of oc ?? []) {
+    const k = `${row.product_name}|${row.variant_name}`;
+    if (!grouped.has(k)) {
+      grouped.set(k, {
+        productName: row.product_name,
+        variantName: row.variant_name,
+        codes: [],
+      });
+    }
+    grouped.get(k)!.codes.push(row.code);
+  }
+  const lines = [...grouped.values()].map((g) => ({ ...g, quantity: g.codes.length }));
+  const delivered = (oc ?? []).length;
+  const allDelivered = lines.length > 0 && lines.every((l) => l.codes.length > 0);
+
+  if (allDelivered) {
+    await admin.from("orders").update({ status: "completed" }).eq("id", orderId);
+  }
 
   // ---- Email codes ----
   let emailSent = false;
@@ -279,18 +262,11 @@ export async function POST(req: Request) {
     }
   }
 
-  // Mark completed when every item had codes delivered
-  const allDelivered =
-    lines.every((l) => l.codes.length >= l.quantity) && items.length > 0;
-  if (allDelivered) {
-    await admin.from("orders").update({ status: "completed" }).eq("id", order.id);
-  }
-
   return Response.json({
     ok: true,
     order: {
-      id: order.id,
-      order_number: order.order_number,
+      id: orderId,
+      order_number: orderNumber,
       payment_method: "credits",
       status: allDelivered ? "completed" : "paid",
       codes_delivered: delivered,

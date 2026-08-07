@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { clientIp, rateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
@@ -7,6 +8,15 @@ export async function POST(req: Request) {
 
   if (!email || !password) {
     return Response.json({ error: "Email and password are required" }, { status: 400 });
+  }
+
+  const ip = clientIp(req);
+  const rl = await rateLimit(`login:${ip}:${String(email).toLowerCase()}`, 8, 900);
+  if (!rl.allowed) {
+    return Response.json(
+      { error: "Too many login attempts. Please wait a few minutes and try again." },
+      { status: 429 }
+    );
   }
 
   const supabase = await createClient();

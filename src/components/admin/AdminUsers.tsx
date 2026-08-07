@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Minus, Loader2, Shield } from "lucide-react";
+import { Plus, Minus, Loader2, Shield, Trash2 } from "lucide-react";
 import { formatPrice } from "@/lib/order";
 import type { CreditTransaction, Profile } from "@/lib/types";
 
@@ -65,6 +65,17 @@ export default function AdminUsers() {
     load();
   };
 
+  const deleteUser = async (u: Profile) => {
+    if (!window.confirm(`Delete ${u.email}? This cannot be undone.`)) return;
+    setBusy(true);
+    const res = await fetch(`/api/admin/users/${u.id}`, { method: "DELETE" });
+    const data = await res.json();
+    setBusy(false);
+    setNotice(data.ok ? `Deleted ${u.email}` : data.error ?? "Failed to delete user");
+    if (data.ok) setTimeout(() => setNotice(""), 4000);
+    load();
+  };
+
   if (loading)
     return (
       <div className="flex justify-center py-20">
@@ -117,6 +128,14 @@ export default function AdminUsers() {
                     className="flex items-center gap-1.5 rounded-lg border border-red-500/40 px-3 py-1.5 text-xs font-bold text-red-400 hover:bg-red-500/10"
                   >
                     <Minus className="h-3.5 w-3.5" /> Deduct
+                  </button>
+                  <button
+                    onClick={() => deleteUser(u)}
+                    disabled={busy}
+                    title="Delete user"
+                    className="flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-bold text-slate-400 hover:border-red-500/50 hover:text-red-400 disabled:opacity-50"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" /> Delete
                   </button>
                 </div>
               </div>
