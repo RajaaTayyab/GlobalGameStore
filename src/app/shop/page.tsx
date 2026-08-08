@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getCatalog } from "@/lib/products";
 import ProductGrid from "@/components/ProductGrid";
 import ShopControls from "@/components/ShopControls";
+import SectionGrid3D from "@/components/SectionGrid3D";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,8 @@ export default async function ShopPage(props: PageProps<"/shop">) {
   const catalog = await getCatalog({ categorySlug: category, search: q });
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10">
+    <div className="relative mx-auto max-w-7xl overflow-hidden px-4 py-10">
+      <SectionGrid3D seed={4} floaters={4} />
       <div className="mb-8">
         <h1 className="font-serif text-3xl font-bold text-text-primary">Shop</h1>
         <p className="mt-1 text-sm text-text-muted">

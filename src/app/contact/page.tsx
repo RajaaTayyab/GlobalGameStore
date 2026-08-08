@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Mail, Globe } from "lucide-react";
 import ContactWhatsApp from "@/components/ContactWhatsApp";
+import Gateway3D from "@/components/Gateway3D";
 
 export const dynamic = "force-dynamic";
 
@@ -25,8 +26,9 @@ export default async function ContactPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16">
-      <div className="text-center">
+    <div className="relative mx-auto max-w-3xl overflow-hidden px-4 py-16">
+      <Gateway3D seed={9} />
+      <div className="text-center relative">
         <h1 className="font-serif text-3xl font-bold text-text-primary">Contact Us</h1>
         <p className="mt-2 text-text-muted">
           Questions about an order? Our team replies 24/7 on WhatsApp.

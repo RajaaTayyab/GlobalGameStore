@@ -6,6 +6,9 @@ import ProductGrid from "@/components/ProductGrid";
 import RegionBanner from "@/components/RegionBanner";
 import Hero from "@/components/Hero";
 import TiltCard from "@/components/TiltCard";
+import SectionGrid3D from "@/components/SectionGrid3D";
+import CreditFlow3D from "@/components/CreditFlow3D";
+import Gateway3D from "@/components/Gateway3D";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +36,8 @@ export default async function HomePage() {
 
       {/* Categories */}
       {categories.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-14">
+        <section className="relative mx-auto max-w-7xl overflow-hidden px-4 py-14">
+          <SectionGrid3D seed={2} floaters={5} />
           <div className="mb-8 flex items-end justify-between">
             <div>
               <h2 className="font-serif text-2xl font-bold text-text-primary sm:text-3xl">
@@ -74,7 +78,8 @@ export default async function HomePage() {
 
       {/* Location based recommendations */}
       <RegionBanner />
-      <section className="mx-auto max-w-7xl px-4 pb-14">
+      <section className="relative mx-auto max-w-7xl overflow-hidden px-4 pb-14">
+        <SectionGrid3D seed={3} floaters={4} />
         <ProductGrid
           products={catalog.products}
           variantsByProduct={catalog.variantsByProduct}
@@ -83,7 +88,8 @@ export default async function HomePage() {
       </section>
 
       {/* How checkout works — the store's actual point of difference */}
-      <section className="border-y border-border bg-bg/60">
+      <section className="relative overflow-hidden border-y border-border">
+        <CreditFlow3D seed={5} coins={18} />
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <h2 className="font-serif text-3xl font-bold text-text-primary">
@@ -125,7 +131,8 @@ export default async function HomePage() {
       </section>
 
       {/* Closing CTA */}
-      <section className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-6 px-4 py-16">
+      <section className="relative mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-6 overflow-hidden px-4 py-16">
+        <Gateway3D seed={7} />
         <h2 className="font-serif text-2xl font-bold text-text-primary sm:text-3xl">
           Find your game&apos;s catalog.
         </h2>
