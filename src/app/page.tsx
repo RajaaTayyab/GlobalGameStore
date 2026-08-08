@@ -5,6 +5,7 @@ import { getCatalog } from "@/lib/products";
 import ProductGrid from "@/components/ProductGrid";
 import RegionBanner from "@/components/RegionBanner";
 import Hero from "@/components/Hero";
+import TiltCard from "@/components/TiltCard";
 
 export const dynamic = "force-dynamic";
 
@@ -45,10 +46,10 @@ export default async function HomePage() {
           </div>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
 {categories.map((c) => (
+              <TiltCard key={c.id} intensity={6} className="h-full" scale={1.02}>
               <Link
-                key={c.id}
                 href={`/shop?category=${c.slug}`}
-                className="group relative overflow-hidden rounded-lg border border-border bg-surface transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10 hover:glow-chrome-sm"
+                className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-surface transition-[border-color,box-shadow] duration-300 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
               >
                 <Image
                   src={c.image_url || CATEGORY_FALLBACKS[c.slug] || "/images/razer-gold.webp"}
@@ -65,6 +66,7 @@ export default async function HomePage() {
                   </p>
                 </div>
               </Link>
+              </TiltCard>
             ))}
           </div>
         </section>

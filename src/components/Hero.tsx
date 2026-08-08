@@ -6,6 +6,8 @@ import { ArrowRight, MessageCircle } from "lucide-react";
 import { useRegion } from "@/context/RegionContext";
 import { REGION_LABELS } from "@/lib/constants";
 import type { RegionCode } from "@/lib/types";
+import TiltCard from "./TiltCard";
+import Hero3DScene from "./Hero3DScene";
 
 interface HeroItem {
   slug: string;
@@ -40,6 +42,7 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden">
+      <Hero3DScene />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,175,140,0.10),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(201,175,140,0.08),transparent_55%)]" />
       <div className="bg-grid absolute inset-0" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 lg:grid-cols-2 lg:py-28">
@@ -79,28 +82,29 @@ export default function Hero() {
 
         <div className={`grid gap-4 ${cols}`}>
           {featured.map((f, i) => (
-            <Link
-              key={f.slug}
-              href={`/product/${f.slug}`}
-              style={{ animationDelay: `${i * 90}ms` }}
-              className="hud-corners card-premium group relative animate-fade-up overflow-hidden rounded-2xl border border-border shadow-lg hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
-            >
-              <span className="scanlines absolute inset-0" />
-              <Image
-                src={f.image}
-                alt={f.alt}
-                width={300}
-                height={300}
-                className="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-                <p className="font-bold text-text-primary">{f.alt}</p>
-                <p className="mt-0.5 flex items-center gap-1 text-xs font-semibold text-accent-chrome opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100 -translate-x-1">
-                  Shop now <ArrowRight className="h-3 w-3" />
-                </p>
-              </div>
-            </Link>
+            <TiltCard key={f.slug} intensity={7} scale={1.02} className="h-full">
+              <Link
+                href={`/product/${f.slug}`}
+                style={{ animationDelay: `${i * 90}ms` }}
+                className="hud-corners group relative flex h-full animate-fade-up overflow-hidden rounded-2xl border border-border shadow-lg transition-[border-color,box-shadow] duration-300 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
+              >
+                <span className="scanlines absolute inset-0" />
+                <Image
+                  src={f.image}
+                  alt={f.alt}
+                  width={300}
+                  height={300}
+                  className="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <p className="font-bold text-text-primary">{f.alt}</p>
+                  <p className="mt-0.5 flex items-center gap-1 text-xs font-semibold text-accent-chrome opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100 -translate-x-1">
+                    Shop now <ArrowRight className="h-3 w-3" />
+                  </p>
+                </div>
+              </Link>
+            </TiltCard>
           ))}
         </div>
       </div>
