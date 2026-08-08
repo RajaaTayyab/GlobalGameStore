@@ -55,11 +55,11 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border bg-bg/70 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4">
         {/* Logo */}
         <Link href="/" className="group flex items-center gap-2" aria-label="GlobalGameStore home">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-chrome transition duration-300 group-hover:rounded-xl group-hover:brightness-110">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-chrome transition duration-300 group-hover:rounded-xl group-hover:brightness-110 group-hover:shadow-[0_0_12px_2px_rgba(201,175,140,0.35)]">
             <Gamepad2 className="h-5 w-5 text-bg" />
           </div>
           <span className="font-serif text-lg tracking-tight text-text-primary">
@@ -97,7 +97,7 @@ export default function Navbar() {
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
-            className="rounded-lg border border-border p-2 text-text-muted transition duration-200 hover:border-accent-chrome/50 hover:text-text-primary active:scale-90"
+            className="btn-ripple rounded-lg border border-border p-2 text-text-muted transition duration-200 hover:border-accent-chrome/50 hover:text-text-primary hover:glow-chrome-sm active:scale-90"
             aria-label="Toggle light/dark mode"
           >
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -106,12 +106,12 @@ export default function Navbar() {
           {/* Cart */}
           <button
             onClick={openCart}
-            className="relative rounded-lg border border-border p-2 text-text-muted transition duration-200 hover:border-accent-chrome/50 hover:text-text-primary active:scale-90"
+            className="btn-ripple relative rounded-lg border border-border p-2 text-text-muted transition duration-200 hover:border-accent-chrome/50 hover:text-text-primary active:scale-90"
             aria-label="Cart"
           >
             <ShoppingCart className="h-5 w-5" />
             {count > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 animate-fade-in items-center justify-center rounded-full bg-accent-oxblood font-mono text-xs font-bold text-white">
+              <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 animate-fade-in items-center justify-center rounded-full bg-accent-oxblood font-mono text-xs font-bold text-white shadow-[0_0_8px_1px_var(--color-accent-oxblood)]">
                 {count}
               </span>
             )}
@@ -120,7 +120,7 @@ export default function Navbar() {
           {/* Account */}
           <Link
             href={user ? "/account" : "/login"}
-            className="rounded-lg border border-border p-2 text-text-muted transition duration-200 hover:border-accent-chrome/50 hover:text-text-primary active:scale-90"
+            className="btn-ripple rounded-lg border border-border p-2 text-text-muted transition duration-200 hover:border-accent-chrome/50 hover:text-text-primary active:scale-90"
             aria-label="Account"
           >
             <User className="h-5 w-5" />
@@ -144,7 +144,7 @@ export default function Navbar() {
 
       {/* Mobile nav */}
       {mobileOpen && (
-        <nav className="animate-fade-in border-t border-border bg-bg px-4 py-3 md:hidden">
+        <nav className="glass animate-fade-in border-t border-border px-4 py-3 md:hidden">
           {NAV_LINKS.map((l) => (
             <Link
               key={l.href}

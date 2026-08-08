@@ -45,14 +45,17 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${karla.variable} ${splineMono.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <RegionProvider initialRegion={initialRegion}>
-          <CartProvider>
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <CartDrawer />
-          </CartProvider>
-        </RegionProvider>
+        <div className="ambient-particles pointer-events-none fixed inset-0 z-0" aria-hidden="true" />
+        <div className="relative z-10 flex w-full grow flex-col">
+          <RegionProvider initialRegion={initialRegion}>
+            <CartProvider>
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+              <CartDrawer />
+            </CartProvider>
+          </RegionProvider>
+        </div>
       </body>
     </html>
   );

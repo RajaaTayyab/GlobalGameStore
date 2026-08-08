@@ -189,3 +189,253 @@ body {
   background: currentColor;
   opacity: 0.7;
 }
+
+/* ============ Premium Gaming Polish (keeps Vault & Chrome palette) ============ */
+
+/* Glow shadow utilities using our chrome/oxblood accents */
+@utility glow-chrome {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-accent-chrome) 30%, transparent),
+    0 4px 24px -4px color-mix(in srgb, var(--color-accent-chrome) 25%, transparent),
+    0 0 40px -8px color-mix(in srgb, var(--color-accent-chrome) 12%, transparent);
+}
+@utility glow-chrome-sm {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-accent-chrome) 20%, transparent),
+    0 2px 12px -2px color-mix(in srgb, var(--color-accent-chrome) 15%, transparent);
+}
+@utility glow-oxblood {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-accent-oxblood) 40%, transparent),
+    0 4px 24px -4px color-mix(in srgb, var(--color-accent-oxblood) 30%, transparent),
+    0 0 32px -6px color-mix(in srgb, var(--color-accent-oxblood) 15%, transparent);
+}
+@utility glow-oxblood-sm {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-accent-oxblood) 30%, transparent),
+    0 2px 10px -2px color-mix(in srgb, var(--color-accent-oxblood) 20%, transparent);
+}
+@utility glow-instock {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-instock) 35%, transparent),
+    0 2px 16px -2px color-mix(in srgb, var(--color-instock) 25%, transparent);
+}
+
+/* Glassmorphism surfaces — frosted glass with subtle chrome border */
+@utility glass {
+  background: color-mix(in srgb, var(--color-surface) 85%, transparent);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid color-mix(in srgb, var(--color-accent-chrome) 18%, var(--color-border));
+}
+@utility glass-strong {
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid color-mix(in srgb, var(--color-accent-chrome) 25%, var(--color-border));
+}
+
+/* Staggered reveal for grids */
+@utility stagger-1 { animation-delay: 40ms; }
+@utility stagger-2 { animation-delay: 80ms; }
+@utility stagger-3 { animation-delay: 120ms; }
+@utility stagger-4 { animation-delay: 160ms; }
+@utility stagger-5 { animation-delay: 200ms; }
+@utility stagger-6 { animation-delay: 240ms; }
+@utility stagger-7 { animation-delay: 280ms; }
+@utility stagger-8 { animation-delay: 320ms; }
+
+/* ============ Premium Gaming Pseudo-element / State utilities ============ */
+/* These use pseudo-elements or state selectors, so they must be plain CSS, not @utility. */
+
+/* Scanline overlay — subtle CRT feel for hero/images, never > 6% opacity */
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    color-mix(in srgb, var(--color-text-primary) 4%, transparent) 2px,
+    color-mix(in srgb, var(--color-text-primary) 4%, transparent) 4px
+  );
+  opacity: 0.5;
+  mask-image: radial-gradient(ellipse 100% 80% at 50% 50%, black 50%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 50%, black 50%, transparent 100%);
+}
+
+/* Gradient border — animated chrome sweep on primary cards */
+.border-gradient-chrome {
+  position: relative;
+  border-radius: 12px;
+}
+.border-gradient-chrome::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 13px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-accent-chrome) 40%, transparent) 0%,
+    color-mix(in srgb, var(--color-accent-chrome) 10%, transparent) 50%,
+    color-mix(in srgb, var(--color-accent-chrome) 5%, transparent) 100%
+  );
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.border-gradient-chrome:hover::before {
+  opacity: 1;
+}
+
+/* Magnetic button press — slight scale + glow pulse */
+.magnetic {
+  transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.15s ease;
+}
+.magnetic:active {
+  transform: scale(0.98);
+}
+.magnetic:hover {
+  transform: scale(1.015);
+}
+
+/* Shimmer loading skeleton */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-border) 60%, transparent) 25%,
+    color-mix(in srgb, var(--color-border) 30%, transparent) 50%,
+    color-mix(in srgb, var(--color-border) 60%, transparent) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/* CRT scanline fade-in for hero entrance */
+@keyframes scanline-reveal {
+  0% { clip-path: inset(0 0 100% 0); opacity: 0; }
+  50% { clip-path: inset(0 0 50% 0); opacity: 0.6; }
+  100% { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+.animate-scanline-reveal {
+  animation: scanline-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Radial atmospheric glow for hero background */
+.radial-glow {
+  position: relative;
+}
+.radial-glow::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 80vw;
+  height: 80vw;
+  max-width: 600px;
+  max-height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--color-accent-chrome) 12%, transparent) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Premium card hover lift with glow */
+.card-premium {
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease;
+}
+.card-premium:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--color-accent-chrome) 50%, var(--color-border));
+}
+
+/* Button ripple effect (pseudo-element based) */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.btn-ripple::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, color-mix(in srgb, currentColor 15%, transparent) 0%, transparent 70%);
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.1s ease;
+  pointer-events: none;
+}
+.btn-ripple:active::after {
+  transform: scale(2.5);
+  opacity: 1;
+  transition: transform 0s, opacity 0s;
+}
+
+/* Focus ring gaming style */
+.focus-gaming {
+  outline: none;
+}
+.focus-gaming:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent-chrome) 40%, transparent);
+}
+
+/* Text gradient chrome (for headings) */
+.text-gradient-chrome {
+  background: linear-gradient(
+    135deg,
+    var(--color-text-primary) 0%,
+    var(--color-accent-chrome) 50%,
+    var(--color-text-primary) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Ambient floating particles (CSS only, very subtle) */
+.ambient-particles {
+  position: relative;
+}
+.ambient-particles::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(2px 2px at 10% 20%, color-mix(in srgb, var(--color-accent-chrome) 15%, transparent), transparent),
+    radial-gradient(2px 2px at 80% 40%, color-mix(in srgb, var(--color-accent-chrome) 10%, transparent), transparent),
+    radial-gradient(1px 1px at 50% 80%, color-mix(in srgb, var(--color-accent-chrome) 8%, transparent), transparent),
+    radial-gradient(1.5px 1.5px at 30% 60%, color-mix(in srgb, var(--color-accent-chrome) 12%, transparent), transparent),
+    radial-gradient(1px 1px at 90% 10%, color-mix(in srgb, var(--color-accent-chrome) 8%, transparent), transparent);
+  background-size: 400px 400px;
+  animation: ambient-drift 30s linear infinite;
+  opacity: 0.4;
+}
+@keyframes ambient-drift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(20px, 15px); }
+  50% { transform: translate(-10px, 30px); }
+  75% { transform: translate(15px, -10px); }
+  100% { transform: translate(0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambient-particles::before {
+    animation: none;
+  }
+}

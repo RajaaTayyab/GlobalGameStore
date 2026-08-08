@@ -425,7 +425,7 @@ interface ApiResponse {
           <form
             onSubmit={saveProduct}
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[90vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-lg border border-border bg-surface p-6"
+            className="glass-strong clip-corner max-h-[90vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-lg border border-accent-chrome/20 p-6 shadow-2xl"
           >
             <h2 className="font-serif text-lg font-bold text-text-primary">{editing ? "Edit product" : "New product"}</h2>
             <div>

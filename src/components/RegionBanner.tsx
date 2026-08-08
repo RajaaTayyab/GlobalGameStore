@@ -32,7 +32,7 @@ export default function RegionBanner() {
           {(REGION_GAMES[region] ?? []).map((g) => (
             <span
               key={g}
-              className="rounded-full border border-border px-3 py-1.5 font-mono text-xs font-semibold text-text-muted"
+              className="clip-corner-sm rounded-full border border-border px-3 py-1.5 font-mono text-xs font-semibold text-text-muted transition duration-200 hover:border-accent-chrome/40 hover:text-text-primary"
             >
               {g}
             </span>

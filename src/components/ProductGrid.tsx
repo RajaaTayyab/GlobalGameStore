@@ -45,18 +45,19 @@ export default function ProductGrid({
 
   return (
     <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
-      {visible.map((p) => (
-        <ProductCard
-          key={p.id}
-          product={p}
-          variants={variantsByProduct[p.id] ?? []}
-          highlight={detected && p.region?.code === region}
-          regionBadge={
-            showRegionBadge && detected && p.region && p.region.code === region
-              ? `Popular in ${p.region.name}`
-              : null
-          }
-        />
+      {visible.map((p, i) => (
+        <div key={p.id} className={`animate-fade-up stagger-${(i % 8) + 1}`}>
+          <ProductCard
+            product={p}
+            variants={variantsByProduct[p.id] ?? []}
+            highlight={detected && p.region?.code === region}
+            regionBadge={
+              showRegionBadge && detected && p.region && p.region.code === region
+                ? `Popular in ${p.region.name}`
+                : null
+            }
+          />
+        </div>
       ))}
     </div>
   );

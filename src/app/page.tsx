@@ -44,11 +44,11 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {categories.map((c) => (
+{categories.map((c) => (
               <Link
                 key={c.id}
                 href={`/shop?category=${c.slug}`}
-                className="hud-corners clip-corner group relative overflow-hidden border border-border bg-surface transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
+                className="group relative overflow-hidden rounded-lg border border-border bg-surface transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10 hover:glow-chrome-sm"
               >
                 <Image
                   src={c.image_url || CATEGORY_FALLBACKS[c.slug] || "/images/razer-gold.webp"}
@@ -93,8 +93,10 @@ export default async function HomePage() {
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-lg border border-border bg-surface p-6">
-              <Wallet className="h-6 w-6 text-accent-chrome" />
+            <div className="card-premium group rounded-lg border border-border bg-surface p-6 hover:border-accent-chrome/40 hover:shadow-lg hover:shadow-accent-chrome/10">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-chrome/10 text-accent-chrome transition duration-300 group-hover:bg-accent-chrome group-hover:text-bg">
+                <Wallet className="h-6 w-6" />
+              </div>
               <h3 className="mt-4 font-serif text-lg font-semibold text-text-primary">
                 Store credit
               </h3>
@@ -104,8 +106,10 @@ export default async function HomePage() {
                 second payment clears.
               </p>
             </div>
-            <div className="rounded-lg border border-border bg-surface p-6">
-              <MessageCircle className="h-6 w-6 text-instock" />
+            <div className="card-premium group rounded-lg border border-border bg-surface p-6 hover:border-accent-chrome/40 hover:shadow-lg hover:shadow-accent-chrome/10">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-instock/10 text-instock transition duration-300 group-hover:bg-instock group-hover:text-bg">
+                <MessageCircle className="h-6 w-6" />
+              </div>
               <h3 className="mt-4 font-serif text-lg font-semibold text-text-primary">
                 WhatsApp order
               </h3>
@@ -125,7 +129,7 @@ export default async function HomePage() {
         </h2>
         <Link
           href="/shop"
-          className="clip-corner group inline-flex items-center gap-2 bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
+          className="btn-ripple clip-corner group inline-flex items-center gap-2 bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 hover:glow-oxblood active:scale-[0.98]"
         >
           Browse the catalog
           <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />

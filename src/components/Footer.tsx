@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <Link href="/" className="group flex items-center gap-2" aria-label="GlobalGameStore home">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-chrome transition duration-300 group-hover:rounded-xl group-hover:brightness-110">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-chrome transition duration-300 group-hover:rounded-xl group-hover:brightness-110 group-hover:shadow-[0_0_12px_2px_rgba(201,175,140,0.35)]">
               <Gamepad2 className="h-5 w-5 text-bg" />
             </div>
             <span className="font-serif text-lg tracking-tight text-text-primary">
@@ -58,7 +58,7 @@ export default function Footer() {
           </p>
           <button
             onClick={() => router.push("/contact")}
-            className="inline-flex items-center gap-2 rounded-lg bg-instock px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-instock/20 transition duration-200 hover:bg-instock/90 hover:shadow-instock/35 active:scale-[0.98]"
+            className="btn-ripple inline-flex items-center gap-2 rounded-lg bg-instock px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-instock/20 transition duration-200 hover:bg-instock/90 hover:shadow-instock/35 hover:glow-instock active:scale-[0.98]"
           >
             <MessageCircle className="h-4 w-4" />
             WhatsApp Support

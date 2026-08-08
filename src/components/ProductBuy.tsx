@@ -96,7 +96,7 @@ export default function ProductBuy({
             onClick={() => setSelected(v)}
             className={`rounded-xl border px-4 py-3 text-left transition duration-200 active:scale-[0.99] ${
               selected?.id === v.id
-                ? "border-accent-chrome bg-accent-chrome/10 shadow-sm shadow-accent-chrome/10"
+                ? "border-accent-chrome bg-accent-chrome/10 shadow-sm shadow-accent-chrome/10 glow-chrome-sm"
                 : "border-border hover:border-accent-chrome/50 hover:bg-surface"
             }`}
           >
@@ -149,13 +149,13 @@ export default function ProductBuy({
           <div className="mt-6 flex flex-wrap gap-3">
             <button
               onClick={handleAdd}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-accent-chrome/60 px-5 py-3 font-semibold text-accent-chrome transition duration-200 hover:bg-accent-chrome/10 active:scale-[0.98]"
+              className="btn-ripple flex flex-1 items-center justify-center gap-2 rounded-xl border border-accent-chrome/60 px-5 py-3 font-semibold text-accent-chrome transition duration-200 hover:bg-accent-chrome/10 hover:glow-chrome-sm active:scale-[0.98]"
             >
               <ShoppingCart className="h-4 w-4" /> Add to Cart
             </button>
             <button
               onClick={handleBuyNow}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-accent-oxblood px-5 py-3 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
+              className="btn-ripple flex flex-1 items-center justify-center gap-2 rounded-xl bg-accent-oxblood px-5 py-3 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 hover:glow-oxblood active:scale-[0.98]"
             >
               <Zap className="h-4 w-4" /> Buy Now
             </button>

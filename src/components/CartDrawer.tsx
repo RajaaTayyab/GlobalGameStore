@@ -19,7 +19,7 @@ export default function CartDrawer() {
         onClick={closeCart}
       />
       <aside
-        className={`fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col border-l border-border bg-surface shadow-2xl transition-transform duration-300 ${
+        className={`glass-strong fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col border-l border-border shadow-2xl transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -45,7 +45,7 @@ export default function CartDrawer() {
               <Link
                 href="/shop"
                 onClick={closeCart}
-                className="mt-4 rounded-lg bg-accent-oxblood px-4 py-2 text-sm font-semibold text-white hover:bg-accent-oxblood/90"
+                className="btn-ripple clip-corner mt-4 rounded-lg bg-accent-oxblood px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 hover:glow-oxblood-sm active:scale-[0.97]"
               >
                 Browse Products
               </Link>
@@ -130,14 +130,14 @@ export default function CartDrawer() {
               <Link
                 href="/cart"
                 onClick={closeCart}
-                className="flex-1 rounded-lg border border-border px-4 py-2.5 text-center text-sm font-semibold text-text-primary transition duration-200 hover:border-accent-chrome/50 hover:bg-surface active:scale-[0.98]"
+                className="flex-1 rounded-lg border border-border px-4 py-2.5 text-center text-sm font-semibold text-text-primary transition duration-200 hover:border-accent-chrome/50 hover:bg-surface hover:glow-chrome-sm active:scale-[0.98]"
               >
                 View Cart
               </Link>
               <Link
                 href="/checkout"
                 onClick={closeCart}
-                className="flex-1 rounded-lg bg-accent-oxblood px-4 py-2.5 text-center text-sm font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98]"
+                className="btn-ripple flex-1 rounded-lg bg-accent-oxblood px-4 py-2.5 text-center text-sm font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 hover:glow-oxblood-sm active:scale-[0.98]"
               >
                 Checkout
               </Link>

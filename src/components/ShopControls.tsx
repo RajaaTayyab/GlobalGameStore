@@ -62,8 +62,8 @@ export default function ShopControls({
           }}
           className={`rounded-full px-4 py-2 font-mono text-sm font-medium transition duration-200 active:scale-[0.97] ${
             !activeCategory
-              ? "bg-accent-chrome text-bg"
-              : "border border-border text-text-muted hover:border-accent-chrome/50 hover:text-text-primary"
+              ? "bg-accent-chrome text-bg shadow glow-chrome"
+              : "border border-border text-text-muted hover:border-accent-chrome/50 hover:text-text-primary hover:glow-chrome-sm"
           }`}
         >
           All
@@ -79,8 +79,8 @@ export default function ShopControls({
             }}
             className={`rounded-full px-4 py-2 font-mono text-sm font-medium transition duration-200 active:scale-[0.97] ${
               activeCategory === c.slug
-                ? "bg-accent-chrome text-bg"
-                : "border border-border text-text-muted hover:border-accent-chrome/50 hover:text-text-primary"
+                ? "bg-accent-chrome text-bg shadow glow-chrome"
+                : "border border-border text-text-muted hover:border-accent-chrome/50 hover:text-text-primary hover:glow-chrome-sm"
             }`}
           >
             {c.name}

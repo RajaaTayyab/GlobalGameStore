@@ -40,17 +40,20 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,175,140,0.10),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(201,175,140,0.08),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,175,140,0.10),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(201,175,140,0.08),transparent_55%)]" />
       <div className="bg-grid absolute inset-0" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 lg:grid-cols-2 lg:py-28">
         <div className="animate-fade-up">
           <p className="hud-tag mb-5 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent-chrome">
-            <span className="h-1.5 w-1.5 rounded-full bg-instock" />
+            <span className="h-1.5 w-1.5 rounded-full bg-instock shadow-[0_0_6px_1px_var(--color-instock)]" />
             {detected ? `Ranked for ${REGION_LABELS[region]}` : "Full global catalog"}
           </p>
           <h1 className="font-serif text-4xl leading-[1.05] tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
             The vault for{" "}
-            <span className="text-accent-chrome italic">game credit</span>.
+            <span className="text-accent-chrome italic drop-shadow-[0_0_18px_rgba(201,175,140,0.35)]">
+              game credit
+            </span>
+            .
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-text-muted">
             PUBG, Free Fire, PlayStation, Xbox, Razer Gold and more —
@@ -59,14 +62,14 @@ export default function Hero() {
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/shop"
-              className="clip-corner group inline-flex items-center gap-2 bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
+              className="btn-ripple clip-corner group inline-flex items-center gap-2 bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 hover:glow-oxblood active:scale-[0.98]"
             >
               Browse the catalog
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
             <Link
               href="/contact"
-              className="clip-corner inline-flex items-center gap-2 border border-border px-6 py-3 font-semibold text-text-primary transition hover:border-accent-chrome/50 hover:bg-surface active:scale-[0.98]"
+              className="btn-ripple clip-corner inline-flex items-center gap-2 border border-border px-6 py-3 font-semibold text-text-primary transition hover:border-accent-chrome/50 hover:bg-surface hover:glow-chrome-sm active:scale-[0.98]"
             >
               <MessageCircle className="h-4 w-4" />
               Order on WhatsApp
@@ -80,14 +83,15 @@ export default function Hero() {
               key={f.slug}
               href={`/product/${f.slug}`}
               style={{ animationDelay: `${i * 90}ms` }}
-              className="hud-corners group relative animate-fade-up overflow-hidden rounded-2xl border border-border shadow-lg transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
+              className="hud-corners card-premium group relative animate-fade-up overflow-hidden rounded-2xl border border-border shadow-lg hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
             >
+              <span className="scanlines absolute inset-0" />
               <Image
                 src={f.image}
                 alt={f.alt}
                 width={300}
                 height={300}
-                className="aspect-square w-full object-cover transition duration-300 group-hover:scale-105"
+                className="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/20 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-4">
