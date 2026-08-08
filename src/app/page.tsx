@@ -48,7 +48,7 @@ export default async function HomePage() {
               <Link
                 key={c.id}
                 href={`/shop?category=${c.slug}`}
-                className="group relative overflow-hidden rounded-lg border border-border bg-surface transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
+                className="hud-corners clip-corner group relative overflow-hidden border border-border bg-surface transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
               >
                 <Image
                   src={c.image_url || CATEGORY_FALLBACKS[c.slug] || "/images/razer-gold.webp"}
@@ -125,7 +125,7 @@ export default async function HomePage() {
         </h2>
         <Link
           href="/shop"
-          className="group inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
+          className="clip-corner group inline-flex items-center gap-2 bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
         >
           Browse the catalog
           <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />

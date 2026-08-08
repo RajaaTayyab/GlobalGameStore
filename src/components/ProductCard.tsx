@@ -40,7 +40,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
         highlight ? "border-accent-chrome/40" : "border-border"
       }`}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-surface">
+      <div className="hud-corners relative aspect-[4/3] overflow-hidden bg-surface">
         {product.image_url ? (
           <Image
             src={product.image_url}
@@ -55,12 +55,12 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
           </div>
         )}
         {regionBadge && (
-          <span className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-accent-chrome px-2.5 py-1 text-xs font-bold text-bg shadow">
+          <span className="clip-corner-sm absolute left-2 top-2 flex items-center gap-1 bg-accent-chrome px-2.5 py-1 font-mono text-xs font-bold text-bg shadow">
             <Flame className="h-3 w-3" /> {regionBadge}
           </span>
         )}
         {product.featured && (
-          <span className="absolute right-2 top-2 rounded-full bg-accent-chrome px-2.5 py-1 font-mono text-xs font-bold text-bg shadow">
+          <span className="clip-corner-sm absolute right-2 top-2 bg-accent-chrome px-2.5 py-1 font-mono text-xs font-bold text-bg shadow">
             Sale
           </span>
         )}
@@ -99,7 +99,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
           <button
             onClick={handleAdd}
             disabled={!first || !!product.sold_out}
-            className="flex items-center gap-1.5 rounded-lg bg-accent-oxblood px-3 py-2 text-xs font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.97] disabled:opacity-40"
+            className="clip-corner-sm flex items-center gap-1.5 bg-accent-oxblood px-3 py-2 text-xs font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.97] disabled:opacity-40"
           >
             <ShoppingCart className="h-3.5 w-3.5" />
             {product.sold_out ? "Sold out" : "Add to Cart"}

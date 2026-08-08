@@ -41,9 +41,10 @@ export default function Hero() {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,175,140,0.10),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(201,175,140,0.08),transparent_55%)]" />
+      <div className="bg-grid absolute inset-0" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 lg:grid-cols-2 lg:py-28">
         <div className="animate-fade-up">
-          <p className="mb-5 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent-chrome">
+          <p className="hud-tag mb-5 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent-chrome">
             <span className="h-1.5 w-1.5 rounded-full bg-instock" />
             {detected ? `Ranked for ${REGION_LABELS[region]}` : "Full global catalog"}
           </p>
@@ -58,14 +59,14 @@ export default function Hero() {
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/shop"
-              className="group inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
+              className="clip-corner group inline-flex items-center gap-2 bg-accent-oxblood px-6 py-3 font-semibold text-white shadow-lg shadow-accent-oxblood/25 transition hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
             >
               Browse the catalog
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-xl border border-border px-6 py-3 font-semibold text-text-primary transition hover:border-accent-chrome/50 hover:bg-surface active:scale-[0.98]"
+              className="clip-corner inline-flex items-center gap-2 border border-border px-6 py-3 font-semibold text-text-primary transition hover:border-accent-chrome/50 hover:bg-surface active:scale-[0.98]"
             >
               <MessageCircle className="h-4 w-4" />
               Order on WhatsApp
@@ -79,7 +80,7 @@ export default function Hero() {
               key={f.slug}
               href={`/product/${f.slug}`}
               style={{ animationDelay: `${i * 90}ms` }}
-              className="group relative animate-fade-up overflow-hidden rounded-2xl border border-border shadow-lg transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
+              className="hud-corners group relative animate-fade-up overflow-hidden rounded-2xl border border-border shadow-lg transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
             >
               <Image
                 src={f.image}

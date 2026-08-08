@@ -112,3 +112,80 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-muted);
 }
+
+/* ============ Gaming accents — HUD panel language, used sparingly ============ */
+
+/* Single-corner cut, like an esports UI panel. Keep to one clipped corner so it
+   still reads as premium rather than "gamer plastic". */
+@utility clip-corner {
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+}
+@utility clip-corner-sm {
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+
+/* Reticle-style corner brackets, revealed on hover to suggest a "targeted" item */
+.hud-corners::before,
+.hud-corners::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  pointer-events: none;
+  border-color: var(--color-accent-chrome);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.hud-corners::before {
+  border-top: 1.5px solid;
+  border-left: 1.5px solid;
+  border-right: none;
+  border-bottom: none;
+  bottom: auto;
+  right: auto;
+  width: 16px;
+  height: 16px;
+}
+.hud-corners::after {
+  border-bottom: 1.5px solid;
+  border-right: 1.5px solid;
+  border-top: none;
+  border-left: none;
+  top: auto;
+  left: auto;
+  width: 16px;
+  height: 16px;
+}
+.group:hover .hud-corners::before,
+.group:hover .hud-corners::after {
+  opacity: 0.85;
+}
+
+/* Faint blueprint grid — for hero/section backdrops, never louder than 6% */
+.bg-grid {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-text-primary) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-text-primary) 5%, transparent) 1px, transparent 1px);
+  background-size: 36px 36px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+}
+
+/* Stat/readout chip — small mono tag with bracket ends, e.g. "IN STOCK", "SALE" */
+.hud-tag {
+  position: relative;
+  padding-left: 0.6rem;
+}
+.hud-tag::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  translate: 0 -50%;
+  width: 3px;
+  height: 60%;
+  background: currentColor;
+  opacity: 0.7;
+}
