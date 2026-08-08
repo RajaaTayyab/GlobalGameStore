@@ -45,6 +45,10 @@ export default function Hero() {
       <Hero3DScene />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,175,140,0.10),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(201,175,140,0.08),transparent_55%)]" />
       <div className="bg-grid absolute inset-0" />
+
+      {/* Legibility veil behind the stacked text on narrow screens — the globe
+          parks lower-right on mobile, so this softens what sits behind the headline. */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[60%] bg-gradient-to-b from-bg/70 via-bg/25 to-transparent lg:hidden" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 lg:grid-cols-2 lg:py-28">
         <div className="animate-fade-up">
           <p className="hud-tag mb-5 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent-chrome">

@@ -84,8 +84,12 @@ export default function Hero3DScene() {
       const width = mount.clientWidth || window.innerWidth;
       const height = mount.clientHeight || window.innerHeight;
 
+      /* On narrow widths the hero stacks to a single column, so the globe is
+         moved down/right out of the headline zone and camera pulls back. */
+      let isMobile = width < 1024;
+
       const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
-      camera.position.set(0, 0, 13);
+      camera.position.set(0, 0, isMobile ? 14.5 : 13);
 
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -187,7 +191,11 @@ export default function Hero3DScene() {
       ring3.rotation.x = Math.PI / 2;
 
       const heroGroup = new THREE.Group();
-      heroGroup.position.set(0.45, -0.15, 0);
+      const applyLayout = () => {
+        heroGroup.position.set(isMobile ? 2.4 : 0.45, isMobile ? -3.6 : -0.15, 0);
+        camera.position.z = isMobile ? 14.5 : 13;
+      };
+      applyLayout();
       heroGroup.add(core, bright, icosa, shell, ring, ring2, ring3);
       scene.add(heroGroup);
 
@@ -305,22 +313,21 @@ export default function Hero3DScene() {
         active.oxblood.lerpColors(DARK.oxblood, LIGHT.oxblood, mix);
         active.instock.lerpColors(DARK.instock, LIGHT.instock, mix);
 
-        coreMat.opacity = interp(DARK.coreOpacity, LIGHT.coreOpacity);
-        brightMat.opacity = interp(DARK.brightOpacity, LIGHT.brightOpacity);
-        icosaMat.opacity = interp(DARK.icosaOpacity, LIGHT.icosaOpacity);
-        shellMat.opacity = interp(DARK.shellOpacity, LIGHT.shellOpacity);
-        ringMat.opacity = interp(DARK.ringOpacity, LIGHT.ringOpacity);
-        ring2Mat.opacity = interp(DARK.ring2Opacity, LIGHT.ring2Opacity);
-        ring3Mat.opacity = interp(DARK.ring3Opacity, LIGHT.ring3Opacity);
-        particleMat.opacity = interp(DARK.particleOpacity, LIGHT.particleOpacity);
-        gridMat.opacity = interp(DARK.gridOpacity, LIGHT.gridOpacity);
+        const dim = isMobile ? 0.45 : 1;
+        coreMat.opacity = interp(DARK.coreOpacity, LIGHT.coreOpacity) * dim;
+        brightMat.opacity = interp(DARK.brightOpacity, LIGHT.brightOpacity) * dim;
+        icosaMat.opacity = interp(DARK.icosaOpacity, LIGHT.icosaOpacity) * dim;
+        shellMat.opacity = interp(DARK.shellOpacity, LIGHT.shellOpacity) * dim;
+        ringMat.opacity = interp(DARK.ringOpacity, LIGHT.ringOpacity) * dim;
+        ring2Mat.opacity = interp(DARK.ring2Opacity, LIGHT.ring2Opacity) * dim;
+        ring3Mat.opacity = interp(DARK.ring3Opacity, LIGHT.ring3Opacity) * dim;
+        particleMat.opacity = interp(DARK.particleOpacity, LIGHT.particleOpacity) * dim;
+        gridMat.opacity = interp(DARK.gridOpacity, LIGHT.gridOpacity) * dim;
         for (const c of chips) {
-          (c.mesh.material as THREE.MeshBasicMaterial).opacity = interp(
-            DARK.chipOpacity,
-            LIGHT.chipOpacity
-          );
+          (c.mesh.material as THREE.MeshBasicMaterial).opacity =
+            interp(DARK.chipOpacity, LIGHT.chipOpacity) * dim;
         }
-        bloomPass.strength = interp(DARK.glow, LIGHT.glow);
+        bloomPass.strength = interp(DARK.glow, LIGHT.glow) * dim;
         renderer.toneMappingExposure = interp(DARK.exposure, LIGHT.exposure);
 
         // Vault casing rotation
@@ -365,6 +372,11 @@ export default function Hero3DScene() {
         if (!mount || disposed) return;
         const w = mount.clientWidth || window.innerWidth;
         const h = mount.clientHeight || window.innerHeight;
+        const nextMobile = w < 1024;
+        if (nextMobile !== isMobile) {
+          isMobile = nextMobile;
+          applyLayout();
+        }
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
         renderer.setSize(w, h);
