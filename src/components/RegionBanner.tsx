@@ -6,10 +6,10 @@ import { useRegion } from "@/context/RegionContext";
 import { REGION_LABELS } from "@/lib/constants";
 
 const REGION_GAMES: Record<string, string[]> = {
-  pk: ["PUBG Mobile", "Free Fire"],
-  mena: ["Yalla Ludo", "Jawaker"],
-  us: ["PlayStation", "Nintendo", "Xbox"],
-  global: ["PUBG Mobile", "Free Fire", "PlayStation", "Xbox", "Razer Gold"],
+  pk: ["PUBG Mobile", "Free Fire", "TikTok", "Yalla Live"],
+  mena: ["PSN", "Yalla Live", "TikTok"],
+  us: ["PSN", "Xbox", "iTunes"],
+  global: ["PUBG Mobile", "Free Fire", "PSN", "Xbox", "iTunes", "Razer Gold"],
 };
 
 export default function RegionBanner() {

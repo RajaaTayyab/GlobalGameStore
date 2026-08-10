@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, Gamepad2, MessageCircle } from "lucide-react";
 import { useRegion } from "@/context/RegionContext";
-import { REGION_LABELS } from "@/lib/constants";
 import type { RegionCode } from "@/lib/types";
 import TiltCard from "./TiltCard";
 import Hero3DScene from "./Hero3DScene";
@@ -16,24 +16,62 @@ interface HeroItem {
 }
 
 const HERO_FEATURED: Record<RegionCode, HeroItem[]> = {
-  mena: [{ slug: "yalla-ludo", image: "/images/yalla-ludo.webp", alt: "Yalla Ludo" }],
-  pk: [{ slug: "pubg-mobile", image: "/images/pubgmobile.webp", alt: "PUBG Mobile" }],
+  mena: [
+    { slug: "psn", image: "/images/playstation.webp", alt: "PSN" },
+    { slug: "yalla-live", image: "/images/yalla-ludo.webp", alt: "Yalla Live" },
+  ],
+  pk: [
+    { slug: "pubg-mobile", image: "/images/pubgmobile.webp", alt: "PUBG Mobile" },
+    { slug: "free-fire", image: "/images/freefire.webp", alt: "Free Fire" },
+    { slug: "tiktok", image: "/images/tiktok.webp", alt: "TikTok" },
+  ],
   us: [
-    { slug: "playstation-usa", image: "/images/playstation.webp", alt: "PlayStation" },
+    { slug: "psn", image: "/images/playstation.webp", alt: "PSN" },
     { slug: "xbox", image: "/images/xbox.webp", alt: "Xbox" },
+    { slug: "itunes", image: "/images/itunes.webp", alt: "iTunes" },
   ],
   global: [
     { slug: "pubg-mobile", image: "/images/pubgmobile.webp", alt: "PUBG Mobile" },
     { slug: "free-fire", image: "/images/freefire.webp", alt: "Free Fire" },
-    { slug: "playstation-usa", image: "/images/playstation.webp", alt: "PlayStation" },
+    { slug: "psn", image: "/images/playstation.webp", alt: "PSN" },
     { slug: "xbox", image: "/images/xbox.webp", alt: "Xbox" },
+    { slug: "itunes", image: "/images/itunes.webp", alt: "iTunes" },
     { slug: "razer-gold-global", image: "/images/razer-gold.webp", alt: "Razer Gold" },
-    { slug: "nintendo-eshop-usa", image: "/images/nintendo.webp", alt: "Nintendo" },
+    { slug: "yalla-live", image: "/images/yalla-ludo.webp", alt: "Yalla Live" },
+    { slug: "tiktok", image: "/images/tiktok.webp", alt: "TikTok" },
   ],
 };
 
+/** Featured card art with a themed placeholder fallback so missing product
+    art never renders a broken image. */
+function HeroArt({ src, alt, label }: { src: string; alt: string; label: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed) {
+    return (
+      <div className="flex aspect-square w-full items-center justify-center bg-surface">
+        <div className="text-center">
+          <Gamepad2 className="mx-auto h-10 w-10 text-accent-chrome/60" />
+          <p className="mt-2 px-4 font-serif text-lg text-text-primary">{label}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={300}
+      height={300}
+      onError={() => setFailed(true)}
+      className="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
+    />
+  );
+}
+
 export default function Hero() {
-  const { region, detected } = useRegion();
+  const { region } = useRegion();
   const featured = HERO_FEATURED[region] ?? HERO_FEATURED.global;
   const cols =
     featured.length > 2
@@ -49,12 +87,9 @@ export default function Hero() {
       {/* Legibility veil behind the stacked text on narrow screens — the globe
           parks lower-right on mobile, so this softens what sits behind the headline. */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[60%] bg-gradient-to-b from-bg/70 via-bg/25 to-transparent lg:hidden" />
+
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 lg:grid-cols-2 lg:py-28">
         <div className="animate-fade-up">
-          <p className="hud-tag mb-5 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent-chrome">
-            <span className="h-1.5 w-1.5 rounded-full bg-instock shadow-[0_0_6px_1px_var(--color-instock)]" />
-            {detected ? `Ranked for ${REGION_LABELS[region]}` : "Full global catalog"}
-          </p>
           <h1 className="font-serif text-4xl leading-[1.05] tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
             The vault for{" "}
             <span className="text-accent-chrome italic drop-shadow-[0_0_18px_rgba(201,175,140,0.35)]">
@@ -63,7 +98,7 @@ export default function Hero() {
             .
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-text-muted">
-            PUBG, Free Fire, PlayStation, Xbox, Razer Gold and more —
+            PUBG, Free Fire, PSN, Xbox, iTunes, Razer Gold and more —
             top-ups and gift cards, released the moment your payment clears.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
@@ -93,13 +128,7 @@ export default function Hero() {
                 className="hud-corners group relative flex h-full animate-fade-up overflow-hidden rounded-2xl border border-border shadow-lg transition-[border-color,box-shadow] duration-300 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
               >
                 <span className="scanlines absolute inset-0" />
-                <Image
-                  src={f.image}
-                  alt={f.alt}
-                  width={300}
-                  height={300}
-                  className="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
-                />
+                <HeroArt src={f.image} alt={f.alt} label={f.alt} />
                 <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <p className="font-bold text-text-primary">{f.alt}</p>

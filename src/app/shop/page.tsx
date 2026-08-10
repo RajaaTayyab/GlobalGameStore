@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Shop",
   description:
-    "Buy game top-ups, gift cards, and digital keys. PUBG Mobile, Free Fire, PlayStation, Xbox, Nintendo, Razer Gold and more.",
+    "Buy game top-ups, gift cards, and digital keys. PUBG Mobile, Free Fire, PSN, Xbox, iTunes, Razer Gold, TikTok and more.",
 };
 
 export default async function ShopPage(props: PageProps<"/shop">) {

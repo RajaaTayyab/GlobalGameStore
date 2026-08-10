@@ -43,8 +43,11 @@ export default function Footer() {
           </h4>
           <ul className="space-y-2 text-sm text-text-muted">
             <li><Link href="/shop?category=pubg-mobile" className="transition-colors hover:text-accent-chrome">PUBG Mobile</Link></li>
-            <li><Link href="/shop?category=playstation" className="transition-colors hover:text-accent-chrome">PlayStation</Link></li>
+            <li><Link href="/shop?category=psn" className="transition-colors hover:text-accent-chrome">PSN</Link></li>
             <li><Link href="/shop?category=xbox" className="transition-colors hover:text-accent-chrome">Xbox</Link></li>
+            <li><Link href="/shop?category=itunes" className="transition-colors hover:text-accent-chrome">iTunes</Link></li>
+            <li><Link href="/shop?category=yalla-live" className="transition-colors hover:text-accent-chrome">Yalla Live</Link></li>
+            <li><Link href="/shop?category=tiktok" className="transition-colors hover:text-accent-chrome">TikTok</Link></li>
             <li><Link href="/shop?category=razer-gold" className="transition-colors hover:text-accent-chrome">Razer Gold</Link></li>
           </ul>
         </div>
