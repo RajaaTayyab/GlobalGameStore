@@ -1,4 +1,4 @@
-export type RegionCode = "pk" | "mena" | "us" | "global";
+export type RegionCode = "pk" | "mena" | "us" | "sa" | "ae" | "kw" | "global";
 
 export interface Category {
   id: string;

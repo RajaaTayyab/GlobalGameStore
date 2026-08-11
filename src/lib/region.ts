@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import type { RegionCode } from "@/lib/types";
 
-const REGION_CODES: RegionCode[] = ["pk", "mena", "us", "global"];
+const REGION_CODES: RegionCode[] = ["pk", "mena", "us", "sa", "ae", "kw", "global"];
 export const REGION_COOKIE = "gts-region";
 
 /** Reads the region cookie set by the proxy from the visitor's IP country. */

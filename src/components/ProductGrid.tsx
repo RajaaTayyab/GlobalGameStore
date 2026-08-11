@@ -21,7 +21,15 @@ export default function ProductGrid({
   const { region, detected } = useRegion();
 
   const sorted = useMemo(() => {
-    const ranked = products.map((p) => {
+    // Region-locked products (region.code not "global") are only visible to
+    // visitors whose detected IP region matches. If we haven't detected a
+    // region yet (e.g. local dev, no geo header), fall back to showing
+    // everything rather than hiding the whole catalog.
+    const visible = !detected
+      ? products
+      : products.filter((p) => !p.region || p.region.code === region);
+
+    const ranked = visible.map((p) => {
       let rank = 3;
       if (p.region && p.region.code === region) rank = 0;
       else if (p.region && p.region.code === "global") rank = 2;
@@ -31,7 +39,7 @@ export default function ProductGrid({
     });
     ranked.sort((a, b) => a.rank - b.rank);
     return ranked.map((r) => r.p);
-  }, [products, region]);
+  }, [products, region, detected]);
 
   const visible = limit ? sorted.slice(0, limit) : sorted;
 
