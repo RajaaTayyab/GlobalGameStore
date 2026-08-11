@@ -17,28 +17,28 @@ interface HeroItem {
 
 const HERO_FEATURED: Record<RegionCode, HeroItem[]> = {
   mena: [
-    { slug: "psn", image: "/images/playstation.webp", alt: "PSN" },
-    { slug: "yalla-live", image: "/images/yalla-ludo.webp", alt: "Yalla Live" },
+    { slug: "psn", image: "/images/playstation.jpeg", alt: "PSN" },
+    { slug: "yalla-live", image: "/images/yalla-live.jpeg", alt: "Yalla Live" },
   ],
   pk: [
     { slug: "pubg-mobile", image: "/images/pubgmobile.webp", alt: "PUBG Mobile" },
     { slug: "free-fire", image: "/images/freefire.webp", alt: "Free Fire" },
-    { slug: "tiktok", image: "/images/tiktok.webp", alt: "TikTok" },
+    { slug: "tiktok", image: "/images/tiktok.png", alt: "TikTok" },
   ],
   us: [
-    { slug: "psn", image: "/images/playstation.webp", alt: "PSN" },
-    { slug: "xbox", image: "/images/xbox.webp", alt: "Xbox" },
+    { slug: "psn", image: "/images/playstation.jpeg", alt: "PSN" },
+    { slug: "xbox", image: "/images/xbox.png", alt: "Xbox" },
     { slug: "itunes", image: "/images/itunes.webp", alt: "iTunes" },
   ],
   global: [
     { slug: "pubg-mobile", image: "/images/pubgmobile.webp", alt: "PUBG Mobile" },
     { slug: "free-fire", image: "/images/freefire.webp", alt: "Free Fire" },
-    { slug: "psn", image: "/images/playstation.webp", alt: "PSN" },
-    { slug: "xbox", image: "/images/xbox.webp", alt: "Xbox" },
+    { slug: "psn", image: "/images/playstation.jpeg", alt: "PSN" },
+    { slug: "xbox", image: "/images/xbox.png", alt: "Xbox" },
     { slug: "itunes", image: "/images/itunes.webp", alt: "iTunes" },
-    { slug: "razer-gold-global", image: "/images/razer-gold.webp", alt: "Razer Gold" },
-    { slug: "yalla-live", image: "/images/yalla-ludo.webp", alt: "Yalla Live" },
-    { slug: "tiktok", image: "/images/tiktok.webp", alt: "TikTok" },
+    { slug: "razer-gold-global", image: "/images/razer-gold.jpeg", alt: "Razer Gold" },
+    { slug: "yalla-live", image: "/images/yalla-live.jpeg", alt: "Yalla Live" },
+    { slug: "tiktok", image: "/images/tiktok.png", alt: "TikTok" },
   ],
 };
 

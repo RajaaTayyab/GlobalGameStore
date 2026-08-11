@@ -15,14 +15,14 @@ export const dynamic = "force-dynamic";
 const CATEGORY_FALLBACKS: Record<string, string> = {
   "free-fire": "/images/freefire.webp",
   "pubg-mobile": "/images/pubgmobile.webp",
-  playstation: "/images/playstation.webp",
-  psn: "/images/playstation.webp",
-  xbox: "/images/xbox.webp",
+  playstation: "/images/playstation.jpeg",
+  psn: "/images/playstation.jpeg",
+  xbox: "/images/xbox.png",
   itunes: "/images/itunes.webp",
-  "razer-gold": "/images/razer-gold.webp",
-  "yalla-live": "/images/yalla-ludo.webp",
-  tiktok: "/images/tiktok.webp",
-  "yalla-ludo": "/images/yalla-ludo.webp",
+  "razer-gold": "/images/razer-gold.jpeg",
+  "yalla-live": "/images/yalla-live.jpeg",
+  tiktok: "/images/tiktok.png",
+  "yalla-ludo": "/images/yalla-live.jpeg",
   jawaker: "/images/jawaker.webp",
 };
 
@@ -59,7 +59,7 @@ export default async function HomePage() {
                 className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-surface transition-[border-color,box-shadow] duration-300 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
               >
                 <Image
-                  src={c.image_url || CATEGORY_FALLBACKS[c.slug] || "/images/playstation.webp"}
+                  src={c.image_url || CATEGORY_FALLBACKS[c.slug] || "/images/playstation.jpeg"}
                   alt={c.name}
                   width={400}
                   height={300}
