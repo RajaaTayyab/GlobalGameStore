@@ -5,10 +5,10 @@
 -- What this does:
 --  1. Upserts the 7 regions (pk, mena, us, sa, ae, kw, global)
 --  2. Upserts all categories used below
---  3. DELETES only the product slugs listed in this file (and, via
---     ON DELETE CASCADE, their variants + any stock codes) so it is
---     safe to re-run and does NOT touch unrelated products (e.g.
---     Razer Gold) that aren't part of this sheet.
+--  3. DELETES ALL existing products (full wipe, per user request) -
+--     including any not in this sheet (e.g. Razer Gold). Cascades
+--     via ON DELETE CASCADE to their variants + stock codes. Order
+--     history is untouched (orders store their own name/price copy).
 --  4. Re-inserts every product + variant fresh from the sheet.
 --
 -- IMPORTANT: prices below are exactly what was in the sheet (your
@@ -60,34 +60,13 @@ on conflict (slug) do update set
   sort_order = excluded.sort_order,
   active = true;
 
--- ---------- 3. Delete previous entries for these products ----------
--- (cascades to product_variants and codes automatically)
-delete from public.products
-where slug in (
-  'yalla-ludo-gold',
-  'yalla-ludo-diamond',
-  'free-fire',
-  'yalla-live',
-  'pubg-mobile',
-  'jawaker',
-  'tiktok',
-  'itunes',
-  'xbox',
-  'xbox-ksa',
-  'psn',
-  'psn-uae',
-  'psn-kuwait',
-  'psn-ksa',
-  'nintendo-eshop',
-  'netflix-ksa',
-  'netflix-uae',
-  'nordvpn-standard',
-  'surfshark-vpn',
-  'amazon-ksa',
-  'amazon-uae',
-  'noon-sa',
-  'noon-ae'
-);
+-- ---------- 3. Delete ALL previous product entries ----------
+-- Full wipe (per user confirmation) - removes every existing product,
+-- including ones not in this sheet (e.g. Razer Gold). Cascades to
+-- product_variants and codes automatically. Orders/order history are
+-- untouched (order_items/order_codes store their own name/price copy
+-- and do not FK-reference products).
+delete from public.products;
 
 -- ---------- 4. Insert products ----------
 with cat as (select id, slug from public.categories),
