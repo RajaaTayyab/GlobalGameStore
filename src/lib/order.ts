@@ -2,7 +2,7 @@ import { STORE_NAME, CURRENCY } from "./constants";
 import type { CartItem } from "./types";
 
 export function formatPrice(n: number): string {
-  return `${CURRENCY}${n.toFixed(2)}`;
+  return `${n.toFixed(2)} ${CURRENCY}`;
 }
 
 export function generateOrderNumber(): string {

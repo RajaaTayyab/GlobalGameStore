@@ -175,7 +175,7 @@ export default function AdminUsers() {
             <p className="mb-4 font-mono text-2xl font-bold text-instock">
               {formatPrice(Number(selected.credits_balance ?? 0))}
             </p>
-            <label className="mb-1.5 block text-sm text-text-muted">Amount (USD)</label>
+            <label className="mb-1.5 block text-sm text-text-muted">Amount (USDT)</label>
             <input
               type="number"
               required

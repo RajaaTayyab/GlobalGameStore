@@ -15,25 +15,25 @@ interface HeroItem {
   alt: string;
 }
 
-const HERO_FEATURED: Record<RegionCode, HeroItem[]> = {
+const HERO_FEATURED: Partial<Record<RegionCode, HeroItem[]>> = {
   mena: [
-    { slug: "psn", image: "/images/playstation.jpeg", alt: "PSN" },
+    { slug: "psn", image: "/images/playstation.jpg", alt: "PSN" },
     { slug: "yalla-live", image: "/images/yalla-live.jpeg", alt: "Yalla Live" },
   ],
   pk: [
-    { slug: "pubg-mobile", image: "/images/pubgmobile.webp", alt: "PUBG Mobile" },
+    { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
     { slug: "free-fire", image: "/images/freefire.webp", alt: "Free Fire" },
     { slug: "tiktok", image: "/images/tiktok.png", alt: "TikTok" },
   ],
   us: [
-    { slug: "psn", image: "/images/playstation.jpeg", alt: "PSN" },
+    { slug: "psn", image: "/images/playstation.jpg", alt: "PSN" },
     { slug: "xbox", image: "/images/xbox.png", alt: "Xbox" },
     { slug: "itunes", image: "/images/itunes.webp", alt: "iTunes" },
   ],
   global: [
-    { slug: "pubg-mobile", image: "/images/pubgmobile.webp", alt: "PUBG Mobile" },
+    { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
     { slug: "free-fire", image: "/images/freefire.webp", alt: "Free Fire" },
-    { slug: "psn", image: "/images/playstation.jpeg", alt: "PSN" },
+    { slug: "psn", image: "/images/playstation.jpg", alt: "PSN" },
     { slug: "xbox", image: "/images/xbox.png", alt: "Xbox" },
     { slug: "itunes", image: "/images/itunes.webp", alt: "iTunes" },
     { slug: "razer-gold-global", image: "/images/razer-gold.jpeg", alt: "Razer Gold" },
@@ -72,7 +72,7 @@ function HeroArt({ src, alt, label }: { src: string; alt: string; label: string 
 
 export default function Hero() {
   const { region } = useRegion();
-  const featured = HERO_FEATURED[region] ?? HERO_FEATURED.global;
+  const featured = HERO_FEATURED[region] ?? HERO_FEATURED.global ?? [];
   const cols =
     featured.length > 2
       ? "grid-cols-2 sm:grid-cols-3"

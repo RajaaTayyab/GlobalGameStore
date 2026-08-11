@@ -39,7 +39,7 @@ function buildHtml(e: OrderCodesEmail): string {
       <tr><th style="padding:10px;border:1px solid #334155;text-align:left;">Item</th><th style="padding:10px;border:1px solid #334155;text-align:left;">Code</th></tr>
       ${rows}
     </table>
-    <p style="margin-top:24px;"><strong>Total paid:</strong> $${e.total.toFixed(2)}</p>
+    <p style="margin-top:24px;"><strong>Total paid:</strong> ${e.total.toFixed(2)} USDT</p>
     <p style="color:#94a3b8;font-size:12px;">Need help? Reply to this email and our support team will assist you.</p>
   </div>`;
 }

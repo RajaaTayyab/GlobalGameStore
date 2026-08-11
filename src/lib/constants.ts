@@ -45,7 +45,7 @@ export const REGION_COUNTRIES: Record<RegionCode, string[]> = {
 
 export const REGION_ORDER: RegionCode[] = ["pk", "mena", "us", "sa", "ae", "kw"];
 
-export const CURRENCY = "$";
+export const CURRENCY = "USDT";
 
 export const ORDER_STATUS_LABELS: Record<string, string> = {
   pending: "Pending",

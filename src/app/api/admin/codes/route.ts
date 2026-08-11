@@ -1,5 +1,6 @@
 import { requireAdmin, authError } from "@/lib/auth";
 import { requireAdminClient } from "@/lib/supabase/admin";
+import { revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,8 @@ export async function POST(req: Request) {
 
     const { data, error } = await admin.from("codes").insert(codes).select();
     if (error) throw error;
+    revalidateTag("catalog", { expire: 0 });
+    revalidateTag("stock", { expire: 0 });
     return Response.json({ added: data.length });
   } catch (e) {
     return authError(e);

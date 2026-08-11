@@ -1,5 +1,6 @@
 import { requireAdmin, authError } from "@/lib/auth";
 import { requireAdminClient } from "@/lib/supabase/admin";
+import { revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +44,8 @@ export async function PUT(req: Request, ctx: RouteContext) {
       .select()
       .single();
     if (error) throw error;
+    revalidateTag("catalog", { expire: 0 });
+    revalidateTag("product", { expire: 0 });
     return Response.json({ product: data });
   } catch (e) {
     return authError(e);
@@ -55,6 +58,8 @@ export async function DELETE(_req: Request, ctx: RouteContext) {
     const { id } = await ctx.params;
     const admin = requireAdminClient();
     await admin.from("products").delete().eq("id", id);
+    revalidateTag("catalog", { expire: 0 });
+    revalidateTag("product", { expire: 0 });
     return Response.json({ ok: true });
   } catch (e) {
     return authError(e);

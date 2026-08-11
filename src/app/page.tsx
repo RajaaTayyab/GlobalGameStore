@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Wallet, MessageCircle } from "lucide-react";
+import { ArrowRight, Wallet, MessageCircle, Gamepad2 } from "lucide-react";
 import { getCatalog } from "@/lib/products";
 import ProductGrid from "@/components/ProductGrid";
 import RegionBanner from "@/components/RegionBanner";
@@ -14,16 +14,16 @@ export const dynamic = "force-dynamic";
 
 const CATEGORY_FALLBACKS: Record<string, string> = {
   "free-fire": "/images/freefire.webp",
-  "pubg-mobile": "/images/pubgmobile.webp",
-  playstation: "/images/playstation.jpeg",
-  psn: "/images/playstation.jpeg",
+  "pubg-mobile": "/images/pubg-mobile.jpg",
+  playstation: "/images/playstation.jpg",
+  psn: "/images/playstation.jpg",
   xbox: "/images/xbox.png",
-  itunes: "/images/itunes.webp",
   "razer-gold": "/images/razer-gold.jpeg",
   "yalla-live": "/images/yalla-live.jpeg",
   tiktok: "/images/tiktok.png",
-  "yalla-ludo": "/images/yalla-live.jpeg",
+  "yalla-ludo": "/images/yalla-ludo.webp",
   jawaker: "/images/jawaker.webp",
+  vpn: "/images/nord-vpn.png",
 };
 
 export default async function HomePage() {
@@ -58,13 +58,22 @@ export default async function HomePage() {
                 href={`/shop?category=${c.slug}`}
                 className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-surface transition-[border-color,box-shadow] duration-300 hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10"
               >
-                <Image
-                  src={c.image_url || CATEGORY_FALLBACKS[c.slug] || "/images/playstation.jpeg"}
-                  alt={c.name}
-                  width={400}
-                  height={300}
-                  className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
-                />
+                {(() => {
+                  const src = c.image_url || CATEGORY_FALLBACKS[c.slug];
+                  return src ? (
+                    <Image
+                      src={src}
+                      alt={c.name}
+                      width={400}
+                      height={300}
+                      className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex aspect-[4/3] w-full items-center justify-center bg-surface transition duration-500 group-hover:scale-105">
+                      <Gamepad2 className="h-12 w-12 text-border" />
+                    </div>
+                  );
+                })()}
                 <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/30 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <p className="font-bold text-text-primary">{c.name}</p>

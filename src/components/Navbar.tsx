@@ -128,7 +128,7 @@ export default function Navbar() {
 
           {user && !loading && (
             <span className="hidden rounded-lg bg-surface px-3 py-2 font-mono text-sm font-semibold text-instock lg:inline">
-              ${Number(user.credits_balance || 0).toFixed(2)}
+              {Number(user.credits_balance || 0).toFixed(2)} USDT
             </span>
           )}
 

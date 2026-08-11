@@ -1,5 +1,6 @@
 import { requireAdmin, authError } from "@/lib/auth";
 import { requireAdminClient } from "@/lib/supabase/admin";
+import { revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ export async function POST(req: Request) {
       .single();
 
     if (error) throw error;
+    revalidateTag("catalog", { expire: 0 });
     return Response.json({ variant: data });
   } catch (e) {
     return authError(e);

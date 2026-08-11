@@ -171,7 +171,7 @@ export async function POST(req: Request) {
   const balance = Number(profile?.credits_balance ?? 0);
   if (balance < total) {
     return Response.json(
-      { error: `Insufficient credits. Balance: $${balance.toFixed(2)}, total: $${total.toFixed(2)}` },
+      { error: `Insufficient credits. Balance: ${balance.toFixed(2)} USDT, total: ${total.toFixed(2)} USDT` },
       { status: 400 }
     );
   }

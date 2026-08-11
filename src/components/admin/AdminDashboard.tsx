@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
-  DollarSign,
+  Coins,
   ShoppingCart,
   Users,
   Package,
@@ -47,7 +47,7 @@ export default function AdminDashboard() {
     );
 
   const cards = [
-    { label: "Revenue (paid)", value: formatPrice(stats.revenue), icon: DollarSign, color: "text-instock" },
+    { label: "Revenue (paid)", value: formatPrice(stats.revenue), icon: Coins, color: "text-instock" },
     { label: "Total orders", value: String(stats.orders_count), icon: ShoppingCart, color: "text-accent-chrome" },
     { label: "Pending orders", value: String(stats.pending_orders), icon: AlertTriangle, color: "text-amber-400" },
     { label: "Registered users", value: String(stats.users_count), icon: Users, color: "text-accent-chrome" },
