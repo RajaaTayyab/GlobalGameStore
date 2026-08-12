@@ -50,8 +50,11 @@ export default async function ProductPage({ params }: Props) {
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-2">
-        {/* Image */}
-        <div className="overflow-hidden rounded-lg border border-border bg-surface">
+        {/* Image — object-contain in a fixed-height frame so every product's
+            art fits fully regardless of its native aspect ratio. object-cover
+            + aspect-square was cropping wide banners like Xbox's gift card
+            art (641×403) mid-word. */}
+        <div className="flex h-[420px] items-center justify-center overflow-hidden rounded-lg border border-border bg-surface p-6 sm:h-[480px]">
           {product.image_url ? (
             <Image
               src={product.image_url}
@@ -59,12 +62,10 @@ export default async function ProductPage({ params }: Props) {
               width={800}
               height={800}
               priority
-              className="aspect-square w-full object-cover"
+              className="h-full w-full object-contain"
             />
           ) : (
-            <div className="flex aspect-square w-full items-center justify-center bg-bg/40">
-              <Gamepad2 className="h-24 w-24 text-border" />
-            </div>
+            <Gamepad2 className="h-24 w-24 text-border" />
           )}
         </div>
 
