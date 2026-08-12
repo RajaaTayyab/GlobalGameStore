@@ -196,7 +196,7 @@ export async function POST(req: Request) {
     p_customer_whatsapp: c.whatsapp || null,
     p_country: c.country || null,
     p_idempotency_key: idempotencyKey,
-    p_items: JSON.stringify(itemsPayload),
+    p_items: itemsPayload,
     p_total: total,
   });
 
@@ -246,12 +246,14 @@ export async function POST(req: Request) {
   }
 
   // ---- Email codes ----
+  // Recipient is ALWAYS the account email — the form's email field is
+  // ignored for credits orders so codes can't be redirected elsewhere.
   let emailSent = false;
-  if (c.email || user.email) {
+  if (user.email) {
     try {
       const res = await sendOrderCodesEmail({
-        to: c.email || user.email!,
-        customerName: c.name || profile?.full_name || "",
+        to: user.email,
+        customerName: profile?.full_name || c.name || "",
         orderNumber,
         total,
         lines,
