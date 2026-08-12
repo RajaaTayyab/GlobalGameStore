@@ -44,11 +44,15 @@ function buildHtml(e: OrderCodesEmail): string {
   </div>`;
 }
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return null;
+  return new Resend(apiKey);
+}
 
 export async function sendOrderCodesEmail(e: OrderCodesEmail): Promise<{ sent: boolean; reason?: string }> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
+  const resend = getResend();
+  if (!resend) {
     console.log(
       `[email][dev] Order ${e.orderNumber} codes for ${e.to}:\n` +
         e.lines.map((l) => `${l.productName} ${l.variantName}: ${l.codes.join(", ")}`).join("\n")
@@ -56,7 +60,7 @@ export async function sendOrderCodesEmail(e: OrderCodesEmail): Promise<{ sent: b
     return { sent: false, reason: "RESEND_API_KEY not configured - codes logged to console" };
   }
 
-  const from = process.env.EMAIL_FROM || `${STORE_NAME} <onboarding@resend.dev>`;
+  const from = process.env.EMAIL_FROM || `onboarding@resend.dev`;
 
   await resend.emails.send({
     from,

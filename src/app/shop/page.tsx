@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     "Buy game top-ups, gift cards, and digital keys. PUBG Mobile, Free Fire, PlayStation, Xbox, Apple, TikTok and more.",
 };
 
-export default async function ShopPage(props: PageProps<"/shop">) {
+export default async function ShopPage(props: { searchParams: Promise<{ category?: string; q?: string }> }) {
   const searchParams = await props.searchParams;
   const category = typeof searchParams.category === "string" ? searchParams.category : undefined;
   const q = typeof searchParams.q === "string" ? searchParams.q : undefined;
