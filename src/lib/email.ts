@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import { STORE_NAME } from "./constants";
 
 export interface CodeLine {
@@ -44,29 +44,22 @@ function buildHtml(e: OrderCodesEmail): string {
   </div>`;
 }
 
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 export async function sendOrderCodesEmail(e: OrderCodesEmail): Promise<{ sent: boolean; reason?: string }> {
-  const host = process.env.SMTP_HOST;
-  if (!host) {
-    // Dev mode: log codes so they are not lost.
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
     console.log(
       `[email][dev] Order ${e.orderNumber} codes for ${e.to}:\n` +
         e.lines.map((l) => `${l.productName} ${l.variantName}: ${l.codes.join(", ")}`).join("\n")
     );
-    return { sent: false, reason: "SMTP not configured - codes logged to console" };
+    return { sent: false, reason: "RESEND_API_KEY not configured - codes logged to console" };
   }
 
-  const transporter = nodemailer.createTransport({
-    host,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: Number(process.env.SMTP_PORT || 587) === 465,
-    auth: {
-      user: process.env.SMTP_USER!,
-      pass: process.env.SMTP_PASS!,
-    },
-  });
+  const from = process.env.EMAIL_FROM || `${STORE_NAME} <onboarding@resend.dev>`;
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM || `${STORE_NAME} <${process.env.SMTP_USER}>`,
+  await resend.emails.send({
+    from,
     to: e.to,
     subject: `${STORE_NAME} - Your game codes (Order #${e.orderNumber})`,
     html: buildHtml(e),

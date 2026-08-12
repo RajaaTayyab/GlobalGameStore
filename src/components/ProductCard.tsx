@@ -56,7 +56,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
               alt={product.name}
               fill
               sizes="(max-width: 640px) 50vw, 25vw"
-              className="object-cover transition duration-500 group-hover:scale-105"
+              className="object-contain p-4 transition duration-500 group-hover:scale-105"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-bg/40">
