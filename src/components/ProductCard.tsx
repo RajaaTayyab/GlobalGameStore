@@ -48,16 +48,23 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
           highlight ? "border-accent-chrome/40" : "border-border"
         } hover:border-accent-chrome/50 hover:shadow-xl hover:shadow-accent-chrome/10`}
       >
-        <div className="hud-corners border-gradient-chrome relative aspect-[4/3] overflow-hidden bg-surface">
+        <div className="hud-corners border-gradient-chrome relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-surface p-5">
           <span className="scanlines absolute inset-0 z-10" />
           {product.image_url ? (
-            <Image
-              src={product.image_url}
-              alt={product.name}
-              fill
-              sizes="(max-width: 640px) 50vw, 25vw"
-              className="object-contain p-4 transition duration-500 group-hover:scale-105"
-            />
+            // Icon chip: every source asset has a different baked-in
+            // background (white, black, brand colors, wallpaper art). Rather
+            // than let that clash raw against the dark theme, every image
+            // sits in its own small rounded card — consistent, deliberate,
+            // like an app-store icon — regardless of the source file.
+            <div className="relative flex h-full w-full items-center justify-center rounded-xl bg-white p-3 shadow-lg transition duration-500 group-hover:scale-105">
+              <Image
+                src={product.image_url}
+                alt={product.name}
+                fill
+                sizes="(max-width: 640px) 50vw, 25vw"
+                className="object-contain p-3"
+              />
+            </div>
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-bg/40">
               <Gamepad2 className="h-12 w-12 text-border" />

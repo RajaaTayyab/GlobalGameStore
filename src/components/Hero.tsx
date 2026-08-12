@@ -38,9 +38,10 @@ const HERO_FEATURED: Partial<Record<RegionCode, HeroItem[]>> = {
 };
 
 /** Featured card art with a themed placeholder fallback so missing product
-    art never renders a broken image. object-contain in a fixed frame so
-    wide/non-square logos (Xbox, PSN, Apple) never get cropped like the
-    Xbox gift card art did with object-cover. */
+    art never renders a broken image. Icon chip: every source logo has its
+    own baked-in background (white, black, brand color) — rather than let
+    that clash raw against the dark hero, each one sits in its own small
+    white rounded card, consistent regardless of the source file. */
 function HeroArt({ src, alt, label }: { src: string; alt: string; label: string }) {
   const [failed, setFailed] = useState(false);
 
@@ -56,15 +57,16 @@ function HeroArt({ src, alt, label }: { src: string; alt: string; label: string 
   }
 
   return (
-    <div className="flex aspect-square w-full items-center justify-center bg-surface p-4 transition duration-500 group-hover:scale-105">
-      <Image
-        src={src}
-        alt={alt}
-        width={300}
-        height={300}
-        onError={() => setFailed(true)}
-        className="h-full w-full object-contain"
-      />
+    <div className="flex aspect-square w-full items-center justify-center bg-surface p-5 transition duration-500 group-hover:scale-105">
+      <div className="relative h-full w-full rounded-xl bg-white p-3 shadow-lg">
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          onError={() => setFailed(true)}
+          className="object-contain p-3"
+        />
+      </div>
     </div>
   );
 }

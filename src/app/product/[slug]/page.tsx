@@ -50,20 +50,21 @@ export default async function ProductPage({ params }: Props) {
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-2">
-        {/* Image — object-contain in a fixed-height frame so every product's
-            art fits fully regardless of its native aspect ratio. object-cover
-            + aspect-square was cropping wide banners like Xbox's gift card
-            art (641×403) mid-word. */}
-        <div className="flex h-[420px] items-center justify-center overflow-hidden rounded-lg border border-border bg-surface p-6 sm:h-[480px]">
+        {/* Image — icon chip inside a fixed-height frame. object-contain
+            stops cropping (fixed the Xbox mid-word crop bug); the white chip
+            underneath keeps every source background (white/black/brand
+            color) from clashing raw against the dark surface. */}
+        <div className="flex h-[420px] items-center justify-center overflow-hidden rounded-lg border border-border bg-surface p-8 sm:h-[480px]">
           {product.image_url ? (
-            <Image
-              src={product.image_url}
-              alt={product.name}
-              width={800}
-              height={800}
-              priority
-              className="h-full w-full object-contain"
-            />
+            <div className="relative h-full w-full rounded-2xl bg-white p-6 shadow-xl">
+              <Image
+                src={product.image_url}
+                alt={product.name}
+                fill
+                priority
+                className="object-contain p-6"
+              />
+            </div>
           ) : (
             <Gamepad2 className="h-24 w-24 text-border" />
           )}
