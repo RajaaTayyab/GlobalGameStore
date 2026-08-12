@@ -94,7 +94,8 @@ export default function CartDrawer() {
                         </span>
                         <button
                           onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
-                          className="p-0.5 text-text-muted transition hover:text-text-primary"
+                          disabled={!!item.stock && item.stock > 0 && item.quantity >= item.stock}
+                          className="p-0.5 text-text-muted transition hover:text-text-primary disabled:opacity-30"
                           aria-label="Increase"
                         >
                           <Plus className="h-3.5 w-3.5" />

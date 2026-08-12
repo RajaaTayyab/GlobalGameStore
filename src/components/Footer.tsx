@@ -3,9 +3,28 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Gamepad2, MessageCircle } from "lucide-react";
+import { useRegion } from "@/context/RegionContext";
+import type { RegionCode } from "@/lib/types";
+
+// Mirrors ShopControls.tsx: a category only gets a link here if it has a
+// product actually visible to the visitor's region. `region: null` means
+// the category isn't region-locked at all (visible everywhere).
+const FOOTER_CATEGORIES: { slug: string; label: string; region: RegionCode | null }[] = [
+  { slug: "pubg-mobile", label: "PUBG Mobile", region: null },
+  { slug: "psn", label: "PlayStation", region: "us" },
+  { slug: "xbox", label: "Xbox", region: "us" },
+  { slug: "itunes", label: "Apple", region: null },
+  { slug: "yalla-live", label: "Yalla Live", region: null },
+  { slug: "tiktok", label: "TikTok", region: null },
+];
 
 export default function Footer() {
   const router = useRouter();
+  const { region, detected } = useRegion();
+
+  const visibleCategories = FOOTER_CATEGORIES.filter(
+    (c) => !detected || c.region === null || c.region === region
+  );
 
   return (
     <footer className="border-t border-border bg-bg">
@@ -42,12 +61,13 @@ export default function Footer() {
             Categories
           </h4>
           <ul className="space-y-2 text-sm text-text-muted">
-            <li><Link href="/shop?category=pubg-mobile" className="transition-colors hover:text-accent-chrome">PUBG Mobile</Link></li>
-            <li><Link href="/shop?category=psn" className="transition-colors hover:text-accent-chrome">PlayStation</Link></li>
-            <li><Link href="/shop?category=xbox" className="transition-colors hover:text-accent-chrome">Xbox</Link></li>
-            <li><Link href="/shop?category=itunes" className="transition-colors hover:text-accent-chrome">Apple</Link></li>
-            <li><Link href="/shop?category=yalla-live" className="transition-colors hover:text-accent-chrome">Yalla Live</Link></li>
-            <li><Link href="/shop?category=tiktok" className="transition-colors hover:text-accent-chrome">TikTok</Link></li>
+            {visibleCategories.map((c) => (
+              <li key={c.slug}>
+                <Link href={`/shop?category=${c.slug}`} className="transition-colors hover:text-accent-chrome">
+                  {c.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 

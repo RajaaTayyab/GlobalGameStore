@@ -68,6 +68,7 @@ export default function ProductBuy({
       variantName: selected.name,
       unitPrice: selected.price,
       quantity: qty,
+      stock: selected.stock,
     });
   };
 
@@ -82,6 +83,7 @@ export default function ProductBuy({
       variantName: selected.name,
       unitPrice: selected.price,
       quantity: qty,
+      stock: selected.stock,
     });
     router.push("/checkout");
   };

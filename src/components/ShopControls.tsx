@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, LayoutGrid } from "lucide-react";
-import type { Category } from "@/lib/types";
+import { useRegion } from "@/context/RegionContext";
+import type { Category, Product } from "@/lib/types";
 
 interface Props {
   categories: Category[];
+  products: Product[];
   activeCategory?: string;
   search?: string;
   total: number;
@@ -14,6 +16,7 @@ interface Props {
 
 export default function ShopControls({
   categories,
+  products,
   activeCategory,
   search,
   total,
@@ -21,6 +24,19 @@ export default function ShopControls({
   const router = useRouter();
   const sp = useSearchParams();
   const [q, setQ] = useState(search ?? "");
+  const { region, detected } = useRegion();
+
+  // Only show category pills that actually have a product visible to this
+  // visitor. Region-locked products (Amazon KSA/UAE, Netflix KSA/UAE, etc.)
+  // are hidden outside their region by ProductGrid — a pill for a category
+  // with zero visible products just leads to "No products found."
+  const visibleCategories = useMemo(() => {
+    const visibleProducts = !detected
+      ? products
+      : products.filter((p) => !p.region || p.region.code === region);
+    const categoryIdsWithProducts = new Set(visibleProducts.map((p) => p.category_id));
+    return categories.filter((c) => categoryIdsWithProducts.has(c.id));
+  }, [categories, products, region, detected]);
 
   const navigate = (params: URLSearchParams) => {
     const s = params.toString();
@@ -68,7 +84,7 @@ export default function ShopControls({
         >
           All
         </button>
-        {categories.map((c) => (
+        {visibleCategories.map((c) => (
           <button
             key={c.id}
             onClick={() => {

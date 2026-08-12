@@ -19,21 +19,32 @@ const HERO_FEATURED: Partial<Record<RegionCode, HeroItem[]>> = {
   pk: [
     { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
     { slug: "free-fire", image: "/images/Free-Fire.jpg", alt: "Free Fire" },
-    { slug: "tiktok", image: "/images/tiktok.png", alt: "TikTok" },
+    { slug: "yalla-ludo", image: "/images/yalla ludo.jpeg", alt: "Yalla Ludo" },
   ],
   us: [
     { slug: "psn", image: "/images/psn.png", alt: "PlayStation" },
     { slug: "xbox", image: "/images/xbox.png", alt: "Xbox" },
     { slug: "itunes", image: "/images/Apple_Card.png", alt: "Apple" },
   ],
+  sa: [
+    { slug: "psn-ksa", image: "/images/psn.png", alt: "PlayStation" },
+    { slug: "xbox-ksa", image: "/images/xbox.png", alt: "Xbox" },
+    { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
+  ],
+  ae: [
+    { slug: "psn-uae", image: "/images/psn.png", alt: "PlayStation" },
+    { slug: "netflix-uae", image: "/images/Netflix.png", alt: "Netflix" },
+    { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
+  ],
+  kw: [
+    { slug: "psn-kuwait", image: "/images/psn.png", alt: "PlayStation" },
+    { slug: "tiktok", image: "/images/tiktok.png", alt: "TikTok" },
+    { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
+  ],
   global: [
     { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
     { slug: "free-fire", image: "/images/Free-Fire.jpg", alt: "Free Fire" },
     { slug: "psn", image: "/images/psn.png", alt: "PlayStation" },
-    { slug: "xbox", image: "/images/xbox.png", alt: "Xbox" },
-    { slug: "itunes", image: "/images/Apple_Card.png", alt: "Apple" },
-    { slug: "yalla-live", image: "/images/Yala live.png", alt: "Yalla Live" },
-    { slug: "tiktok", image: "/images/tiktok.png", alt: "TikTok" },
   ],
 };
 

@@ -18,6 +18,11 @@ interface Props {
 export default function ProductCard({ product, variants, regionBadge, highlight }: Props) {
   const { addItem } = useCart();
   const first = variants.find((v) => v.active) ?? variants[0];
+  // Real availability: a variant with codes in stock ships instantly; one
+  // with 0 stock is still buyable, just routed to a WhatsApp order instead
+  // (see ProductBuy.tsx on the detail page — this mirrors that logic so the
+  // grid card and the detail page never disagree again).
+  const inStock = (first?.stock ?? 0) > 0;
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -31,6 +36,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
       variantName: first.name,
       unitPrice: Number(first.price),
       quantity: 1,
+      stock: first.stock,
     });
   };
 
@@ -96,8 +102,12 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
             </div>
           )}
           <div className="mt-auto flex items-center justify-between pt-3">
-            <span className="text-xs text-text-muted">
-              {variants.length > 1 ? `${variants.length} options` : "In stock"}
+            <span className={`text-xs ${inStock ? "text-instock" : "text-text-muted"}`}>
+              {inStock
+                ? `${first!.stock} in stock`
+                : product.sold_out
+                  ? "Sold out"
+                  : "Order via WhatsApp"}
             </span>
             <button
               onClick={handleAdd}

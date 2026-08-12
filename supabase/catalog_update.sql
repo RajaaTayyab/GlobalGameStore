@@ -1,9 +1,13 @@
 -- ============================================================
 -- catalog_update.sql — full catalog refresh
--- Products, categories, and variants aligned with
--- ALL PRODUCTS WITH RATES.xlsx (products_catalog_for_opencode.json).
--- Currency: USDT. Images: local public/images only.
+-- Source: ALL_PRODUCTS_WITH_RATES.xlsx
+-- Currency: USDT charged. Images: local public/images only.
 -- 6 regions: pk, us, sa, ae, kw, global (mena removed).
+-- Variant names show only the reward (e.g. "SAR 50 Amazon (KSA)").
+-- Frontend (ProductBuy.tsx) already renders price separately via
+-- formatPrice(v.price), so name no longer repeats "X USDT —" —
+-- that was causing the duplicate price shown in your screenshot.
+-- Added: Nintendo eShop (US) — was in xlsx, missing from old SQL.
 -- NOTE: run in a FRESH SQL Editor window.
 -- ============================================================
 
@@ -16,7 +20,6 @@ values
   ('ae', 'UAE', array['AE']::text[], 3),
   ('kw', 'Kuwait', array['KW']::text[], 4),
   ('global', 'Global', '{}'::text[], 5)
-
 on conflict (code) do update set
   name = excluded.name,
   countries = excluded.countries,
@@ -34,12 +37,12 @@ values
   ('Apple Gift Cards', 'itunes', 65, true, '/images/Apple_Card.png'),
   ('Xbox Gift Cards', 'xbox', 75, true, '/images/xbox.png'),
   ('PlayStation Gift Cards', 'psn', 85, true, '/images/psn.png'),
+  ('Nintendo eShop', 'nintendo-eshop', 90, true, '/images/nintendo.png'),
   ('Netflix', 'netflix', 95, true, '/images/Netflix.png'),
   ('NordVPN Standard', 'nordvpn', 105, true, '/images/nord-vpn.png'),
   ('Surfshark VPN', 'surfshark', 110, true, '/images/surfshark.png'),
   ('Amazon Gift Cards', 'amazon', 115, true, '/images/Amazon.png'),
   ('Noon Gift Cards', 'noon', 125, true, '/images/noon.png')
-
 on conflict (slug) do update set
   name = excluded.name,
   sort_order = excluded.sort_order,
@@ -47,11 +50,8 @@ on conflict (slug) do update set
   image_url = excluded.image_url;
 
 -- ---------- 3. Delete ALL previous product entries ----------
--- Full wipe (per user confirmation) - removes every existing product,
--- including ones not in this sheet (e.g. Razer Gold). Cascades to
--- product_variants and codes automatically. Orders/order history are
--- untouched (order_items/order_codes store their own name/price copy
--- and do not FK-reference products).
+-- Cascades to product_variants and codes. Orders untouched
+-- (order_items/order_codes keep their own name/price copy).
 delete from public.products;
 
 -- ---------- 4. Insert products ----------
@@ -73,6 +73,7 @@ from (values
   ('PlayStation Gift Card (UAE)', 'psn-uae', 'PlayStation Network gift card, UAE region.', 'psn', 'ae'::text, '/images/psn.png'),
   ('PlayStation Gift Card (Kuwait)', 'psn-kuwait', 'PlayStation Network gift card, Kuwait region.', 'psn', 'kw'::text, '/images/psn.png'),
   ('PlayStation Gift Card (KSA)', 'psn-ksa', 'PlayStation Network gift card, Saudi Arabia region.', 'psn', 'sa'::text, '/images/psn.png'),
+  ('Nintendo eShop (USA)', 'nintendo-eshop-us', 'Nintendo eShop gift card, USA region.', 'nintendo-eshop', 'us'::text, '/images/nintendo.png'),
   ('Netflix Gift Card (KSA)', 'netflix-ksa', 'Netflix gift card, Saudi Arabia region.', 'netflix', 'sa'::text, '/images/Netflix.png'),
   ('Netflix Gift Card (UAE)', 'netflix-uae', 'Netflix gift card, UAE region.', 'netflix', 'ae'::text, '/images/Netflix.png'),
   ('NordVPN Standard', 'nordvpn-standard', 'NordVPN Standard subscription.', 'nordvpn', NULL::text, '/images/nord-vpn.png'),
@@ -93,34 +94,35 @@ on conflict (slug) do update set
   image_url = excluded.image_url;
 
 -- ---------- 5. Insert variants ----------
+-- name = reward only; price column drives the USDT display
 with prod as (select id, slug from public.products)
 insert into public.product_variants (product_id, name, price, active)
 select prod.id, v.name, v.price, true
 from (values
-  ('yalla-ludo', 'Gold 2 USDT (68,500 Gold)', 1.86),
-  ('yalla-ludo', 'Gold 5 USDT (223,700 Gold)', 4.65),
-  ('yalla-ludo', 'Gold 10 USDT (1,463,320 Gold)', 9.3),
-  ('yalla-ludo', 'Gold 25 USDT (3,666,470 Gold)', 23.25),
-  ('yalla-ludo', 'Gold 50 USDT (9,973,990 Gold)', 46.5),
-  ('yalla-ludo', 'Gold 100 USDT (25,236,460 Gold)', 93.0),
-  ('yalla-ludo', 'Gold 300 USDT (76,000,860 Gold)', 279.0),
-  ('yalla-ludo', 'Gold 500 USDT (126,910,990 Gold)', 465.0),
-  ('yalla-ludo', 'Diamond 2 USDT (830 Diamond)', 1.86),
-  ('yalla-ludo', 'Diamond 5 USDT (2,320 Diamond)', 4.65),
-  ('yalla-ludo', 'Diamond 10 USDT (5,150 Diamond)', 9.3),
-  ('yalla-ludo', 'Diamond 25 USDT (13,580 Diamond)', 23.25),
-  ('yalla-ludo', 'Diamond 50 USDT (27,640 Diamond)', 46.5),
-  ('yalla-ludo', 'Diamond 100 USDT (55,800 Diamond)', 93.0),
-  ('yalla-ludo', 'Diamond 300 USDT (168,860 Diamond)', 279.0),
-  ('yalla-ludo', 'Diamond 500 USDT (283,460 Diamond)', 465.0),
-  ('free-fire', '1 USDT (100 Diamond)', 0.94),
-  ('free-fire', '2 USDT (210 Diamond)', 1.88),
-  ('free-fire', '5 USDT (530 Diamond)', 4.7),
-  ('free-fire', '10 USDT (1,080 Diamond)', 9.4),
-  ('free-fire', '20 USDT (2,200 Diamond)', 18.8),
-  ('yalla-live', '25 USDT (2,900 Gold)', 23.5),
-  ('yalla-live', '50 USDT (5,900 Gold)', 47.0),
-  ('yalla-live', '100 USDT (12,500 Gold)', 94.0),
+  ('yalla-ludo', 'Yalla Ludo $2 (68,500 Gold)', 1.86),
+  ('yalla-ludo', 'Yalla Ludo $5 (223,700 Gold)', 4.65),
+  ('yalla-ludo', 'Yalla Ludo $10 (1,463,320 Gold)', 9.3),
+  ('yalla-ludo', 'Yalla Ludo $25 (3,666,470 Gold)', 23.25),
+  ('yalla-ludo', 'Yalla Ludo $50 (9,973,990 Gold)', 46.5),
+  ('yalla-ludo', 'Yalla Ludo $100 (25,236,460 Gold)', 93.0),
+  ('yalla-ludo', 'Yalla Ludo $300 (76,000,860 Gold)', 279.0),
+  ('yalla-ludo', 'Yalla Ludo $500 (126,910,990 Gold)', 465.0),
+  ('yalla-ludo', 'Yalla Ludo $2 (830 Diamond)', 1.86),
+  ('yalla-ludo', 'Yalla Ludo $5 (2,320 Diamond)', 4.65),
+  ('yalla-ludo', 'Yalla Ludo $10 (5,150 Diamond)', 9.3),
+  ('yalla-ludo', 'Yalla Ludo $25 (13,580 Diamond)', 23.25),
+  ('yalla-ludo', 'Yalla Ludo $50 (27,640 Diamond)', 46.5),
+  ('yalla-ludo', 'Yalla Ludo $100 (55,800 Diamond)', 93.0),
+  ('yalla-ludo', 'Yalla Ludo $300 (168,860 Diamond)', 279.0),
+  ('yalla-ludo', 'Yalla Ludo $500 (283,460 Diamond)', 465.0),
+  ('free-fire', 'Free Fire $1 (100 Diamonds)', 0.94),
+  ('free-fire', 'Free Fire $2 (210 Diamonds)', 1.88),
+  ('free-fire', 'Free Fire $5 (530 Diamonds)', 4.7),
+  ('free-fire', 'Free Fire $10 (1,080 Diamonds)', 9.4),
+  ('free-fire', 'Free Fire $20 (2,200 Diamonds)', 18.8),
+  ('yalla-live', 'Yalla Live $25 (2,900 Gold)', 23.5),
+  ('yalla-live', 'Yalla Live $50 (5,900 Gold)', 47.0),
+  ('yalla-live', 'Yalla Live $100 (12,500 Gold)', 94.0),
   ('pubg-mobile', '60 UC', 0.9),
   ('pubg-mobile', '325 UC', 4.5),
   ('pubg-mobile', '660 UC', 9.0),
@@ -149,91 +151,94 @@ from (values
   ('tiktok', '56,000 Coins', 600.0),
   ('tiktok', '63,000 Coins', 675.0),
   ('tiktok', '70,000 Coins', 750.0),
-  ('itunes', '5 USDT Apple Gift Card', 4.8),
-  ('itunes', '10 USDT Apple Gift Card', 9.6),
-  ('itunes', '20 USDT Apple Gift Card', 19.2),
-  ('itunes', '50 USDT Apple Gift Card', 48.0),
-  ('itunes', '100 USDT Apple Gift Card', 96.0),
-  ('itunes', '200 USDT Apple Gift Card', 192.0),
-  ('itunes', '400 USDT Apple Gift Card', 384.0),
-  ('xbox', '15 USDT Xbox Gift Card', 13.5),
-  ('xbox', '25 USDT Xbox Gift Card', 22.5),
-  ('xbox', '50 USDT Xbox Gift Card', 45.0),
-  ('xbox', '100 USDT Xbox Gift Card', 90.0),
-  ('xbox-ksa', 'SAR 50', 14.0),
-  ('xbox-ksa', 'SAR 100', 26.0),
-  ('xbox-ksa', 'SAR 200', 50.0),
-  ('xbox-ksa', 'SAR 300', 75.0),
-  ('psn', '25 USDT', 23.0),
-  ('psn', '50 USDT', 46.0),
-  ('psn', '75 USDT', 69.0),
-  ('psn', '100 USDT', 92.0),
-  ('psn', '150 USDT', 138.0),
-  ('psn', '200 USDT', 184.0),
-  ('psn', '250 USDT', 230.0),
-  ('psn-uae', '10 USDT', 9.2),
-  ('psn-uae', '20 USDT', 18.4),
-  ('psn-uae', '50 USDT', 46.0),
-  ('psn-uae', '100 USDT', 92.0),
-  ('psn-uae', '120 USDT', 110.4),
-  ('psn-uae', '160 USDT', 147.2),
-  ('psn-uae', '200 USDT', 184.0),
-  ('psn-kuwait', '10 USDT', 9.2),
-  ('psn-kuwait', '20 USDT', 18.4),
-  ('psn-kuwait', '50 USDT', 46.0),
-  ('psn-kuwait', '100 USDT', 92.0),
-  ('psn-kuwait', '120 USDT', 110.4),
-  ('psn-kuwait', '160 USDT', 147.2),
-  ('psn-kuwait', '200 USDT', 184.0),
-  ('psn-ksa', '10 USDT', 9.6),
-  ('psn-ksa', '20 USDT', 19.2),
-  ('psn-ksa', '50 USDT', 48.0),
-  ('psn-ksa', '100 USDT', 96.0),
-  ('psn-ksa', '120 USDT', 115.2),
-  ('psn-ksa', '160 USDT', 153.6),
-  ('psn-ksa', '200 USDT', 192.0),
-  ('netflix-ksa', 'SAR 100', 26.0),
-  ('netflix-ksa', 'SAR 150', 39.0),
-  ('netflix-ksa', 'SAR 200', 50.0),
-  ('netflix-ksa', 'SAR 250', 62.0),
-  ('netflix-ksa', 'SAR 300', 75.0),
-  ('netflix-uae', 'AED 100', 26.0),
-  ('netflix-uae', 'AED 150', 39.0),
-  ('netflix-uae', 'AED 200', 50.0),
-  ('netflix-uae', 'AED 250', 62.0),
-  ('netflix-uae', 'AED 300', 75.0),
-  ('nordvpn-standard', '1 Month', 13.0),
-  ('nordvpn-standard', '6 Months', 37.0),
-  ('nordvpn-standard', '1 Year', 52.0),
-  ('surfshark-vpn', '1 Month', 15.0),
-  ('surfshark-vpn', '6 Months', 35.0),
-  ('surfshark-vpn', '12 Months', 50.0),
-  ('amazon-ksa', 'SAR 50', 14.0),
-  ('amazon-ksa', 'SAR 100', 27.0),
-  ('amazon-ksa', 'SAR 250', 67.0),
-  ('amazon-ksa', 'SAR 500', 130.0),
-  ('amazon-uae', 'AED 50', 14.0),
-  ('amazon-uae', 'AED 100', 28.0),
-  ('amazon-uae', 'AED 250', 68.0),
-  ('amazon-uae', 'AED 500', 131.0),
-  ('noon-sa', '100 USDT', 27.0),
-  ('noon-sa', '250 USDT', 66.0),
-  ('noon-sa', '500 USDT', 130.0),
-  ('noon-ae', '100 USDT', 27.0),
-  ('noon-ae', '250 USDT', 66.0),
-  ('noon-ae', '500 USDT', 130.0)
+  ('itunes', '$5 Apple Gift Card', 4.8),
+  ('itunes', '$10 Apple Gift Card', 9.6),
+  ('itunes', '$20 Apple Gift Card', 19.2),
+  ('itunes', '$50 Apple Gift Card', 48.0),
+  ('itunes', '$100 Apple Gift Card', 96.0),
+  ('itunes', '$200 Apple Gift Card', 192.0),
+  ('itunes', '$400 Apple Gift Card', 384.0),
+  ('xbox', '$15 Xbox Gift Card', 13.5),
+  ('xbox', '$25 Xbox Gift Card', 22.5),
+  ('xbox', '$50 Xbox Gift Card', 45.0),
+  ('xbox', '$100 Xbox Gift Card', 90.0),
+  ('xbox-ksa', 'SAR 50 Xbox (KSA)', 14.0),
+  ('xbox-ksa', 'SAR 100 Xbox (KSA)', 26.0),
+  ('xbox-ksa', 'SAR 200 Xbox (KSA)', 50.0),
+  ('xbox-ksa', 'SAR 300 Xbox (KSA)', 75.0),
+  ('psn', '$25 PSN (USA)', 23.0),
+  ('psn', '$50 PSN (USA)', 46.0),
+  ('psn', '$75 PSN (USA)', 69.0),
+  ('psn', '$100 PSN (USA)', 92.0),
+  ('psn', '$150 PSN (USA)', 138.0),
+  ('psn', '$200 PSN (USA)', 184.0),
+  ('psn', '$250 PSN (USA)', 230.0),
+  ('psn-uae', '$10 PSN (UAE)', 9.2),
+  ('psn-uae', '$20 PSN (UAE)', 18.4),
+  ('psn-uae', '$50 PSN (UAE)', 46.0),
+  ('psn-uae', '$100 PSN (UAE)', 92.0),
+  ('psn-uae', '$120 PSN (UAE)', 110.4),
+  ('psn-uae', '$160 PSN (UAE)', 147.2),
+  ('psn-uae', '$200 PSN (UAE)', 184.0),
+  ('psn-kuwait', '$10 PSN (Kuwait)', 9.2),
+  ('psn-kuwait', '$20 PSN (Kuwait)', 18.4),
+  ('psn-kuwait', '$50 PSN (Kuwait)', 46.0),
+  ('psn-kuwait', '$100 PSN (Kuwait)', 92.0),
+  ('psn-kuwait', '$120 PSN (Kuwait)', 110.4),
+  ('psn-kuwait', '$160 PSN (Kuwait)', 147.2),
+  ('psn-kuwait', '$200 PSN (Kuwait)', 184.0),
+  ('psn-ksa', '$10 PSN (KSA)', 9.6),
+  ('psn-ksa', '$20 PSN (KSA)', 19.2),
+  ('psn-ksa', '$50 PSN (KSA)', 48.0),
+  ('psn-ksa', '$100 PSN (KSA)', 96.0),
+  ('psn-ksa', '$120 PSN (KSA)', 115.2),
+  ('psn-ksa', '$160 PSN (KSA)', 153.6),
+  ('psn-ksa', '$200 PSN (KSA)', 192.0),
+  ('nintendo-eshop-us', '$10 Nintendo eShop (US)', 9.0),
+  ('nintendo-eshop-us', '$20 Nintendo eShop (US)', 18.0),
+  ('nintendo-eshop-us', '$35 Nintendo eShop (US)', 31.5),
+  ('nintendo-eshop-us', '$50 Nintendo eShop (US)', 45.0),
+  ('netflix-ksa', 'SAR 100 Netflix (KSA)', 26.0),
+  ('netflix-ksa', 'SAR 150 Netflix (KSA)', 39.0),
+  ('netflix-ksa', 'SAR 200 Netflix (KSA)', 50.0),
+  ('netflix-ksa', 'SAR 250 Netflix (KSA)', 62.0),
+  ('netflix-ksa', 'SAR 300 Netflix (KSA)', 75.0),
+  ('netflix-uae', 'AED 100 Netflix (UAE)', 26.0),
+  ('netflix-uae', 'AED 150 Netflix (UAE)', 39.0),
+  ('netflix-uae', 'AED 200 Netflix (UAE)', 50.0),
+  ('netflix-uae', 'AED 250 Netflix (UAE)', 62.0),
+  ('netflix-uae', 'AED 300 Netflix (UAE)', 75.0),
+  ('nordvpn-standard', '1 Month NordVPN Standard', 13.0),
+  ('nordvpn-standard', '6 Months NordVPN Standard', 37.0),
+  ('nordvpn-standard', '1 Year NordVPN Standard', 52.0),
+  ('surfshark-vpn', '1 Month Surfshark', 15.0),
+  ('surfshark-vpn', '6 Months Surfshark', 35.0),
+  ('surfshark-vpn', '12 Months Surfshark', 50.0),
+  ('amazon-ksa', 'SAR 50 Amazon (KSA)', 14.0),
+  ('amazon-ksa', 'SAR 100 Amazon (KSA)', 27.0),
+  ('amazon-ksa', 'SAR 250 Amazon (KSA)', 67.0),
+  ('amazon-ksa', 'SAR 500 Amazon (KSA)', 130.0),
+  ('amazon-uae', 'AED 50 Amazon (UAE)', 14.0),
+  ('amazon-uae', 'AED 100 Amazon (UAE)', 28.0),
+  ('amazon-uae', 'AED 250 Amazon (UAE)', 68.0),
+  ('amazon-uae', 'AED 500 Amazon (UAE)', 131.0),
+  ('noon-sa', '$100 Noon (SA)', 27.0),
+  ('noon-sa', '$250 Noon (SA)', 66.0),
+  ('noon-sa', '$500 Noon (SA)', 130.0),
+  ('noon-ae', '$100 Noon (AE)', 27.0),
+  ('noon-ae', '$250 Noon (AE)', 66.0),
+  ('noon-ae', '$500 Noon (AE)', 130.0)
 ) as v(product_slug, name, price)
 join prod on prod.slug = v.product_slug;
 
 -- ---------- 6. Cleanup: remove categories with no products ----------
--- (no-ops when the catalog matches the sheet; guards against leftover
---  categories like Razer Gold lingering after the product wipe)
 delete from public.categories c
 where not exists (
   select 1 from public.products p where p.category_id = c.id
 );
 
 -- ============================================================
--- Done. Stock (redeemable codes) for these products is now empty -
--- add codes for each variant from the admin panel before going live.
+-- Done. Stock (codes) empty for these products — add codes per
+-- variant from admin panel before going live. Nintendo eShop
+-- needs an image at public/images/nintendo.png (add or swap slug).
 -- ============================================================

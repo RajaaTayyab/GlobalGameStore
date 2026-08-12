@@ -101,4 +101,5 @@ export interface CartItem {
   variantName: string;
   unitPrice: number;
   quantity: number;
+  stock?: number;
 }
