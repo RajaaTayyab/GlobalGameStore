@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import { PackageCheck, Wallet, MessageCircle, ChevronRight, Gamepad2 } from "lucide-react";
 import { getProductBySlug, getAvailableCodeCounts } from "@/lib/products";
 import ProductBuy from "@/components/ProductBuy";
-import SectionGrid3D from "@/components/SectionGrid3D";
 
 export const dynamic = "force-dynamic";
 
@@ -41,8 +40,7 @@ export default async function ProductPage({ params }: Props) {
   ];
 
   return (
-    <div className="relative mx-auto max-w-7xl overflow-hidden px-4 py-10">
-      <SectionGrid3D seed={6} floaters={3} />
+    <div className="mx-auto max-w-7xl px-4 py-10">
       <nav className="mb-6 flex items-center gap-1.5 font-mono text-sm text-text-muted">
         <Link href="/" className="transition-colors hover:text-accent-chrome">Home</Link>
         <ChevronRight className="h-3.5 w-3.5" />

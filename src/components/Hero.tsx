@@ -19,32 +19,21 @@ const HERO_FEATURED: Partial<Record<RegionCode, HeroItem[]>> = {
   pk: [
     { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
     { slug: "free-fire", image: "/images/Free-Fire.jpg", alt: "Free Fire" },
-    { slug: "yalla-ludo", image: "/images/yalla ludo.jpeg", alt: "Yalla Ludo" },
+    { slug: "tiktok", image: "/images/tiktok.png", alt: "TikTok" },
   ],
   us: [
     { slug: "psn", image: "/images/psn.png", alt: "PlayStation" },
     { slug: "xbox", image: "/images/xbox.png", alt: "Xbox" },
     { slug: "itunes", image: "/images/Apple_Card.png", alt: "Apple" },
   ],
-  sa: [
-    { slug: "psn-ksa", image: "/images/psn.png", alt: "PlayStation" },
-    { slug: "xbox-ksa", image: "/images/xbox.png", alt: "Xbox" },
-    { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
-  ],
-  ae: [
-    { slug: "psn-uae", image: "/images/psn.png", alt: "PlayStation" },
-    { slug: "netflix-uae", image: "/images/Netflix.png", alt: "Netflix" },
-    { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
-  ],
-  kw: [
-    { slug: "psn-kuwait", image: "/images/psn.png", alt: "PlayStation" },
-    { slug: "tiktok", image: "/images/tiktok.png", alt: "TikTok" },
-    { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
-  ],
   global: [
     { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
     { slug: "free-fire", image: "/images/Free-Fire.jpg", alt: "Free Fire" },
     { slug: "psn", image: "/images/psn.png", alt: "PlayStation" },
+    { slug: "xbox", image: "/images/xbox.png", alt: "Xbox" },
+    { slug: "itunes", image: "/images/Apple_Card.png", alt: "Apple" },
+    { slug: "yalla-live", image: "/images/Yala live.png", alt: "Yalla Live" },
+    { slug: "tiktok", image: "/images/tiktok.png", alt: "TikTok" },
   ],
 };
 
@@ -90,20 +79,21 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(201,175,140,0.10),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(201,175,140,0.08),transparent_55%)]" />
       <div className="bg-grid absolute inset-0" />
 
-      {/* Legibility veil behind the stacked text on narrow screens — the globe
-          parks lower-right on mobile, so this softens what sits behind the headline. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[60%] bg-gradient-to-b from-bg/70 via-bg/25 to-transparent lg:hidden" />
+      {/* Legibility veil behind the stacked text — always on, not just
+          mobile. The globe/grid backdrop was cutting straight through the
+          paragraph text on desktop with nothing behind it. */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-full bg-gradient-to-b from-bg/70 via-bg/35 to-transparent lg:w-[58%] lg:bg-gradient-to-r lg:from-bg/85 lg:via-bg/55 lg:to-transparent" />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 lg:grid-cols-2 lg:py-28">
         <div className="animate-fade-up">
-          <h1 className="font-serif text-4xl leading-[1.05] tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+          <h1 className="font-serif text-4xl leading-[1.05] tracking-tight text-text-primary drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)] sm:text-5xl lg:text-6xl">
             The vault for{" "}
             <span className="text-accent-chrome italic drop-shadow-[0_0_18px_rgba(201,175,140,0.35)]">
               game credit
             </span>
             .
           </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-text-muted">
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-text-primary/80 drop-shadow-[0_1px_8px_rgba(0,0,0,0.55)]">
             PUBG, Free Fire, PlayStation, Xbox, TikTok and more —
             top-ups and gift cards, released the moment your payment clears.
           </p>
