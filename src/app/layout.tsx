@@ -34,6 +34,10 @@ export const metadata: Metadata = {
   },
   description:
     "Buy game top-ups, gift cards, and digital keys instantly with fast and secure delivery. Play more, wait less.",
+  icons: {
+    icon: "/images/logo.png",
+    apple: "/images/logo.png",
+  },
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

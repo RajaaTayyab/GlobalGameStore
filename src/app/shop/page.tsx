@@ -17,7 +17,12 @@ export default async function ShopPage(props: PageProps<"/shop">) {
   const category = typeof searchParams.category === "string" ? searchParams.category : undefined;
   const q = typeof searchParams.q === "string" ? searchParams.q : undefined;
 
-  const catalog = await getCatalog({ categorySlug: category, search: q });
+  const [catalog, fullCatalog] = await Promise.all([
+    getCatalog({ categorySlug: category, search: q }),
+    // Unfiltered product list so category pills reflect the whole catalog,
+    // not just whatever the active filter narrowed it down to.
+    getCatalog(),
+  ]);
 
   return (
     <div className="relative mx-auto max-w-7xl overflow-hidden px-4 py-10">
@@ -31,6 +36,7 @@ export default async function ShopPage(props: PageProps<"/shop">) {
 
       <ShopControls
         categories={catalog.categories}
+        products={fullCatalog.products}
         activeCategory={category}
         search={q}
         total={catalog.products.length}

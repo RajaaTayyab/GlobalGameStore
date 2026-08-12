@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Gamepad2, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { useRegion } from "@/context/RegionContext";
 import type { RegionCode } from "@/lib/types";
 
@@ -31,8 +32,14 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <Link href="/" className="group flex items-center gap-2" aria-label="GlobalGameStore home">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-chrome transition duration-300 group-hover:rounded-xl group-hover:brightness-110 group-hover:shadow-[0_0_12px_2px_rgba(201,175,140,0.35)]">
-              <Gamepad2 className="h-5 w-5 text-bg" />
+            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg transition duration-300 group-hover:rounded-xl group-hover:brightness-110 group-hover:shadow-[0_0_12px_2px_rgba(201,175,140,0.35)]">
+              <Image
+                src="/images/logo.png"
+                alt="GlobalGameStore"
+                width={36}
+                height={36}
+                className="h-9 w-9 object-cover"
+              />
             </div>
             <span className="font-serif text-lg tracking-tight text-text-primary">
               Global<span className="text-accent-chrome">GameStore</span>
