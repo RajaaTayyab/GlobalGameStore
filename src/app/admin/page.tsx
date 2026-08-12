@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
-  Tags,
   ShoppingCart,
   Users,
   Settings,
@@ -17,12 +16,11 @@ import {
 import type { Profile } from "@/lib/types";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import AdminProducts from "@/components/admin/AdminProducts";
-import AdminCategories from "@/components/admin/AdminCategories";
 import AdminOrders from "@/components/admin/AdminOrders";
 import AdminUsers from "@/components/admin/AdminUsers";
 import AdminSettings from "@/components/admin/AdminSettings";
 
-type Tab = "dashboard" | "products" | "categories" | "orders" | "users" | "settings";
+type Tab = "dashboard" | "products" | "orders" | "users" | "settings";
 
 export default function AdminPage() {
   const router = useRouter();
@@ -75,7 +73,6 @@ export default function AdminPage() {
   const tabs: { id: Tab; label: string; icon: typeof Package }[] = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "products", label: "Products", icon: Package },
-    { id: "categories", label: "Categories", icon: Tags },
     { id: "orders", label: "Orders", icon: ShoppingCart },
     { id: "users", label: "Users & Credits", icon: Users },
     { id: "settings", label: "Settings", icon: Settings },
@@ -117,7 +114,6 @@ export default function AdminPage() {
 
       {tab === "dashboard" && <AdminDashboard />}
       {tab === "products" && <AdminProducts />}
-      {tab === "categories" && <AdminCategories />}
       {tab === "orders" && <AdminOrders />}
       {tab === "users" && <AdminUsers />}
       {tab === "settings" && <AdminSettings />}
