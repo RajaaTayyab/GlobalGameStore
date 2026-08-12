@@ -13,17 +13,20 @@ import Gateway3D from "@/components/Gateway3D";
 export const dynamic = "force-dynamic";
 
 const CATEGORY_FALLBACKS: Record<string, string> = {
-  "free-fire": "/images/freefire.webp",
+  "free-fire": "/images/Free-Fire.jpg",
   "pubg-mobile": "/images/pubg-mobile.jpg",
-  playstation: "/images/playstation.jpg",
-  psn: "/images/playstation.jpg",
+  psn: "/images/psn.png",
   xbox: "/images/xbox.png",
-  "razer-gold": "/images/razer-gold.jpeg",
-  "yalla-live": "/images/yalla-live.jpeg",
+  "yalla-live": "/images/Yala live.png",
   tiktok: "/images/tiktok.png",
-  "yalla-ludo": "/images/yalla-ludo.webp",
-  jawaker: "/images/jawaker.webp",
-  vpn: "/images/nord-vpn.png",
+  "yalla-ludo": "/images/yalla ludo.jpeg",
+  jawaker: "/images/Jawaker.jpeg",
+  itunes: "/images/Apple_Card.png",
+  netflix: "/images/Netflix.png",
+  amazon: "/images/Amazon.png",
+  noon: "/images/noon.png",
+  nordvpn: "/images/nord-vpn.png",
+  surfshark: "/images/surfshark.png",
 };
 
 export default async function HomePage() {

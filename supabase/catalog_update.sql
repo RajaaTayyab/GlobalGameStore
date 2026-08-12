@@ -1,36 +1,21 @@
 -- ============================================================
--- GlobalGameStore - Full catalog replace
--- Generated from ALL_PRODUCTS_WITH_RATES.xlsx
---
--- What this does:
---  1. Upserts the 7 regions (pk, mena, us, sa, ae, kw, global)
---  2. Upserts all categories used below
---  3. DELETES ALL existing products (full wipe, per user request) -
---     including any not in this sheet (e.g. Razer Gold). Cascades
---     via ON DELETE CASCADE to their variants + stock codes. Order
---     history is untouched (orders store their own name/price copy).
---  4. Re-inserts every product + variant fresh from the sheet.
---
--- IMPORTANT: prices below are exactly what was in the sheet (your
--- supplier/cost rate in USD). No markup has been applied - double
--- check these are the prices you want customers to pay before running
--- this against production.
---
--- Region-locked products (region_code below is not NULL) will now be
--- HIDDEN from visitors outside that region on the storefront (this
--- required a small code change in ProductGrid.tsx - see chat).
+-- catalog_update.sql — full catalog refresh
+-- Products, categories, and variants aligned with
+-- ALL PRODUCTS WITH RATES.xlsx (products_catalog_for_opencode.json).
+-- Currency: USDT. Images: local public/images only.
+-- 6 regions: pk, us, sa, ae, kw, global (mena removed).
+-- NOTE: run in a FRESH SQL Editor window.
 -- ============================================================
 
 -- ---------- 1. Regions ----------
 insert into public.regions (code, name, countries, sort_order)
 values
   ('pk', 'Pakistan', array['PK']::text[], 0),
-  ('mena', 'Middle East', array['QA','BH','OM','IQ','JO','LB','EG','SY','YE','PS']::text[], 1),
-  ('us', 'USA', array['US']::text[], 2),
-  ('sa', 'Saudi Arabia', array['SA']::text[], 3),
-  ('ae', 'UAE', array['AE']::text[], 4),
-  ('kw', 'Kuwait', array['KW']::text[], 5),
-  ('global', 'Global', '{}'::text[], 6)
+  ('us', 'USA', array['US']::text[], 1),
+  ('sa', 'Saudi Arabia', array['SA']::text[], 2),
+  ('ae', 'UAE', array['AE']::text[], 3),
+  ('kw', 'Kuwait', array['KW']::text[], 4),
+  ('global', 'Global', '{}'::text[], 5)
 
 on conflict (code) do update set
   name = excluded.name,
@@ -40,19 +25,20 @@ on conflict (code) do update set
 -- ---------- 2. Categories ----------
 insert into public.categories (name, slug, sort_order, active, image_url)
 values
-  ('Yalla Ludo', 'yalla-ludo', 5, true, '/images/yalla-ludo.webp'),
-  ('Free Fire', 'free-fire', 15, true, '/images/freefire.webp'),
-  ('Yalla Live', 'yalla-live', 40, true, '/images/yalla-live.jpeg'),
-  ('PUBG Mobile', 'pubg-mobile', 25, true, '/images/pubg-mobile.jpg'),
-  ('Jawaker', 'jawaker', 60, true, '/images/jawaker.webp'),
-  ('TikTok', 'tiktok', 50, true, '/images/tiktok.png'),
-  ('iTunes', 'itunes', 30, true, null),
-  ('Xbox', 'xbox', 35, true, '/images/xbox.png'),
-  ('PSN', 'psn', 10, true, '/images/playstation.jpg'),
-  ('Netflix', 'netflix', 80, true, null),
-  ('VPN', 'vpn', 90, true, '/images/nord-vpn.png'),
-  ('Amazon Gift Cards', 'amazon', 100, true, null),
-  ('Noon', 'noon', 110, true, null)
+  ('Yalla Ludo', 'yalla-ludo', 5, true, '/images/yalla ludo.jpeg'),
+  ('Free Fire', 'free-fire', 15, true, '/images/Free-Fire.jpg'),
+  ('Yalla Live', 'yalla-live', 25, true, '/images/Yala live.png'),
+  ('PUBG Mobile Global', 'pubg-mobile', 35, true, '/images/pubg-mobile.jpg'),
+  ('Jawaker', 'jawaker', 45, true, '/images/Jawaker.jpeg'),
+  ('TikTok', 'tiktok', 55, true, '/images/tiktok.png'),
+  ('Apple Gift Cards', 'itunes', 65, true, '/images/Apple_Card.png'),
+  ('Xbox Gift Cards', 'xbox', 75, true, '/images/xbox.png'),
+  ('PlayStation Gift Cards', 'psn', 85, true, '/images/psn.png'),
+  ('Netflix', 'netflix', 95, true, '/images/Netflix.png'),
+  ('NordVPN Standard', 'nordvpn', 105, true, '/images/nord-vpn.png'),
+  ('Surfshark VPN', 'surfshark', 110, true, '/images/surfshark.png'),
+  ('Amazon Gift Cards', 'amazon', 115, true, '/images/Amazon.png'),
+  ('Noon Gift Cards', 'noon', 125, true, '/images/noon.png')
 
 on conflict (slug) do update set
   name = excluded.name,
@@ -74,28 +60,27 @@ with cat as (select id, slug from public.categories),
 insert into public.products (name, slug, description, category_id, region_id, active, image_url)
 select v.name, v.slug, v.description, cat.id, reg.id, true, v.image_url
 from (values
-  ('Yalla Ludo Gold', 'yalla-ludo-gold', 'Top up Yalla Ludo Gold instantly.', 'yalla-ludo', NULL::text, '/images/yalla-ludo-gold.jpeg'),
-  ('Yalla Ludo Diamond', 'yalla-ludo-diamond', 'Top up Yalla Ludo Diamonds instantly.', 'yalla-ludo', NULL::text, '/images/yalla-ludo-diamond.jpeg'),
-  ('Free Fire', 'free-fire', 'Top up Free Fire Diamonds instantly.', 'free-fire', NULL::text, '/images/freefire.webp'),
-  ('Yalla Live Coins', 'yalla-live', 'Top up Yalla Live coins instantly.', 'yalla-live', NULL::text, '/images/yalla-live.jpeg'),
-  ('PUBG Mobile', 'pubg-mobile', 'PUBG Mobile Global UC top-up.', 'pubg-mobile', NULL::text, '/images/pubg-mobile.jpg'),
-  ('Jawaker Pins', 'jawaker', 'Jawaker token top-up.', 'jawaker', NULL::text, '/images/jawaker.webp'),
-  ('TikTok Coins', 'tiktok', 'Top up TikTok coins instantly.', 'tiktok', NULL::text, '/images/tiktok.png'),
-  ('iTunes Gift Card', 'itunes', 'App Store / iTunes gift cards, ready to redeem.', 'itunes', NULL::text, NULL),
+  ('Yalla Ludo', 'yalla-ludo', 'Top up Yalla Ludo Gold & Diamond instantly.', 'yalla-ludo', NULL::text, '/images/yalla ludo.jpeg'),
+  ('Free Fire', 'free-fire', 'Top up Free Fire Diamonds instantly.', 'free-fire', NULL::text, '/images/Free-Fire.jpg'),
+  ('Yalla Live', 'yalla-live', 'Top up Yalla Live coins instantly.', 'yalla-live', NULL::text, '/images/Yala live.png'),
+  ('PUBG Mobile Global', 'pubg-mobile', 'PUBG Mobile Global UC top-up.', 'pubg-mobile', NULL::text, '/images/pubg-mobile.jpg'),
+  ('Jawaker', 'jawaker', 'Jawaker token top-up.', 'jawaker', NULL::text, '/images/Jawaker.jpeg'),
+  ('TikTok', 'tiktok', 'Top up TikTok coins instantly.', 'tiktok', NULL::text, '/images/tiktok.png'),
+  ('Apple Gift Card', 'itunes', 'App Store gift cards, ready to redeem.', 'itunes', NULL::text, '/images/Apple_Card.png'),
   ('Xbox Gift Card (USA)', 'xbox', 'Xbox Gift Card, USA region.', 'xbox', 'us'::text, '/images/xbox.png'),
   ('Xbox Gift Card (KSA)', 'xbox-ksa', 'Xbox Gift Card, Saudi Arabia region.', 'xbox', 'sa'::text, '/images/xbox.png'),
-  ('PSN Gift Card (USA)', 'psn', 'PlayStation Network gift card, USA region.', 'psn', 'us'::text, '/images/playstation.jpg'),
-  ('PSN Gift Card (UAE)', 'psn-uae', 'PlayStation Network gift card, UAE region.', 'psn', 'ae'::text, '/images/playstation.jpg'),
-  ('PSN Gift Card (Kuwait)', 'psn-kuwait', 'PlayStation Network gift card, Kuwait region.', 'psn', 'kw'::text, '/images/playstation.jpg'),
-  ('PSN Gift Card (KSA)', 'psn-ksa', 'PlayStation Network gift card, Saudi Arabia region.', 'psn', 'sa'::text, '/images/playstation.jpg'),
-  ('Netflix Gift Card (KSA)', 'netflix-ksa', 'Netflix gift card, Saudi Arabia region.', 'netflix', 'sa'::text, NULL),
-  ('Netflix Gift Card (UAE)', 'netflix-uae', 'Netflix gift card, UAE region.', 'netflix', 'ae'::text, NULL),
-  ('NordVPN Standard', 'nordvpn-standard', 'NordVPN Standard subscription.', 'vpn', NULL::text, '/images/nord-vpn.png'),
-  ('Surfshark VPN', 'surfshark-vpn', 'Surfshark VPN subscription.', 'vpn', NULL::text, '/images/surfshark.jpeg'),
-  ('Amazon Gift Card (KSA)', 'amazon-ksa', 'Amazon gift card, Saudi Arabia region.', 'amazon', 'sa'::text, NULL),
-  ('Amazon Gift Card (UAE)', 'amazon-uae', 'Amazon gift card, UAE region.', 'amazon', 'ae'::text, NULL),
-  ('Noon Gift Card (SA)', 'noon-sa', 'Noon gift card, Saudi Arabia region.', 'noon', 'sa'::text, NULL),
-  ('Noon Gift Card (AE)', 'noon-ae', 'Noon gift card, UAE region.', 'noon', 'ae'::text, NULL)
+  ('PlayStation Gift Card (USA)', 'psn', 'PlayStation Network gift card, USA region.', 'psn', 'us'::text, '/images/psn.png'),
+  ('PlayStation Gift Card (UAE)', 'psn-uae', 'PlayStation Network gift card, UAE region.', 'psn', 'ae'::text, '/images/psn.png'),
+  ('PlayStation Gift Card (Kuwait)', 'psn-kuwait', 'PlayStation Network gift card, Kuwait region.', 'psn', 'kw'::text, '/images/psn.png'),
+  ('PlayStation Gift Card (KSA)', 'psn-ksa', 'PlayStation Network gift card, Saudi Arabia region.', 'psn', 'sa'::text, '/images/psn.png'),
+  ('Netflix Gift Card (KSA)', 'netflix-ksa', 'Netflix gift card, Saudi Arabia region.', 'netflix', 'sa'::text, '/images/Netflix.png'),
+  ('Netflix Gift Card (UAE)', 'netflix-uae', 'Netflix gift card, UAE region.', 'netflix', 'ae'::text, '/images/Netflix.png'),
+  ('NordVPN Standard', 'nordvpn-standard', 'NordVPN Standard subscription.', 'nordvpn', NULL::text, '/images/nord-vpn.png'),
+  ('Surfshark VPN', 'surfshark-vpn', 'Surfshark VPN subscription.', 'surfshark', NULL::text, '/images/surfshark.png'),
+  ('Amazon Gift Card (KSA)', 'amazon-ksa', 'Amazon gift card, Saudi Arabia region.', 'amazon', 'sa'::text, '/images/Amazon.png'),
+  ('Amazon Gift Card (UAE)', 'amazon-uae', 'Amazon gift card, UAE region.', 'amazon', 'ae'::text, '/images/Amazon.png'),
+  ('Noon Gift Card (KSA)', 'noon-sa', 'Noon gift card, Saudi Arabia region.', 'noon', 'sa'::text, '/images/noon.png'),
+  ('Noon Gift Card (UAE)', 'noon-ae', 'Noon gift card, UAE region.', 'noon', 'ae'::text, '/images/noon.png')
 ) as v(name, slug, description, cat_slug, region_code, image_url)
 join cat on cat.slug = v.cat_slug
 left join reg on reg.code = v.region_code
@@ -112,22 +97,22 @@ with prod as (select id, slug from public.products)
 insert into public.product_variants (product_id, name, price, active)
 select prod.id, v.name, v.price, true
 from (values
-  ('yalla-ludo-gold', '2 USDT (68,500 Gold)', 1.86),
-  ('yalla-ludo-gold', '5 USDT (223,700 Gold)', 4.65),
-  ('yalla-ludo-gold', '10 USDT (1,463,320 Gold)', 9.3),
-  ('yalla-ludo-gold', '25 USDT (3,666,470 Gold)', 23.25),
-  ('yalla-ludo-gold', '50 USDT (9,973,990 Gold)', 46.5),
-  ('yalla-ludo-gold', '100 USDT (25,236,460 Gold)', 93.0),
-  ('yalla-ludo-gold', '300 USDT (76,000,860 Gold)', 279.0),
-  ('yalla-ludo-gold', '500 USDT (126,910,990 Gold)', 465.0),
-  ('yalla-ludo-diamond', '2 USDT (830 Diamond)', 1.86),
-  ('yalla-ludo-diamond', '5 USDT (2,320 Diamond)', 4.65),
-  ('yalla-ludo-diamond', '10 USDT (5,150 Diamond)', 9.3),
-  ('yalla-ludo-diamond', '25 USDT (13,580 Diamond)', 23.25),
-  ('yalla-ludo-diamond', '50 USDT (27,640 Diamond)', 46.5),
-  ('yalla-ludo-diamond', '100 USDT (55,800 Diamond)', 93.0),
-  ('yalla-ludo-diamond', '300 USDT (168,860 Diamond)', 279.0),
-  ('yalla-ludo-diamond', '500 USDT (283,460 Diamond)', 465.0),
+  ('yalla-ludo', 'Gold 2 USDT (68,500 Gold)', 1.86),
+  ('yalla-ludo', 'Gold 5 USDT (223,700 Gold)', 4.65),
+  ('yalla-ludo', 'Gold 10 USDT (1,463,320 Gold)', 9.3),
+  ('yalla-ludo', 'Gold 25 USDT (3,666,470 Gold)', 23.25),
+  ('yalla-ludo', 'Gold 50 USDT (9,973,990 Gold)', 46.5),
+  ('yalla-ludo', 'Gold 100 USDT (25,236,460 Gold)', 93.0),
+  ('yalla-ludo', 'Gold 300 USDT (76,000,860 Gold)', 279.0),
+  ('yalla-ludo', 'Gold 500 USDT (126,910,990 Gold)', 465.0),
+  ('yalla-ludo', 'Diamond 2 USDT (830 Diamond)', 1.86),
+  ('yalla-ludo', 'Diamond 5 USDT (2,320 Diamond)', 4.65),
+  ('yalla-ludo', 'Diamond 10 USDT (5,150 Diamond)', 9.3),
+  ('yalla-ludo', 'Diamond 25 USDT (13,580 Diamond)', 23.25),
+  ('yalla-ludo', 'Diamond 50 USDT (27,640 Diamond)', 46.5),
+  ('yalla-ludo', 'Diamond 100 USDT (55,800 Diamond)', 93.0),
+  ('yalla-ludo', 'Diamond 300 USDT (168,860 Diamond)', 279.0),
+  ('yalla-ludo', 'Diamond 500 USDT (283,460 Diamond)', 465.0),
   ('free-fire', '1 USDT (100 Diamond)', 0.94),
   ('free-fire', '2 USDT (210 Diamond)', 1.88),
   ('free-fire', '5 USDT (530 Diamond)', 4.7),
@@ -239,6 +224,14 @@ from (values
   ('noon-ae', '500 USDT', 130.0)
 ) as v(product_slug, name, price)
 join prod on prod.slug = v.product_slug;
+
+-- ---------- 6. Cleanup: remove categories with no products ----------
+-- (no-ops when the catalog matches the sheet; guards against leftover
+--  categories like Razer Gold lingering after the product wipe)
+delete from public.categories c
+where not exists (
+  select 1 from public.products p where p.category_id = c.id
+);
 
 -- ============================================================
 -- Done. Stock (redeemable codes) for these products is now empty -

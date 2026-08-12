@@ -7,9 +7,8 @@ import { REGION_LABELS } from "@/lib/constants";
 
 const REGION_GAMES: Record<string, string[]> = {
   pk: ["PUBG Mobile", "Free Fire", "TikTok", "Yalla Live"],
-  mena: ["PSN", "Yalla Live", "TikTok"],
-  us: ["PSN", "Xbox", "iTunes"],
-  global: ["PUBG Mobile", "Free Fire", "PSN", "Xbox", "iTunes", "Razer Gold"],
+  us: ["PlayStation", "Xbox", "Apple"],
+  global: ["PUBG Mobile", "Free Fire", "PlayStation", "Xbox", "Apple", "TikTok"],
 };
 
 export default function RegionBanner() {

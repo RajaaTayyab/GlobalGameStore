@@ -16,28 +16,23 @@ interface HeroItem {
 }
 
 const HERO_FEATURED: Partial<Record<RegionCode, HeroItem[]>> = {
-  mena: [
-    { slug: "psn", image: "/images/playstation.jpg", alt: "PSN" },
-    { slug: "yalla-live", image: "/images/yalla-live.jpeg", alt: "Yalla Live" },
-  ],
   pk: [
     { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
-    { slug: "free-fire", image: "/images/freefire.webp", alt: "Free Fire" },
+    { slug: "free-fire", image: "/images/Free-Fire.jpg", alt: "Free Fire" },
     { slug: "tiktok", image: "/images/tiktok.png", alt: "TikTok" },
   ],
   us: [
-    { slug: "psn", image: "/images/playstation.jpg", alt: "PSN" },
+    { slug: "psn", image: "/images/psn.png", alt: "PlayStation" },
     { slug: "xbox", image: "/images/xbox.png", alt: "Xbox" },
-    { slug: "itunes", image: "/images/itunes.webp", alt: "iTunes" },
+    { slug: "itunes", image: "/images/Apple_Card.png", alt: "Apple" },
   ],
   global: [
     { slug: "pubg-mobile", image: "/images/pubg-mobile.jpg", alt: "PUBG Mobile" },
-    { slug: "free-fire", image: "/images/freefire.webp", alt: "Free Fire" },
-    { slug: "psn", image: "/images/playstation.jpg", alt: "PSN" },
+    { slug: "free-fire", image: "/images/Free-Fire.jpg", alt: "Free Fire" },
+    { slug: "psn", image: "/images/psn.png", alt: "PlayStation" },
     { slug: "xbox", image: "/images/xbox.png", alt: "Xbox" },
-    { slug: "itunes", image: "/images/itunes.webp", alt: "iTunes" },
-    { slug: "razer-gold-global", image: "/images/razer-gold.jpeg", alt: "Razer Gold" },
-    { slug: "yalla-live", image: "/images/yalla-live.jpeg", alt: "Yalla Live" },
+    { slug: "itunes", image: "/images/Apple_Card.png", alt: "Apple" },
+    { slug: "yalla-live", image: "/images/Yala live.png", alt: "Yalla Live" },
     { slug: "tiktok", image: "/images/tiktok.png", alt: "TikTok" },
   ],
 };
@@ -98,7 +93,7 @@ export default function Hero() {
             .
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-text-muted">
-            PUBG, Free Fire, PSN, Xbox, iTunes, Razer Gold and more —
+            PUBG, Free Fire, PlayStation, Xbox, TikTok and more —
             top-ups and gift cards, released the moment your payment clears.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
