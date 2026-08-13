@@ -23,14 +23,14 @@ function buildHtml(e: OrderCodesEmail): string {
         (c, i) =>
           `<tr>
             <td style="padding:10px;border:1px solid #e5e7eb;">${l.productName} ${l.variantName}${i > 0 ? " (extra)" : ""}</td>
-            <td style="padding:10px;border:1px solid #e5e7eb;"><code style="background:#f3f4f6;padding:4px 8px;border-radius:4px;font-weight:bold;">${c}</code></td>
+            <td style="padding:10px;border:1px solid #e5e7eb;"><code style="background:#f3f4f6;padding:4px 8px;border-radius:4px;font-weight:bold;font-family:'Comic Sans MS','Comic Sans','Chalkboard SE','Comic Neue',cursive,sans-serif;">${c}</code></td>
           </tr>`
       )
     )
     .join("");
 
   return `
-  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#0f172a;color:#f1f5f9;padding:32px;border-radius:12px;">
+  <div style="font-family:'Comic Sans MS','Comic Sans','Chalkboard SE','Comic Neue',cursive,sans-serif;max-width:600px;margin:0 auto;background:#0f172a;color:#f1f5f9;padding:32px;border-radius:12px;">
     <h1 style="color:#22d3ee;margin:0 0 8px;">${STORE_NAME}</h1>
     <p style="color:#94a3b8;margin:0 0 24px;">Order #${e.orderNumber}</p>
     <h2 style="color:#fff;">Your game codes are ready!</h2>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Karla, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 import { RegionProvider } from "@/context/RegionContext";
 import { CartProvider } from "@/context/CartContext";
@@ -7,25 +6,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import { getRegionFromCookie } from "@/lib/region";
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-});
-
-const karla = Karla({
-  variable: "--font-karla",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
-const splineMono = Spline_Sans_Mono({
-  variable: "--font-spline-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -46,7 +26,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      className={`${karla.variable} ${splineMono.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className="h-full antialiased"
     >
       <body className="min-h-full flex flex-col">
         <div className="ambient-particles pointer-events-none fixed inset-0 z-0" aria-hidden="true" />
