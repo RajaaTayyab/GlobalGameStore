@@ -302,6 +302,47 @@ body {
 }
 
 /* Shimmer loading skeleton */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes splash-pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.55;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+.splash-ring {
+  animation: splash-pulse-ring 1.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.splash-ring-delay {
+  animation-delay: 0.6s;
+}
+
+@keyframes splash-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.animate-splash-bob {
+  animation: splash-bob 2.4s ease-in-out infinite;
+}
+
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
