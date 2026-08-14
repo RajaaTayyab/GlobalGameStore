@@ -19,7 +19,7 @@ interface Slide {
   accent: "chrome" | "oxblood";
 }
 
-// One promo set per region — a Pakistani visitor sees PUBG/Free Fire/Jawaker,
+// One promo set per region a Pakistani visitor sees PUBG/Free Fire/Jawaker,
 // a US visitor sees PSN USA/Xbox/Apple, a KSA visitor sees PSN KSA/Amazon
 // KSA/Netflix KSA, and so on. Falls back to `global` for anything else.
 const REGION_SLIDES: Record<RegionCode, Slide[]> = {
@@ -30,7 +30,7 @@ const REGION_SLIDES: Record<RegionCode, Slide[]> = {
       eyebrow: "PUBG MOBILE GLOBAL",
       title: "UC delivered the second payment clears",
       badge: "Up to 40,500 UC",
-      subtitle: "Instant delivery — no waiting for a code by email.",
+      subtitle: "Instant delivery, no waiting for a code by email.",
       image: "/images/pubg-mobile.jpg",
       imageAlt: "PUBG Mobile",
       accent: "chrome",
@@ -87,7 +87,7 @@ const REGION_SLIDES: Record<RegionCode, Slide[]> = {
       eyebrow: "APPLE GIFT CARD",
       title: "App Store & iTunes credit, any amount",
       badge: "$5 – $400",
-      subtitle: "Apps, subscriptions, storage — all covered.",
+      subtitle: "Apps, subscriptions, storage, all covered.",
       image: "/images/Apple_Card.png",
       imageAlt: "Apple Gift Card",
       accent: "chrome",
@@ -192,7 +192,7 @@ const REGION_SLIDES: Record<RegionCode, Slide[]> = {
       eyebrow: "APPLE GIFT CARD",
       title: "App Store & iTunes credit, any amount",
       badge: "$5 – $400",
-      subtitle: "Apps, subscriptions, storage — all covered.",
+      subtitle: "Apps, subscriptions, storage, all covered.",
       image: "/images/Apple_Card.png",
       imageAlt: "Apple Gift Card",
       accent: "chrome",
@@ -205,7 +205,7 @@ const REGION_SLIDES: Record<RegionCode, Slide[]> = {
       eyebrow: "PUBG MOBILE GLOBAL",
       title: "UC delivered the second payment clears",
       badge: "Up to 40,500 UC",
-      subtitle: "Instant delivery — no waiting for a code by email.",
+      subtitle: "Instant delivery, no waiting for a code by email.",
       image: "/images/pubg-mobile.jpg",
       imageAlt: "PUBG Mobile",
       accent: "chrome",
@@ -225,7 +225,7 @@ const REGION_SLIDES: Record<RegionCode, Slide[]> = {
       id: "cards",
       href: "/shop?category=psn",
       eyebrow: "GIFT CARDS",
-      title: "PlayStation, Xbox & Apple — all regions",
+      title: "PlayStation, Xbox & Apple, all regions",
       badge: "USA · KSA · UAE · Kuwait",
       subtitle: "One store credit balance, every region covered.",
       image: "/images/psn.png",
@@ -248,7 +248,7 @@ export default function PromoCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
 
   // Region can change client-side (geolocation resolves after first paint),
-  // which swaps the slide set — always land back on slide 1 when that happens
+  // which swaps the slide set always land back on slide 1 when that happens
   // instead of pointing at an index that belonged to the old set.
   useEffect(() => {
     setIndex(0);
@@ -321,7 +321,7 @@ export default function PromoCarousel() {
             />
             <div className="bg-grid pointer-events-none absolute inset-0 opacity-40" />
 
-            {/* Text block — a normal flex item now (was absolute-positioned
+            {/* Text block a normal flex item now (was absolute-positioned
                 art + padding-hack on the text, which choked the text down to
                 ~128px on any screen since the padding ate into its own
                 max-w-md cap, not the actual free space). flex-1 lets it use
@@ -353,7 +353,7 @@ export default function PromoCarousel() {
               </span>
             </div>
 
-            {/* Art — normal flex item too now, not absolutely positioned.
+            {/* Art normal flex item too now, not absolutely positioned.
                 Big, "cover image" scale as requested, but sitting in flow so
                 it can never overlap or steal width from the text. */}
             <div className="relative z-10 h-40 w-40 flex-none rounded-2xl bg-white p-4 shadow-2xl sm:h-60 sm:w-60 lg:h-72 lg:w-72">

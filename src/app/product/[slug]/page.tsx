@@ -33,7 +33,7 @@ export default async function ProductPage({ params }: Props) {
       text:
         totalStock > 0
           ? `${totalStock} code${totalStock === 1 ? "" : "s"} in stock, ready to send`
-          : "Restocking — check back shortly",
+          : "Restocking check back shortly",
     },
     { icon: Wallet, text: "Store credit for one-click checkout" },
     { icon: MessageCircle, text: "Or order the whole cart on WhatsApp" },
@@ -50,7 +50,7 @@ export default async function ProductPage({ params }: Props) {
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-2">
-        {/* Image — icon chip inside a fixed-height frame. object-contain
+        {/* Image icon chip inside a fixed-height frame. object-contain
             stops cropping (fixed the Xbox mid-word crop bug); the white chip
             underneath keeps every source background (white/black/brand
             color) from clashing raw against the dark surface. */}

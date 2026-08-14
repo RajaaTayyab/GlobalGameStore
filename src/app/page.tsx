@@ -15,7 +15,7 @@ export default async function HomePage() {
       {/* Hero (region-aware via IP) */}
       <Hero />
 
-      {/* Location based recommendations, then the full catalog — no
+      {/* Location based recommendations, then the full catalog no
           separate category grid, it only ever repeated this same list. */}
       <RegionBanner />
       <section className="relative mx-auto max-w-7xl px-4 py-14">
@@ -33,7 +33,7 @@ export default async function HomePage() {
               Didn&apos;t find your game?
             </h2>
             <p className="mt-1 text-sm text-text-muted">
-              Full catalog, region filters, and live stock — all on one page.
+              Full catalog, region filters, and live stock, all on one page.
             </p>
           </div>
           <Link

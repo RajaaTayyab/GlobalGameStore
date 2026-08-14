@@ -20,7 +20,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
   const first = variants.find((v) => v.active) ?? variants[0];
   // Real availability: a variant with codes in stock ships instantly; one
   // with 0 stock is still buyable, just routed to a WhatsApp order instead
-  // (see ProductBuy.tsx on the detail page — this mirrors that logic so the
+  // (see ProductBuy.tsx on the detail page this mirrors that logic so the
   // grid card and the detail page never disagree again).
   const inStock = (first?.stock ?? 0) > 0;
 
@@ -54,8 +54,8 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
             // Icon chip: every source asset has a different baked-in
             // background (white, black, brand colors, wallpaper art). Rather
             // than let that clash raw against the dark theme, every image
-            // sits in its own small rounded card — consistent, deliberate,
-            // like an app-store icon — regardless of the source file.
+            // sits in its own small rounded card consistent, deliberate,
+            // like an app-store icon regardless of the source file.
             <div className="relative flex h-full w-full items-center justify-center rounded-xl bg-white p-3 shadow-lg transition duration-500 group-hover:scale-105">
               <Image
                 src={product.image_url}

@@ -2,13 +2,13 @@
 
 # This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+This version has breaking changes APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+This block is written and re-added by `next dev` verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
 
-# Design System — Vault & Chrome
+# Design System Vault & Chrome
 
 All app pages use this theme, including the admin panel (`src/app/admin/*`, `src/components/admin/*`).
 
@@ -33,22 +33,22 @@ All app pages use this theme, including the admin panel (`src/app/admin/*`, `src
 | `--color-bg` reused | text on chrome badge tiles (legibility) |
 
 ## Rules
-- No gradients on headline text or CTAs — flat solid colors.
+- No gradients on headline text or CTAs flat solid colors.
 - Cards: `rounded-lg` (or `rounded-xl` for dense inner blocks), `border border-border`, `bg-surface`.
 - Category labels, SKUs, order numbers, breadcrumbs, prices: `font-mono`.
 - Headlines: `font-serif` (Instrument Serif). Body: `font-sans` (Karla). Mono: Spline Sans Mono (roles wired via `--font-sans`/`--font-serif`/`--font-mono` in `layout.tsx`).
 - Hero radial glow stays subtle: `rgba(201,175,140,0.10)` dark / `0.08` light.
-- Destructive actions (danger zone, delete, cancelled/error states) keep semantic red (`red-*`); warnings keep `amber-*`; positive/credit/success keep `--color-instock` — no tokens exist for these.
+- Destructive actions (danger zone, delete, cancelled/error states) keep semantic red (`red-*`); warnings keep `amber-*`; positive/credit/success keep `--color-instock` no tokens exist for these.
 - Admin panel follows the same tokens: primary actions = oxblood, active tab = solid chrome (`bg-accent-chrome text-bg`), admin badges = chrome, prices/order numbers = mono, destructive (delete/deduct) = red.
 - Text on oxblood buttons = white; text on chrome tile = `text-bg`.
 - Micro-interactions: interactive elements get `transition duration-200` (or 300) + `active:scale-[0.98]` (small buttons `.97`, tiny icon buttons `scale-90`). Card hover = `hover:-translate-y-1` + `hover:border-accent-chrome/40-50` + soft chrome/instock shadow. Image zoom = `group-hover:scale-105` (duration-500). Steppers grey out (`disabled:opacity-30`) at min/max. Focus rings = `focus:ring-2 focus:ring-accent-chrome/15` on inputs; global `:focus-visible` outline in `globals.css`.
 - Motion: `--animate-fade-up` / `fade-in`/`slide-in-right` tokens in `globals.css` (used by Hero stagger, mobile menu, cart badge). `prefers-reduced-motion` disabled in globals.
-- No emoji icons — always lucide-react (placeholder art = `Gamepad2`). Headlines never request weights above what's loaded (Instrument Serif is 400-only; use `font-bold` max, not `font-extrabold`).
-- Search `slate-|cyan-|emerald-|amber-|bg-white|text-white` before adding UI — those are legacy leftovers from the pre-theme pass.
+- No emoji icons always lucide-react (placeholder art = `Gamepad2`). Headlines never request weights above what's loaded (Instrument Serif is 400-only; use `font-bold` max, not `font-extrabold`).
+- Search `slate-|cyan-|emerald-|amber-|bg-white|text-white` before adding UI those are legacy leftovers from the pre-theme pass.
 
 # Project Facts
 - `.env.local` has `REQUIRE_EMAIL_VERIFICATION=true`, Gmail SMTP creds (only used by `src/lib/email.ts` order codes), `WHATSAPP_NUMBER=923195432549`, `ADMIN_EMAILS=admin@globalgamestore.com`.
-- Confirmation/reset emails come from Supabase Auth dashboard SMTP (not `.env.local`) — still needs dashboard SMTP + Site URL + Redirect URL config.
+- Confirmation/reset emails come from Supabase Auth dashboard SMTP (not `.env.local`) still needs dashboard SMTP + Site URL + Redirect URL config.
 - Rate limiting in `src/lib/ratelimit.ts`; admin client in `src/lib/supabase/admin.ts`.
-- SQL production hardening (`supabase/production_hardening.sql`) must be re-run in a FRESH SQL Editor window — stale editor buffer causes the `42601` syntax error.
+- SQL production hardening (`supabase/production_hardening.sql`) must be re-run in a FRESH SQL Editor window stale editor buffer causes the `42601` syntax error.
 

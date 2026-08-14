@@ -246,7 +246,7 @@ export async function POST(req: Request) {
   }
 
   // ---- Email codes ----
-  // Recipient is ALWAYS the account email — the form's email field is
+  // Recipient is ALWAYS the account email the form's email field is
   // ignored for credits orders so codes can't be redirected elsewhere.
   let emailSent = false;
   if (user.email) {

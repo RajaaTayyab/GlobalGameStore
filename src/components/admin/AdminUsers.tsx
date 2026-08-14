@@ -54,7 +54,7 @@ export default function AdminUsers() {
       return;
     }
     setNotice(
-      `${mode === "add" ? "Added" : "Deducted"} credits for ${selected.email} — new balance ${formatPrice(
+      `${mode === "add" ? "Added" : "Deducted"} credits for ${selected.email} new balance ${formatPrice(
         Number(data.profile.credits_balance)
       )}`
     );
@@ -110,7 +110,7 @@ export default function AdminUsers() {
                     )}
                   </p>
                   <p className="text-xs text-text-muted">
-                    {u.full_name || "—"} · joined {new Date(u.created_at).toLocaleDateString()}
+                    {u.full_name || "-"} · joined {new Date(u.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <div className="flex items-center gap-3">

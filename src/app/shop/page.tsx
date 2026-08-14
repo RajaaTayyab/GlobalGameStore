@@ -28,7 +28,7 @@ export default async function ShopPage(props: { searchParams: Promise<{ category
       <div className="mb-8">
         <h1 className="font-serif text-3xl font-bold text-text-primary">Shop</h1>
         <p className="mt-1 text-sm text-text-muted">
-          All products — recommended picks for your location appear on top.
+          All products, recommended picks for your location appear on top.
         </p>
       </div>
 

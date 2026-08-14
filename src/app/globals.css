@@ -113,7 +113,7 @@ body {
   background: var(--color-text-muted);
 }
 
-/* ============ Gaming accents — HUD panel language, used sparingly ============ */
+/* ============ Gaming accents HUD panel language, used sparingly ============ */
 
 /* Single-corner cut, like an esports UI panel. Keep to one clipped corner so it
    still reads as premium rather than "gamer plastic". */
@@ -163,7 +163,7 @@ body {
   opacity: 0.85;
 }
 
-/* Faint blueprint grid — for hero/section backdrops, never louder than 6% */
+/* Faint blueprint grid for hero/section backdrops, never louder than 6% */
 .bg-grid {
   background-image:
     linear-gradient(color-mix(in srgb, var(--color-text-primary) 5%, transparent) 1px, transparent 1px),
@@ -173,7 +173,7 @@ body {
   mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
 }
 
-/* Stat/readout chip — small mono tag with bracket ends, e.g. "IN STOCK", "SALE" */
+/* Stat/readout chip small mono tag with bracket ends, e.g. "IN STOCK", "SALE" */
 .hud-tag {
   position: relative;
   padding-left: 0.6rem;
@@ -221,7 +221,7 @@ body {
     0 2px 16px -2px color-mix(in srgb, var(--color-instock) 25%, transparent);
 }
 
-/* Glassmorphism surfaces — frosted glass with subtle chrome border */
+/* Glassmorphism surfaces frosted glass with subtle chrome border */
 @utility glass {
   background: color-mix(in srgb, var(--color-surface) 85%, transparent);
   backdrop-filter: blur(16px) saturate(160%);
@@ -248,7 +248,7 @@ body {
 /* ============ Premium Gaming Pseudo-element / State utilities ============ */
 /* These use pseudo-elements or state selectors, so they must be plain CSS, not @utility. */
 
-/* Scanline overlay — subtle CRT feel for hero/images, never > 6% opacity */
+/* Scanline overlay subtle CRT feel for hero/images, never > 6% opacity */
 .scanlines::after {
   content: "";
   position: absolute;
@@ -266,7 +266,7 @@ body {
   -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 50%, black 50%, transparent 100%);
 }
 
-/* Gradient border — animated chrome sweep on primary cards */
+/* Gradient border animated chrome sweep on primary cards */
 .border-gradient-chrome {
   position: relative;
   border-radius: 12px;
@@ -290,7 +290,7 @@ body {
   opacity: 1;
 }
 
-/* Magnetic button press — slight scale + glow pulse */
+/* Magnetic button press slight scale + glow pulse */
 .magnetic {
   transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.15s ease;
 }

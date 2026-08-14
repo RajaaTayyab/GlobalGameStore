@@ -144,7 +144,7 @@ interface ApiResponse {
     setError("");
     setModalOpen(false);
     load();
-    showNotice(editing ? "Product updated" : "Product created — add variants and codes next");
+    showNotice(editing ? "Product updated" : "Product created add variants and codes next");
   };
 
   const deleteProduct = async (p: ProductRow) => {
@@ -474,7 +474,7 @@ interface ApiResponse {
                 />
               </label>
               <p className="mt-1.5 text-xs text-text-muted">
-                PNG, JPG, WebP, GIF or AVIF · max 5 MB — or paste a URL below.
+                PNG, JPG, WebP, GIF or AVIF · max 5 MB or paste a URL below.
               </p>
               <input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="https://…" className={inputCls} />
             </div>

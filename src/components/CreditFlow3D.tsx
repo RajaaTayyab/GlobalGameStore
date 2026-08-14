@@ -22,7 +22,7 @@ interface Coin {
 }
 
 /**
- * Rising credit stream for money/loyalty sections — thin chrome/oxblood discs
+ * Rising credit stream for money/loyalty sections thin chrome/oxblood discs
  * pour upward, spin, and fade out like a balance being minted, flanked by
  * faint beams. All tints lerp with the active theme.
  */
@@ -58,7 +58,7 @@ export default function CreditFlow3D({
     renderer.domElement.style.display = "block";
     mount.appendChild(renderer.domElement);
 
-    /* Vertical credit streams — thin additive columns at each edge */
+    /* Vertical credit streams thin additive columns at each edge */
     const beamGeo = new THREE.CylinderGeometry(0.035, 0.035, 11, 8, 1, true);
     const beamMatL = new THREE.MeshBasicMaterial({
       color: palette.chrome,

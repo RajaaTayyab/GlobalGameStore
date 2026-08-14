@@ -26,7 +26,7 @@ export interface Catalog {
 }
 
 /* ---------------------------------------------------------------------------
- * Full catalog — one Supabase round trip for products (+ variants), categories
+ * Full catalog one Supabase round trip for products (+ variants), categories
  * and regions, cached for 60s across all requests (invalidate with revalidateTag
  * "catalog" if you ever trigger it from the admin side).
  * ------------------------------------------------------------------------- */
@@ -117,7 +117,7 @@ export async function getCatalog(
 }
 
 /* ---------------------------------------------------------------------------
- * Product by slug — cached per slug (60s) and deduped within a request so the
+ * Product by slug cached per slug (60s) and deduped within a request so the
  * metadata + page render share one fetch.
  * ------------------------------------------------------------------------- */
 async function fetchProductBySlug(slug: string): Promise<{
@@ -153,7 +153,7 @@ export const getProductBySlug = cache(
 );
 
 /* ---------------------------------------------------------------------------
- * Available code counts per variant — short-lived (30s); stock moves when
+ * Available code counts per variant short-lived (30s); stock moves when
  * orders are placed, so we revalidate defensively.
  * ------------------------------------------------------------------------- */
 async function fetchAvailableCodeCounts(variantIds: string[]): Promise<Record<string, number>> {

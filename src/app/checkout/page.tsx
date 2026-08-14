@@ -276,7 +276,7 @@ export default function CheckoutPage() {
                   </p>
                   <p className="mt-1 text-sm text-text-muted">
                     {user
-                      ? `Balance: ${formatPrice(balance)} — codes are delivered to your email instantly.`
+                      ? `Balance: ${formatPrice(balance)}. Codes are delivered to your email instantly.`
                       : "Log in to pay with credits. Codes are emailed right after payment."}
                   </p>
                   {user && !canPayCredits && (
@@ -309,7 +309,7 @@ export default function CheckoutPage() {
                   </p>
                   <p className="mt-1 text-sm text-text-muted">
                     We send your order summary to our WhatsApp. Our team confirms and delivers
-                    your codes. Works for everyone — no account needed.
+                    your codes. Works for everyone, no account needed.
                   </p>
                 </div>
               </label>

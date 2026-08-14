@@ -10,7 +10,7 @@ interface Props {
 }
 
 /**
- * A faint "gateway" hologram — two concentric rings orbiting a wireframe core
+ * A faint "gateway" hologram two concentric rings orbiting a wireframe core
  * with particles spiralling along its axis. Reads as an activation/dispatch
  * point for transaction-heavy or terminal sections (closing CTA, product
  * header, contact).

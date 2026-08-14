@@ -6,7 +6,7 @@ import { REGION_COOKIE } from "@/lib/region";
 /**
  * Geo-route by the visitor's IP country (Vercel sets `x-vercel-ip-country`).
  * The region is re-evaluated on every request so it always follows the current
- * IP — e.g. when a visitor connects via a VPN in another country, the region
+ * IP e.g. when a visitor connects via a VPN in another country, the region
  * (and the hero/recommendations) update accordingly.
  */
 export function proxy(request: NextRequest) {

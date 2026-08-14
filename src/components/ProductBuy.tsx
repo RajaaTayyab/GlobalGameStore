@@ -137,15 +137,11 @@ export default function ProductBuy({
                 <Plus className="h-4 w-4" />
               </button>
             </div>
-            <p className="text-sm text-text-muted">
-              {stock > 0 ? (
+            {stock > 0 && (
+              <p className="text-sm text-text-muted">
                 <span className="text-instock">{stock} codes in stock</span>
-              ) : (
-                <span className="text-text-muted">
-                  Sold via WhatsApp order (no instant code stock)
-                </span>
-              )}
-            </p>
+              </p>
+            )}
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">

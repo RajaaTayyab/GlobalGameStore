@@ -7,7 +7,7 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 
-/* Vault & Chrome palette — chrome gold is dominant (dark), with oxblood as a
+/* Vault & Chrome palette chrome gold is dominant (dark), with oxblood as a
    rose counter-light and instock as a cold accent. Light mode shifts every hue
    to the theme's softer values so the scene reads "premium" in both modes
    instead of fighting the surrounding UI. */
@@ -167,7 +167,7 @@ export default function Hero3DScene() {
         shellMat
       );
 
-      /* Halo rings — thin additive tori read as "containment/portal" */
+      /* Halo rings thin additive tori read as "containment/portal" */
       const ringMat = new THREE.MeshBasicMaterial({
         color: active.chrome,
         transparent: true,
@@ -406,7 +406,7 @@ export default function Hero3DScene() {
         });
       };
     } catch (err) {
-      // WebGL unavailable — the hero just falls back to CSS gradients
+      // WebGL unavailable the hero just falls back to CSS gradients
       console.warn("[Hero3DScene] WebGL init failed, skipping:", err);
       return;
     }

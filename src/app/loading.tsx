@@ -5,7 +5,7 @@ const SKELETON_CARDS = Array.from({ length: 8 });
 export default function Loading() {
   return (
     <div aria-busy="true">
-      {/* Branded splash — shown during route/page transitions. Logo with a
+      {/* Branded splash shown during route/page transitions. Logo with a
           soft breathing glow and expanding pulse rings, on the site's own
           dark surface so it never flashes a mismatched white screen. */}
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-5 bg-bg">

@@ -12,15 +12,15 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,175,140,0.10),transparent_55%)]" />
       <div className="bg-grid absolute inset-0" />
 
-      {/* Legibility veil — the globe/grid backdrop was cutting straight
+      {/* Legibility veil the globe/grid backdrop was cutting straight
           through the text with nothing behind it. */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[70%] bg-gradient-to-b from-bg/80 via-bg/40 to-transparent" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-16 lg:py-20">
-        {/* Promo banner carousel — swipeable, autoplay, dot pagination */}
+        {/* Promo banner carousel swipeable, autoplay, dot pagination */}
         <PromoCarousel />
 
-        {/* Headline — centered, like a search-led storefront rather than a
+        {/* Headline centered, like a search-led storefront rather than a
             marketing banner: the row of games below does the selling. */}
         <div className="animate-fade-up mx-auto mt-12 max-w-2xl text-center">
           <h1 className="font-serif text-4xl leading-[1.05] tracking-tight text-text-primary drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)] sm:text-5xl">
@@ -31,7 +31,7 @@ export default function Hero() {
             .
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-text-primary/80 drop-shadow-[0_1px_8px_rgba(0,0,0,0.55)]">
-            PUBG, Free Fire, PlayStation, Xbox, TikTok and more —
+            PUBG, Free Fire, PlayStation, Xbox, TikTok and more -
             top-ups and gift cards, released the moment your payment clears.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-4">

@@ -28,7 +28,7 @@ export default function ShopControls({
 
   // Only show category pills that actually have a product visible to this
   // visitor. Region-locked products (Amazon KSA/UAE, Netflix KSA/UAE, etc.)
-  // are hidden outside their region by ProductGrid — a pill for a category
+  // are hidden outside their region by ProductGrid a pill for a category
   // with zero visible products just leads to "No products found."
   const visibleCategories = useMemo(() => {
     const visibleProducts = !detected

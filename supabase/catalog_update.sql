@@ -1,13 +1,13 @@
 -- ============================================================
--- catalog_update.sql — full catalog refresh
+-- catalog_update.sql full catalog refresh
 -- Source: ALL_PRODUCTS_WITH_RATES.xlsx
 -- Currency: USDT charged. Images: local public/images only.
 -- 6 regions: pk, us, sa, ae, kw, global (mena removed).
 -- Variant names show only the reward (e.g. "SAR 50 Amazon (KSA)").
 -- Frontend (ProductBuy.tsx) already renders price separately via
--- formatPrice(v.price), so name no longer repeats "X USDT —" —
+-- formatPrice(v.price), so name no longer repeats "X USDT -" -
 -- that was causing the duplicate price shown in your screenshot.
--- Added: Nintendo eShop (US) — was in xlsx, missing from old SQL.
+-- Added: Nintendo eShop (US) was in xlsx, missing from old SQL.
 -- NOTE: run in a FRESH SQL Editor window.
 -- ============================================================
 
@@ -238,7 +238,7 @@ where not exists (
 );
 
 -- ============================================================
--- Done. Stock (codes) empty for these products — add codes per
+-- Done. Stock (codes) empty for these products add codes per
 -- variant from admin panel before going live. Nintendo eShop
 -- needs an image at public/images/nintendo.png (add or swap slug).
 -- ============================================================
