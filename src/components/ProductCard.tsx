@@ -20,7 +20,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
   const first = variants.find((v) => v.active) ?? variants[0];
   // Real availability: a variant with codes in stock ships instantly; one
   // with 0 stock is still buyable, just routed to a WhatsApp order instead
-  // (see ProductBuy.tsx on the detail page this mirrors that logic so the
+  // (see ProductBuy.tsx on the detail page — this mirrors that logic so the
   // grid card and the detail page never disagree again).
   const inStock = (first?.stock ?? 0) > 0;
 
@@ -54,8 +54,8 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
             // Icon chip: every source asset has a different baked-in
             // background (white, black, brand colors, wallpaper art). Rather
             // than let that clash raw against the dark theme, every image
-            // sits in its own small rounded card consistent, deliberate,
-            // like an app-store icon regardless of the source file.
+            // sits in its own small rounded card — consistent, deliberate,
+            // like an app-store icon — regardless of the source file.
             <div className="relative flex h-full w-full items-center justify-center rounded-xl bg-white p-3 shadow-lg transition duration-500 group-hover:scale-105">
               <Image
                 src={product.image_url}
@@ -90,26 +90,32 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
         </div>
 
         <div className="flex flex-1 flex-col p-4">
-          <p className="font-mono text-xs uppercase tracking-wider text-text-muted">
+          <p className="line-clamp-1 font-mono text-xs uppercase tracking-wider text-text-muted">
             {product.category?.name ?? "Digital Product"}
           </p>
           <h3 className="mt-1 line-clamp-1 font-serif text-base font-semibold text-text-primary transition-colors duration-300 group-hover:text-accent-chrome">
             {product.name}
           </h3>
-          {first && (
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className="font-mono text-lg font-bold text-price">
-                {formatPrice(Number(first.price))}
-              </span>
-              {first.original_price && Number(first.original_price) > Number(first.price) && (
-                <span className="font-mono text-sm text-old-price line-through">
-                  {formatPrice(Number(first.original_price))}
+          {/* Fixed-height price row (not just conditional content) so a
+              product with no discount doesn't end up a different height
+              than one that has one — every card stays the same size,
+              same as Codashop's uniform tiles, not just per-row stretch. */}
+          <div className="mt-2 flex h-7 items-baseline gap-2">
+            {first && (
+              <>
+                <span className="font-mono text-lg font-bold text-price">
+                  {formatPrice(Number(first.price))}
                 </span>
-              )}
-            </div>
-          )}
-          <div className="mt-auto flex items-center justify-between pt-3">
-            <span className={`text-xs ${inStock ? "text-instock" : "text-text-muted"}`}>
+                {first.original_price && Number(first.original_price) > Number(first.price) && (
+                  <span className="font-mono text-sm text-old-price line-through">
+                    {formatPrice(Number(first.original_price))}
+                  </span>
+                )}
+              </>
+            )}
+          </div>
+          <div className="mt-auto flex h-9 items-center justify-between gap-2 pt-3">
+            <span className={`truncate text-xs ${inStock ? "text-instock" : "text-text-muted"}`}>
               {inStock
                 ? `${first!.stock} in stock`
                 : product.sold_out
@@ -119,7 +125,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
             <button
               onClick={handleAdd}
               disabled={!first || !!product.sold_out}
-              className="btn-ripple clip-corner-sm flex items-center gap-1.5 bg-accent-oxblood px-3 py-2 text-xs font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 hover:glow-oxblood-sm active:scale-[0.97] disabled:opacity-40"
+              className="btn-ripple clip-corner-sm flex flex-none items-center gap-1.5 bg-accent-oxblood px-3 py-2 text-xs font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 hover:glow-oxblood-sm active:scale-[0.97] disabled:opacity-40"
             >
               <ShoppingCart className="h-3.5 w-3.5" />
               {product.sold_out ? "Sold out" : "Add to Cart"}
