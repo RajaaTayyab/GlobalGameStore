@@ -20,6 +20,7 @@ import type { Category, Product, Region, Variant } from "@/lib/types";
 interface ProductRow extends Product {
   variants: (Variant & { available: number })[];
   available: number;
+  pre_loaded_account?: string;
 }
 
 export default function AdminProducts() {

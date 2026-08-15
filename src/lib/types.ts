@@ -26,6 +26,7 @@ export interface Product {
   featured: boolean;
   active: boolean;
   sold_out?: boolean;
+  pre_loaded_account?: string;
   category?: { name: string } | null;
   region?: { code: RegionCode; name: string } | null;
 }
