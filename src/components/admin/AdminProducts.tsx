@@ -37,8 +37,8 @@ export default function AdminProducts() {
   const [form, setForm] = useState({
     name: "",
     description: "",
+    pre_loaded_account: "",
     image_url: "",
-    category_id: "",
     region_id: "",
     featured: false,
     active: true,
@@ -73,23 +73,22 @@ interface ApiResponse {
     fetch("/api/admin/products")
       .then((r) => r.json())
       .then((d: ApiResponse) => {
-        if (d.products) {
-          setProducts(
-            d.products.map((p) => ({
-              ...p,
-              variants: (p.variants ?? []).map((v) => ({
-                ...v,
-                available: d.available_codes?.[v.id] ?? 0,
-              })),
-              available: (p.variants ?? []).reduce(
-                (s, v) => s + (d.available_codes?.[v.id] ?? 0),
-                0
-              ),
-            }))
-          );
-          setCategories(d.categories ?? []);
-          setRegions(d.regions ?? []);
-        } else setError(d.error ?? "Failed to load");
+if (d.products) {
+            setProducts(
+              d.products.map((p) => ({
+                ...p,
+                variants: (p.variants ?? []).map((v) => ({
+                  ...v,
+                  available: d.available_codes?.[v.id] ?? 0,
+                })),
+                available: (p.variants ?? []).reduce(
+                  (s, v) => s + (d.available_codes?.[v.id] ?? 0),
+                  0
+                ),
+              }))
+            );
+            setRegions(d.regions ?? []);
+          } else setError(d.error ?? "Failed to load");
       })
       .finally(() => setLoading(false));
   };
@@ -103,7 +102,7 @@ interface ApiResponse {
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ name: "", description: "", image_url: "", category_id: "", region_id: "", featured: false, active: true, sold_out: false });
+    setForm({ name: "", description: "", pre_loaded_account: "", image_url: "", region_id: "", featured: false, active: true, sold_out: false });
     setModalOpen(true);
   };
 
@@ -112,8 +111,8 @@ interface ApiResponse {
     setForm({
       name: p.name,
       description: p.description ?? "",
+      pre_loaded_account: p.pre_loaded_account ?? "",
       image_url: p.image_url ?? "",
-      category_id: p.category_id ?? "",
       region_id: p.region_id ?? "",
       featured: p.featured,
       active: p.active,
@@ -131,7 +130,6 @@ interface ApiResponse {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...form,
-        category_id: form.category_id || null,
         region_id: form.region_id || null,
       }),
     });
@@ -479,15 +477,6 @@ interface ApiResponse {
               <input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="https://…" className={inputCls} />
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="mb-1.5 block text-sm text-text-muted">Category</label>
-                <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} className={inputCls}>
-                  <option value="">None</option>
-                  {categories.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-              </div>
               <div>
                 <label className="mb-1.5 block text-sm text-text-muted">Region (recommendations)</label>
                 <select value={form.region_id} onChange={(e) => setForm({ ...form, region_id: e.target.value })} className={inputCls}>
