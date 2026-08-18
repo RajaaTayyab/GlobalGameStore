@@ -17,6 +17,7 @@ export default function AdminUsers() {
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
+  const [search, setSearch] = useState("");
 
   const load = () => {
     fetch("/api/admin/users")
@@ -29,6 +30,15 @@ export default function AdminUsers() {
   };
 
   useEffect(load, []);
+
+  const q = search.trim().toLowerCase();
+  const filteredUsers = users.filter(
+    (u) =>
+      !q
+      || u.email.toLowerCase().includes(q)
+      || (u.full_name ?? "").toLowerCase().includes(q)
+      || (u.phone ?? "").toLowerCase().includes(q)
+  );
 
   const openPanel = (u: Profile, m: CreditMode) => {
     setSelected(u);
@@ -94,11 +104,20 @@ export default function AdminUsers() {
       <div className="grid gap-6 lg:grid-cols-3">
         {/* User list */}
         <div className="overflow-hidden rounded-lg border border-border bg-surface lg:col-span-2">
-          <div className="border-b border-border px-5 py-4">
-            <p className="font-bold text-text-primary">{users.length} users</p>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4">
+            <p className="font-bold text-text-primary">
+              {filteredUsers.length} user{filteredUsers.length === 1 ? "" : "s"}
+              {q ? ` matching "${search}"` : ""}
+            </p>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search users…"
+              className="rounded-xl border border-border bg-bg px-4 py-2 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
+            />
           </div>
           <div className="divide-y divide-border">
-            {users.map((u) => (
+            {filteredUsers.map((u) => (
               <div key={u.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
                 <div className="min-w-0">
                   <p className="flex items-center gap-2 text-sm font-semibold text-text-primary">

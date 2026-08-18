@@ -38,6 +38,8 @@ export interface Variant {
   price: number;
   original_price: number | null;
   active: boolean;
+  sold_out?: boolean;
+  price_on_request?: boolean;
   stock?: number;
 }
 

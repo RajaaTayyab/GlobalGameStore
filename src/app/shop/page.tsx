@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getCatalog } from "@/lib/products";
+import { getWhatsappNumber } from "@/lib/settings";
 import ProductGrid from "@/components/ProductGrid";
 import ShopControls from "@/components/ShopControls";
 
@@ -11,17 +12,11 @@ export const metadata: Metadata = {
     "Buy game top-ups, gift cards, and digital keys. PUBG Mobile, Free Fire, PlayStation, Xbox, Apple, TikTok and more.",
 };
 
-export default async function ShopPage(props: { searchParams: Promise<{ category?: string; q?: string }> }) {
+export default async function ShopPage(props: { searchParams: Promise<{ q?: string }> }) {
   const searchParams = await props.searchParams;
-  const category = typeof searchParams.category === "string" ? searchParams.category : undefined;
   const q = typeof searchParams.q === "string" ? searchParams.q : undefined;
 
-  const [catalog, fullCatalog] = await Promise.all([
-    getCatalog({ categorySlug: category, search: q }),
-    // Unfiltered product list so category pills reflect the whole catalog,
-    // not just whatever the active filter narrowed it down to.
-    getCatalog(),
-  ]);
+  const [catalog, whatsappPhone] = await Promise.all([getCatalog({ search: q }), getWhatsappNumber()]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">
@@ -32,17 +27,12 @@ export default async function ShopPage(props: { searchParams: Promise<{ category
         </p>
       </div>
 
-      <ShopControls
-        categories={catalog.categories}
-        products={fullCatalog.products}
-        activeCategory={category}
-        search={q}
-        total={catalog.products.length}
-      />
+      <ShopControls search={q} total={catalog.products.length} />
 
       <ProductGrid
         products={catalog.products}
         variantsByProduct={catalog.variantsByProduct}
+        whatsappPhone={whatsappPhone}
       />
     </div>
   );

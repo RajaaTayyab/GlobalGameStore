@@ -50,6 +50,7 @@ interface CreateBody {
   name: string;
   description?: string;
   image_url?: string;
+  pre_loaded_account?: string;
   category_id?: string | null;
   region_id?: string | null;
   featured?: boolean;
@@ -81,6 +82,7 @@ export async function POST(req: Request) {
         name: body.name.trim(),
         slug,
         description: body.description ?? null,
+        pre_loaded_account: body.pre_loaded_account ?? null,
         image_url: body.image_url ?? null,
         category_id: body.category_id || null,
         region_id: body.region_id || null,

@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingCart, Flame, Gamepad2 } from "lucide-react";
+import { ShoppingCart, Flame, Gamepad2, MessageCircle } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { formatPrice } from "@/lib/order";
+import { formatPrice, buildWhatsAppLink } from "@/lib/order";
 import type { Product, Variant } from "@/lib/types";
 import TiltCard from "./TiltCard";
 
@@ -13,16 +13,20 @@ interface Props {
   variants: Variant[];
   regionBadge?: string | null;
   highlight?: boolean;
+  whatsappPhone?: string;
 }
 
-export default function ProductCard({ product, variants, regionBadge, highlight }: Props) {
+export default function ProductCard({ product, variants, regionBadge, highlight, whatsappPhone = "" }: Props) {
   const { addItem } = useCart();
   const first = variants.find((v) => v.active) ?? variants[0];
   // Real availability: a variant with codes in stock ships instantly; one
   // with 0 stock is still buyable, just routed to a WhatsApp order instead
   // (see ProductBuy.tsx on the detail page — this mirrors that logic so the
-  // grid card and the detail page never disagree again).
-  const inStock = (first?.stock ?? 0) > 0;
+  // grid card and the detail page never disagree again). A variant manually
+  // flagged sold out is not orderable at all.
+  const variantSoldOut = !!first?.sold_out;
+  const priceOnRequest = !!first?.price_on_request && !variantSoldOut && !product.sold_out;
+  const inStock = (first?.stock ?? 0) > 0 && !variantSoldOut;
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -101,7 +105,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
               than one that has one — every card stays the same size,
               same as Codashop's uniform tiles, not just per-row stretch. */}
           <div className="mt-2 flex h-7 items-baseline gap-2">
-            {first && (
+            {first && !priceOnRequest && (
               <>
                 <span className="font-mono text-lg font-bold text-price">
                   {formatPrice(Number(first.price))}
@@ -113,23 +117,46 @@ export default function ProductCard({ product, variants, regionBadge, highlight 
                 )}
               </>
             )}
+            {first && priceOnRequest && (
+              <span className="font-mono text-sm font-bold text-accent-chrome">Contact for price</span>
+            )}
           </div>
           <div className="mt-auto flex h-9 items-center justify-between gap-2 pt-3">
             <span className={`truncate text-xs ${inStock ? "text-instock" : "text-text-muted"}`}>
-              {inStock
-                ? `${first!.stock} in stock`
-                : product.sold_out
-                  ? "Sold out"
-                  : "Order via WhatsApp"}
+              {priceOnRequest ? (
+                <>
+                  <MessageCircle className="mr-1 inline h-3 w-3" /> Contact WhatsApp
+                </>
+              ) : inStock ? (
+                `${first!.stock} in stock`
+              ) : product.sold_out || variantSoldOut ? (
+                "Sold out"
+              ) : (
+                "Order via WhatsApp"
+              )}
             </span>
-            <button
-              onClick={handleAdd}
-              disabled={!first || !!product.sold_out}
-              className="btn-ripple clip-corner-sm flex flex-none items-center gap-1.5 bg-accent-oxblood px-3 py-2 text-xs font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 hover:glow-oxblood-sm active:scale-[0.97] disabled:opacity-40"
-            >
-              <ShoppingCart className="h-3.5 w-3.5" />
-              {product.sold_out ? "Sold out" : "Add to Cart"}
-            </button>
+            {first && priceOnRequest ? (
+              <a
+                href={buildWhatsAppLink(
+                  whatsappPhone,
+                  `Hello! I'd like to know the price for ${product.name} - ${first.name}.`
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ripple clip-corner-sm flex flex-none items-center gap-1.5 bg-instock px-3 py-2 text-xs font-semibold text-white transition duration-200 hover:bg-instock/90 hover:glow-instock-sm active:scale-[0.97]"
+              >
+                <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
+              </a>
+            ) : (
+              <button
+                onClick={handleAdd}
+                disabled={!first || !!product.sold_out || variantSoldOut}
+                className="btn-ripple clip-corner-sm flex flex-none items-center gap-1.5 bg-accent-oxblood px-3 py-2 text-xs font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 hover:glow-oxblood-sm active:scale-[0.97] disabled:opacity-40"
+              >
+                <ShoppingCart className="h-3.5 w-3.5" />
+                {product.sold_out || variantSoldOut ? "Sold out" : "Add to Cart"}
+              </button>
+            )}
           </div>
         </div>
       </Link>

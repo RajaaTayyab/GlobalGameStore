@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getCatalog } from "@/lib/products";
+import { getWhatsappNumber } from "@/lib/settings";
 import ProductGrid from "@/components/ProductGrid";
 import RegionBanner from "@/components/RegionBanner";
 import Hero from "@/components/Hero";
@@ -8,7 +9,7 @@ import Hero from "@/components/Hero";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const catalog = await getCatalog();
+  const [catalog, whatsappPhone] = await Promise.all([getCatalog(), getWhatsappNumber()]);
 
   return (
     <div>
@@ -22,6 +23,7 @@ export default async function HomePage() {
         <ProductGrid
           products={catalog.products}
           variantsByProduct={catalog.variantsByProduct}
+          whatsappPhone={whatsappPhone}
         />
       </section>
 

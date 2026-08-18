@@ -15,7 +15,7 @@ import {
   Gamepad2,
 } from "lucide-react";
 import { formatPrice } from "@/lib/order";
-import type { Category, Product, Region, Variant } from "@/lib/types";
+import type { Product, Region, Variant } from "@/lib/types";
 
 interface ProductRow extends Product {
   variants: (Variant & { available: number })[];
@@ -25,12 +25,12 @@ interface ProductRow extends Product {
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<ProductRow[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [regions, setRegions] = useState<Region[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [search, setSearch] = useState("");
 
   // create/edit modal
   const [modalOpen, setModalOpen] = useState(false);
@@ -51,6 +51,17 @@ export default function AdminProducts() {
   const [vPrice, setVPrice] = useState("");
   const [vOrig, setVOrig] = useState("");
   const [codesInput, setCodesInput] = useState("");
+  const [vPriceOnRequest, setVPriceOnRequest] = useState(false);
+  const [editingVariantId, setEditingVariantId] = useState<string | null>(null);
+  const [evName, setEvName] = useState("");
+  const [evPrice, setEvPrice] = useState("");
+  const [evOrig, setEvOrig] = useState("");
+  const [evActive, setEvActive] = useState(true);
+  const [evSoldOut, setEvSoldOut] = useState(false);
+  const [evPriceOnRequest, setEvPriceOnRequest] = useState(false);
+  const [codesForVariant, setCodesForVariant] = useState<string | null>(null);
+  const [codesList, setCodesList] = useState<{ id: string; code: string; status: string; created_at: string }[]>([]);
+  const [codesLoading, setCodesLoading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -64,7 +75,6 @@ interface ApiProduct extends Product {
 
 interface ApiResponse {
   products?: ApiProduct[];
-  categories?: Category[];
   regions?: Region[];
   available_codes?: Record<string, number>;
   error?: string;
@@ -170,15 +180,16 @@ if (d.products) {
   };
 
   const addVariant = async (productId: string) => {
-    if (!vName || !vPrice) return;
+    if (!vName || (!vPrice && !vPriceOnRequest)) return;
     const res = await fetch("/api/admin/variants", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         product_id: productId,
         name: vName,
-        price: Number(vPrice),
+        price: Number(vPrice || 0),
         original_price: vOrig ? Number(vOrig) : null,
+        price_on_request: vPriceOnRequest,
       }),
     });
     const data = await res.json();
@@ -189,6 +200,7 @@ if (d.products) {
     setVName("");
     setVPrice("");
     setVOrig("");
+    setVPriceOnRequest(false);
     load();
     showNotice("Variant added");
   };
@@ -216,6 +228,91 @@ if (d.products) {
     await fetch(`/api/admin/variants/${id}`, { method: "DELETE" });
     load();
     showNotice("Variant deleted");
+  };
+
+  const openEditVariant = (v: Variant & { available: number }) => {
+    setEditingVariantId(v.id);
+    setEvName(v.name);
+    setEvPrice(String(v.price));
+    setEvOrig(v.original_price != null ? String(v.original_price) : "");
+    setEvActive(v.active);
+    setEvSoldOut(!!v.sold_out);
+    setEvPriceOnRequest(!!v.price_on_request);
+  };
+
+  const saveVariant = async (id: string) => {
+    if (!evName || (!evPrice && !evPriceOnRequest)) return;
+    setBusy(true);
+    const res = await fetch(`/api/admin/variants/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: evName,
+        price: Number(evPrice || 0),
+        original_price: evOrig ? Number(evOrig) : null,
+        active: evActive,
+        sold_out: evSoldOut,
+        price_on_request: evPriceOnRequest,
+      }),
+    });
+    const data = await res.json();
+    setBusy(false);
+    if (!res.ok) {
+      setError(data.error ?? "Failed to update variant");
+      return;
+    }
+    setEditingVariantId(null);
+    load();
+    showNotice("Variant updated");
+  };
+
+  const toggleVariantSoldOut = async (v: Variant & { available: number }) => {
+    const next = !v.sold_out;
+    const res = await fetch(`/api/admin/variants/${v.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sold_out: next }),
+    });
+    if (res.ok) {
+      load();
+      showNotice(next ? `"${v.name}" marked as sold out` : `"${v.name}" is back in stock`);
+    } else {
+      const d = await res.json();
+      setError(d.error ?? "Failed to update variant");
+    }
+  };
+
+  const toggleCodes = (variantId: string) => {
+    if (codesForVariant === variantId) {
+      setCodesForVariant(null);
+      return;
+    }
+    setCodesForVariant(variantId);
+    setCodesList([]);
+    setCodesLoading(true);
+    fetch(`/api/admin/codes?variant_id=${variantId}`)
+      .then((r) => r.json())
+      .then((d) => setCodesList(d.codes ?? []))
+      .finally(() => setCodesLoading(false));
+  };
+
+  const deleteCode = async (id: string) => {
+    if (!confirm("Delete this code? This cannot be undone.")) return;
+    const res = await fetch(`/api/admin/codes/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      if (codesForVariant) {
+        setCodesLoading(true);
+        fetch(`/api/admin/codes?variant_id=${codesForVariant}`)
+          .then((r) => r.json())
+          .then((d) => setCodesList(d.codes ?? []))
+          .finally(() => setCodesLoading(false));
+      }
+      load();
+      showNotice("Code deleted");
+    } else {
+      const d = await res.json();
+      setError(d.error ?? "Failed to delete code");
+    }
   };
 
   const handleImageFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -253,6 +350,11 @@ if (d.products) {
   const inputCls =
     "w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15";
 
+  const q = search.trim().toLowerCase();
+  const filteredProducts = products.filter(
+    (p) => !q || p.name.toLowerCase().includes(q) || (p.region?.name ?? "").toLowerCase().includes(q)
+  );
+
   if (loading)
     return (
       <div className="flex justify-center py-20">
@@ -273,18 +375,29 @@ if (d.products) {
         </p>
       )}
 
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-text-muted">{products.length} products</p>
-        <button
-          onClick={openCreate}
-          className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-4 py-2.5 text-sm font-bold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98]"
-        >
-          <Plus className="h-4 w-4" /> New Product
-        </button>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-text-muted">
+          {filteredProducts.length} product{filteredProducts.length === 1 ? "" : "s"}
+          {q ? ` matching "${search}"` : ""}
+        </p>
+        <div className="flex items-center gap-3">
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search products…"
+            className="rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
+          />
+          <button
+            onClick={openCreate}
+            className="flex items-center gap-2 rounded-xl bg-accent-oxblood px-4 py-2.5 text-sm font-bold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98]"
+          >
+            <Plus className="h-4 w-4" /> New Product
+          </button>
+        </div>
       </div>
 
       <div className="space-y-3">
-        {products.map((p) => (
+        {filteredProducts.map((p) => (
           <div key={p.id} className="rounded-lg border border-border bg-surface">
             <div className="flex flex-wrap items-center gap-4 p-4">
               <button
@@ -308,7 +421,7 @@ if (d.products) {
                     {p.featured && <span className="ml-2 rounded-full bg-accent-chrome px-2 py-0.5 font-mono text-xs font-bold text-bg">sale</span>}
                   </p>
                   <p className="mt-0.5 text-xs text-text-muted">
-                    {p.category?.name ?? "No category"} · {p.region?.name ?? "Global"} ·{" "}
+                    {p.region?.name ?? "Global"} ·{" "}
                     {p.variants?.length ?? 0} variant(s) ·{" "}
                     <span className={p.available > 0 ? "text-instock" : "text-red-400"}>
                       {p.available} code(s) in stock
@@ -350,51 +463,173 @@ if (d.products) {
               <div className="space-y-5 border-t border-border p-4">
                 {p.variants?.map((v) => (
                   <div key={v.id} className="rounded-xl border border-border bg-bg p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <p className="font-medium text-text-primary">{v.name}</p>
-                        <p className="text-sm text-text-muted">
-                          <span className="font-mono text-price">{formatPrice(Number(v.price))}</span>
-                          {v.original_price && (
-                            <span className="ml-2 font-mono text-old-price line-through">{formatPrice(Number(v.original_price))}</span>
-                          )}
-                          {" · "}
-                          <span className={v.available > 0 ? "text-instock" : "text-red-400"}>
-                            {v.available} available
-                          </span>
-                        </p>
+                    {editingVariantId === v.id ? (
+                      <div className="space-y-3">
+                        <div className="grid gap-3 sm:grid-cols-3">
+                          <input value={evName} onChange={(e) => setEvName(e.target.value)} placeholder="Variant name (e.g. 100 UC)" className={inputCls} />
+                          <input value={evPrice} onChange={(e) => setEvPrice(e.target.value)} type="number" min="0" step="0.01" placeholder="Price" className={inputCls} />
+                          <input value={evOrig} onChange={(e) => setEvOrig(e.target.value)} type="number" min="0" step="0.01" placeholder="Old price (optional)" className={inputCls} />
+                        </div>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <label className="flex items-center gap-2 text-sm text-text-muted">
+                            <input type="checkbox" checked={evActive} onChange={(e) => setEvActive(e.target.checked)} className="accent-accent-chrome" />
+                            Active
+                          </label>
+                          <label className="flex items-center gap-2 text-sm text-text-muted">
+                            <input type="checkbox" checked={evSoldOut} onChange={(e) => setEvSoldOut(e.target.checked)} className="accent-red-500" />
+                            Sold out
+                          </label>
+                          <label className="flex items-center gap-2 text-sm text-text-muted">
+                            <input type="checkbox" checked={evPriceOnRequest} onChange={(e) => setEvPriceOnRequest(e.target.checked)} className="accent-accent-chrome" />
+                            Contact for price
+                          </label>
+                          <div className="ml-auto flex gap-2">
+                            <button
+                              onClick={() => saveVariant(v.id)}
+                              disabled={busy}
+                              className="rounded-lg bg-accent-oxblood px-4 py-2 text-xs font-bold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.97] disabled:opacity-60"
+                            >
+                              Save Variant
+                            </button>
+                            <button
+                              onClick={() => setEditingVariantId(null)}
+                              className="rounded-lg border border-border px-4 py-2 text-xs font-medium text-text-muted hover:border-accent-chrome/50"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => addCodes(v.id)}
-                          className="rounded-lg bg-accent-oxblood px-3 py-1.5 text-xs font-bold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.97]"
-                          disabled={!codesInput.trim()}
-                        >
-                          Add codes
-                        </button>
-                        <button
-                          onClick={() => deleteVariant(v.id)}
-                          className="rounded-lg border border-border p-1.5 text-text-muted hover:border-red-500 hover:text-red-400"
-                          aria-label="Delete variant"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
+                    ) : (
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <p className="font-medium text-text-primary">{v.name}</p>
+                          <p className="text-sm text-text-muted">
+                            <span className="font-mono text-price">{formatPrice(Number(v.price))}</span>
+                            {v.original_price && (
+                              <span className="ml-2 font-mono text-old-price line-through">{formatPrice(Number(v.original_price))}</span>
+                            )}
+                            {" · "}
+                            <span className={v.available > 0 ? "text-instock" : "text-red-400"}>
+                              {v.available} available
+                            </span>
+                            {!v.active && (
+                              <span className="ml-2 rounded-full bg-border px-2 py-0.5 text-xs text-text-muted">inactive</span>
+                            )}
+                            {v.sold_out && (
+                              <span className="ml-2 rounded-full bg-red-500/20 px-2 py-0.5 text-xs font-bold text-red-400">sold out</span>
+                            )}
+                            {v.price_on_request && (
+                              <span className="ml-2 rounded-full bg-accent-chrome/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-accent-chrome">contact for price</span>
+                            )}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => toggleVariantSoldOut(v)}
+                            className={`rounded-lg border px-2.5 py-1.5 text-xs font-bold transition ${
+                              v.sold_out
+                                ? "border-red-500/50 bg-red-500/10 text-red-400 hover:bg-red-500/20"
+                                : "border-border text-text-muted hover:border-red-500/50 hover:text-red-400"
+                            }`}
+                            aria-label="Toggle variant sold out"
+                          >
+                            {v.sold_out ? "In stock" : "Sold out"}
+                          </button>
+                          <button
+                            onClick={() => addCodes(v.id)}
+                            className="rounded-lg bg-accent-oxblood px-3 py-1.5 text-xs font-bold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.97]"
+                            disabled={!codesInput.trim()}
+                          >
+                            Add codes
+                          </button>
+                          <button
+                            onClick={() => toggleCodes(v.id)}
+                            className={`rounded-lg border p-1.5 transition ${
+                              codesForVariant === v.id
+                                ? "border-accent-chrome text-accent-chrome"
+                                : "border-border text-text-muted hover:border-accent-chrome hover:text-accent-chrome"
+                            }`}
+                            aria-label="View codes"
+                            title="View codes"
+                          >
+                            <KeyRound className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            onClick={() => openEditVariant(v)}
+                            className="rounded-lg border border-border p-1.5 text-text-muted hover:border-accent-chrome hover:text-accent-chrome"
+                            aria-label="Edit variant"
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            onClick={() => deleteVariant(v.id)}
+                            className="rounded-lg border border-border p-1.5 text-text-muted hover:border-red-500 hover:text-red-400"
+                            aria-label="Delete variant"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    )}
+                    {codesForVariant === v.id && (
+                      <div className="mt-3 border-t border-border pt-3">
+                        {codesLoading ? (
+                          <div className="flex justify-center py-4">
+                            <Loader2 className="h-5 w-5 animate-spin text-accent-chrome" />
+                          </div>
+                        ) : codesList.length === 0 ? (
+                          <p className="text-xs text-text-muted">No codes for this variant.</p>
+                        ) : (
+                          <>
+                            <p className="mb-2 text-xs text-text-muted">
+                              {codesList.length} code{codesList.length === 1 ? "" : "s"} (showing latest {Math.min(codesList.length, 500)})
+                            </p>
+                            <ul className="max-h-48 space-y-1.5 overflow-y-auto">
+                              {codesList.map((c) => (
+                                <li key={c.id} className="flex items-center justify-between gap-2 rounded-lg bg-surface px-3 py-1.5">
+                                  <code className="min-w-0 truncate font-mono text-xs text-text-primary">{c.code}</code>
+                                  <span
+                                    className={`flex-none rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase ${
+                                      c.status === "available"
+                                        ? "bg-instock/15 text-instock"
+                                        : "bg-amber-500/15 text-amber-400"
+                                    }`}
+                                  >
+                                    {c.status}
+                                  </span>
+                                  <button
+                                    onClick={() => deleteCode(c.id)}
+                                    className="flex-none rounded-md p-1 text-text-muted hover:text-red-400"
+                                    aria-label="Delete code"
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
 
                 <div className="grid gap-3 rounded-xl border border-border bg-bg p-4 sm:grid-cols-4">
                   <input value={vName} onChange={(e) => setVName(e.target.value)} placeholder="Variant name (e.g. 100 UC)" className={inputCls} />
-                  <input value={vPrice} onChange={(e) => setVPrice(e.target.value)} type="number" min="0" step="0.01" placeholder="Price" className={inputCls} />
+                  <input value={vPrice} onChange={(e) => setVPrice(e.target.value)} type="number" min="0" step="0.01" placeholder={vPriceOnRequest ? "Price (kept as 0)" : "Price"} className={inputCls} />
                   <input value={vOrig} onChange={(e) => setVOrig(e.target.value)} type="number" min="0" step="0.01" placeholder="Old price (optional)" className={inputCls} />
                   <button
                     onClick={() => addVariant(p.id)}
-                    disabled={!vName || !vPrice}
+                    disabled={!vName || (!vPrice && !vPriceOnRequest)}
                     className="rounded-xl bg-accent-oxblood px-3 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98] disabled:opacity-50"
                   >
                     <Plus className="mr-1 inline h-4 w-4" /> Add Variant
                   </button>
+                  <label className="flex items-center gap-2 text-sm text-text-muted sm:col-span-4">
+                    <input type="checkbox" checked={vPriceOnRequest} onChange={(e) => setVPriceOnRequest(e.target.checked)} className="accent-accent-chrome" />
+                    New variant is contact-for-price (hidden price, customer asks on WhatsApp)
+                  </label>
                 </div>
 
                 <div className="rounded-xl border border-border bg-bg p-4">
@@ -434,6 +669,10 @@ if (d.products) {
             <div>
               <label className="mb-1.5 block text-sm text-text-muted">Description</label>
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className={inputCls} />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm text-text-muted">Pre-loaded account note</label>
+              <textarea value={form.pre_loaded_account} onChange={(e) => setForm({ ...form, pre_loaded_account: e.target.value })} rows={2} placeholder="e.g. PUBG Mobile Pre-Loaded Account — price is contact WhatsApp for price" className={inputCls} />
             </div>
             <div>
               <label className="mb-1.5 block text-sm text-text-muted">Product image</label>

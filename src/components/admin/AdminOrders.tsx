@@ -27,6 +27,8 @@ export default function AdminOrders() {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const load = () => {
     fetch("/api/admin/orders")
@@ -82,6 +84,18 @@ export default function AdminOrders() {
 
   const copy = (text: string) => navigator.clipboard?.writeText(text).catch(() => {});
 
+  const q = search.trim().toLowerCase();
+  const filteredOrders = orders.filter((o) => {
+    const matchesSearch =
+      !q
+      || o.order_number.toLowerCase().includes(q)
+      || (o.customer_name ?? "").toLowerCase().includes(q)
+      || (o.customer_email ?? "").toLowerCase().includes(q)
+      || (o.customer_whatsapp ?? "").toLowerCase().includes(q);
+    const matchesStatus = statusFilter === "all" || o.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
   if (loading)
     return (
       <div className="flex justify-center py-20">
@@ -101,7 +115,30 @@ export default function AdminOrders() {
           No orders yet.
         </p>
       )}
-      {orders.map((o) => (
+      {orders.length > 0 && (
+        <div className="flex flex-wrap items-center gap-3">
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search order #, name, email…"
+            className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary transition focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15 sm:max-w-xs"
+          />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="rounded-xl border border-border bg-bg px-3 py-2.5 text-sm text-text-primary focus:border-accent-chrome focus:outline-none focus:ring-2 focus:ring-accent-chrome/15"
+          >
+            <option value="all">All statuses</option>
+            {STATUS_OPTIONS.map((s) => (
+              <option key={s} value={s}>{ORDER_STATUS_LABELS[s]}</option>
+            ))}
+          </select>
+          <p className="text-sm text-text-muted">
+            {filteredOrders.length} of {orders.length} order{orders.length === 1 ? "" : "s"}
+          </p>
+        </div>
+      )}
+      {filteredOrders.map((o) => (
         <div key={o.id} className="rounded-lg border border-border bg-surface">
           <div className="flex flex-wrap items-center gap-3 p-4">
             <button

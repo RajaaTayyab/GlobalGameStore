@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PackageCheck, Wallet, MessageCircle, ChevronRight, Gamepad2 } from "lucide-react";
 import { getProductBySlug, getAvailableCodeCounts } from "@/lib/products";
+import { getWhatsappNumber } from "@/lib/settings";
 import ProductBuy from "@/components/ProductBuy";
 
 export const dynamic = "force-dynamic";
@@ -26,6 +27,7 @@ export default async function ProductPage({ params }: Props) {
 
   const stock = await getAvailableCodeCounts(variants.map((v) => v.id));
   const totalStock = Object.values(stock).reduce((sum, n) => sum + n, 0);
+  const whatsappPhone = await getWhatsappNumber();
 
   const perks = [
     {
@@ -37,10 +39,9 @@ export default async function ProductPage({ params }: Props) {
     },
     { icon: Wallet, text: "Store credit for one-click checkout" },
     { icon: MessageCircle, text: "Or order the whole cart on WhatsApp" },
-    {
-      icon: Gamepad2,
-      text: "PUBG Mobile Pre-Loaded Account — price is contact WhatsApp for price",
-    },
+    ...(product.pre_loaded_account
+      ? [{ icon: Gamepad2, text: product.pre_loaded_account }]
+      : []),
   ];
 
   return (
@@ -109,12 +110,15 @@ export default async function ProductPage({ params }: Props) {
             productName={product.name}
             productImage={product.image_url}
             soldOut={!!product.sold_out}
+            whatsappPhone={whatsappPhone}
             variants={variants.map((v) => ({
               id: v.id,
               name: v.name,
               price: Number(v.price),
               originalPrice: v.original_price ? Number(v.original_price) : null,
               stock: stock[v.id] ?? 0,
+              soldOut: !!v.sold_out,
+              priceOnRequest: !!v.price_on_request,
             }))}
           />
         </div>

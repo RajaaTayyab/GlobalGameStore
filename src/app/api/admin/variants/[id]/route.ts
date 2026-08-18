@@ -16,7 +16,7 @@ export async function PUT(req: Request, ctx: RouteContext) {
     const body = await req.json();
 
     const allowed: Record<string, unknown> = {};
-    for (const key of ["name", "price", "original_price", "active"]) {
+    for (const key of ["name", "price", "original_price", "active", "sold_out"]) {
       if (key in body) allowed[key] = body[key];
     }
 

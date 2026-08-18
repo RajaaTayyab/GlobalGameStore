@@ -55,6 +55,26 @@ export async function POST(req: Request) {
     );
   }
 
+  const variantSoldOut = (variants as unknown as { sold_out?: boolean }[]).some(
+    (v) => v.sold_out
+  );
+  if (variantSoldOut) {
+    return Response.json(
+      { error: "One or more items are sold out and cannot be ordered" },
+      { status: 400 }
+    );
+  }
+
+  const priceOnRequest = (variants as unknown as { price_on_request?: boolean }[]).some(
+    (v) => v.price_on_request
+  );
+  if (priceOnRequest) {
+    return Response.json(
+      { error: "One or more items require a price quote on WhatsApp and cannot be ordered directly" },
+      { status: 400 }
+    );
+  }
+
   const items: CartItem[] = body.items.map((raw) => {
     const v = variants.find((x) => x.id === raw.variantId)!;
     const product = (v as unknown as {

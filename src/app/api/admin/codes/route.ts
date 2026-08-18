@@ -4,6 +4,28 @@ import { revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
+export async function GET(req: Request) {
+  try {
+    await requireAdmin();
+    const admin = requireAdminClient();
+    const url = new URL(req.url);
+    const variantId = url.searchParams.get("variant_id");
+    if (!variantId) {
+      return Response.json({ error: "variant_id is required" }, { status: 400 });
+    }
+    const { data, error } = await admin
+      .from("codes")
+      .select("id, code, status, created_at")
+      .eq("variant_id", variantId)
+      .order("created_at", { ascending: false })
+      .limit(500);
+    if (error) throw error;
+    return Response.json({ codes: data ?? [] });
+  } catch (e) {
+    return authError(e);
+  }
+}
+
 export async function POST(req: Request) {
   try {
     await requireAdmin();
