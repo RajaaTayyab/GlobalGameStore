@@ -25,6 +25,7 @@ export async function POST(req: Request) {
         price: Number(body.price),
         original_price: body.original_price != null ? Number(body.original_price) : null,
         sold_out: !!body.sold_out,
+        price_on_request: !!body.price_on_request,
       })
       .select()
       .single();

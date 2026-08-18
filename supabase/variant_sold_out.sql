@@ -1,13 +1,3 @@
--- ============================================================
--- variant_sold_out.sql
--- Per-variant manual sold-out flag. When EVERY active variant of a
--- product is flagged sold out, the product is automatically marked
--- sold out (mirrors sync_sold_out's one-way behavior for code stock,
--- so the existing code-stock trigger and the manual admin product
--- toggle keep working unchanged).
--- NOTE: run in a FRESH SQL Editor window.
--- ============================================================
-
 -- ---------- 1. Variant sold-out column ----------
 alter table public.product_variants
   add column if not exists sold_out boolean not null default false;
@@ -45,8 +35,3 @@ drop trigger if exists trg_sync_variant_sold_out on public.product_variants;
 create trigger trg_sync_variant_sold_out
   after insert or update or delete on public.product_variants
   for each row execute function public.sync_variant_sold_out();
-
--- ============================================================
--- Done. Existing products are left untouched (sold_out defaults to
--- false); flag variants from the admin panel Products tab.
--- ============================================================
