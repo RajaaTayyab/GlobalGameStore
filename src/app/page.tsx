@@ -24,6 +24,7 @@ export default async function HomePage() {
           products={catalog.products}
           variantsByProduct={catalog.variantsByProduct}
           whatsappPhone={whatsappPhone}
+          hidePrice
         />
       </section>
 

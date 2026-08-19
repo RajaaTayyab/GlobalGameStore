@@ -32,6 +32,24 @@ export async function POST(req: Request, ctx: RouteContext) {
     if (rawCodes.length > 0) {
       const cleaned = rawCodes.filter((c) => c.code?.trim());
       if (cleaned.length > 0) {
+        const deliveredCodes = cleaned.map((c) => c.code.trim());
+
+        // A code already sold/assigned in our inventory can never be reused.
+        const { data: usedRows } = await admin
+          .from("codes")
+          .select("code")
+          .in("code", deliveredCodes)
+          .eq("status", "assigned");
+        const used = (usedRows ?? []).map((r) => r.code);
+        if (used.length > 0) {
+          return Response.json(
+            {
+              error: `These codes were already sold and cannot be reused: ${[...new Set(used)].join(", ")}`,
+            },
+            { status: 409 }
+          );
+        }
+
         const { error } = await admin.from("order_codes").insert(
           cleaned.map((c) => ({
             order_id: id,
@@ -41,6 +59,14 @@ export async function POST(req: Request, ctx: RouteContext) {
           }))
         );
         if (error) throw error;
+
+        // Persist the sale: mark matching inventory codes as assigned so the
+        // storefront stock count drops and they can't be delivered again.
+        await admin
+          .from("codes")
+          .update({ status: "assigned", order_id: id })
+          .in("code", deliveredCodes)
+          .eq("status", "available");
       }
     }
 

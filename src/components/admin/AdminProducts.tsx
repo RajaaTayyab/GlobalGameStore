@@ -214,10 +214,14 @@ if (d.products) {
       body: JSON.stringify({ variant_id: variantId, codes: raw }),
     });
     const data = await res.json();
-    if (data.added) {
+    if ((data.added ?? 0) > 0 || data.duplicates) {
       setCodesInput("");
       load();
-      showNotice(`${data.added} code(s) added`);
+      showNotice(
+        data.added > 0
+          ? `${data.added} code(s) added${data.duplicates ? `, ${data.duplicates} duplicate(s) skipped` : ""}`
+          : `${data.duplicates} duplicate(s) skipped — no new codes added`
+      );
     } else {
       setError(data.error ?? "Failed to add codes");
     }

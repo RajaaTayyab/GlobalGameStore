@@ -14,9 +14,10 @@ interface Props {
   regionBadge?: string | null;
   highlight?: boolean;
   whatsappPhone?: string;
+  hidePrice?: boolean;
 }
 
-export default function ProductCard({ product, variants, regionBadge, highlight, whatsappPhone = "" }: Props) {
+export default function ProductCard({ product, variants, regionBadge, highlight, whatsappPhone = "", hidePrice }: Props) {
   const { addItem } = useCart();
   const first = variants.find((v) => v.active) ?? variants[0];
   // Real availability: a variant with codes in stock ships instantly; one
@@ -105,7 +106,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight,
               than one that has one — every card stays the same size,
               same as Codashop's uniform tiles, not just per-row stretch. */}
           <div className="mt-2 flex h-7 items-baseline gap-2">
-            {first && !priceOnRequest && (
+            {!hidePrice && first && !priceOnRequest && (
               <>
                 <span className="font-mono text-lg font-bold text-price">
                   {formatPrice(Number(first.price))}
@@ -117,7 +118,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight,
                 )}
               </>
             )}
-            {first && priceOnRequest && (
+            {!hidePrice && first && priceOnRequest && (
               <span className="font-mono text-sm font-bold text-accent-chrome">Contact for price</span>
             )}
           </div>

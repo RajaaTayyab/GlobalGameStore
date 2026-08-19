@@ -41,19 +41,39 @@ export async function POST(req: Request) {
           .split(/[\n,]+/)
           .map((c: string) => c.trim());
 
-    const codes = rawCodes
-      .filter(Boolean)
-      .map((code) => ({ variant_id: body.variant_id, code }));
+    const codes = rawCodes.filter(Boolean);
 
     if (codes.length === 0) {
       return Response.json({ error: "No codes provided" }, { status: 400 });
     }
 
-    const { data, error } = await admin.from("codes").insert(codes).select();
+    // Reject any that already exist (duplicate codes can never be used
+    // again) — guarded at the DB level too by idx_codes_code_unique.
+    const { data: existing } = await admin
+      .from("codes")
+      .select("code")
+      .in("code", codes);
+    const existingSet = new Set((existing ?? []).map((r) => r.code));
+
+    const seen = new Set<string>();
+    const fresh = codes.filter((c) => {
+      if (existingSet.has(c) || seen.has(c)) return false;
+      seen.add(c);
+      return true;
+    });
+
+    if (fresh.length === 0) {
+      return Response.json({ added: 0, duplicates: codes.length });
+    }
+
+    const { data, error } = await admin
+      .from("codes")
+      .insert(fresh.map((code) => ({ variant_id: body.variant_id, code })))
+      .select();
     if (error) throw error;
     revalidateTag("catalog", { expire: 0 });
     revalidateTag("stock", { expire: 0 });
-    return Response.json({ added: data.length });
+    return Response.json({ added: data.length, duplicates: codes.length - fresh.length });
   } catch (e) {
     return authError(e);
   }

@@ -11,6 +11,7 @@ interface Props {
   limit?: number;
   showRegionBadge?: boolean;
   whatsappPhone?: string;
+  hidePrice?: boolean;
 }
 
 export default function ProductGrid({
@@ -19,6 +20,7 @@ export default function ProductGrid({
   limit,
   showRegionBadge = true,
   whatsappPhone = "",
+  hidePrice,
 }: Props) {
   const { region, detected } = useRegion();
 
@@ -62,6 +64,7 @@ export default function ProductGrid({
             variants={variantsByProduct[p.id] ?? []}
             highlight={detected && p.region?.code === region}
             whatsappPhone={whatsappPhone}
+            hidePrice={hidePrice}
             regionBadge={
               showRegionBadge && detected && p.region && p.region.code === region
                 ? `Popular in ${p.region.name}`
