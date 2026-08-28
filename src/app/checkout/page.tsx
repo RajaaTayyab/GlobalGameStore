@@ -311,6 +311,15 @@ export default function CheckoutPage() {
                     We send your order summary to our WhatsApp. Our team confirms and delivers
                     your codes. Works for everyone, no account needed.
                   </p>
+                  <div className="mt-3 inline-flex rounded-lg border border-border bg-bg p-1.5">
+                    <Image
+                      src="/images/crypto-accepted.png"
+                      alt="Crypto accepted: Bitcoin, Ethereum, Litecoin, and Bitcoin Cash"
+                      width={180}
+                      height={135}
+                      className="h-auto w-36 rounded object-contain sm:w-44"
+                    />
+                  </div>
                 </div>
               </label>
             </div>
