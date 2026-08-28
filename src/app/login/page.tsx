@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogIn, Loader2, Gamepad2 } from "lucide-react";
+import TiltCard from "@/components/TiltCard";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -46,10 +47,11 @@ export default function LoginPage() {
         </p>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4 rounded-lg border border-border bg-surface p-6"
-      >
+      <TiltCard intensity={4} scale={1.015} glare>
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 rounded-lg border border-border bg-surface p-6"
+        >
         {error && (
           <p className="rounded-lg bg-red-500/10 px-4 py-2.5 text-sm text-red-400">{error}</p>
         )}
@@ -95,6 +97,7 @@ export default function LoginPage() {
           </Link>
         </p>
       </form>
+      </TiltCard>
     </div>
   );
 }

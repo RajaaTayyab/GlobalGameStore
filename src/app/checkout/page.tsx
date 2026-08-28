@@ -13,6 +13,7 @@ import {
   Gamepad2,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import CheckoutSuccess3D from "@/components/CheckoutSuccess3D";
 import { formatPrice } from "@/lib/order";
 import type { Profile } from "@/lib/types";
 
@@ -106,7 +107,10 @@ export default function CheckoutPage() {
     if (result.order?.payment_method === "credits") {
       return (
         <div className="mx-auto max-w-xl px-4 py-24 text-center">
-          <CheckCircle2 className="mx-auto h-16 w-16 text-instock" />
+          <div className="relative mx-auto h-44 w-44 sm:h-52 sm:w-52">
+            <CheckoutSuccess3D />
+            <CheckCircle2 className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-12 w-12 -translate-x-1/2 -translate-y-1/2 text-instock drop-shadow-[0_2px_8px_rgba(95,174,135,0.45)]" />
+          </div>
           <h1 className="mt-4 font-serif text-2xl font-bold text-text-primary">Order paid with credits!</h1>
           <p className="mt-2 text-text-muted">
             Order <span className="font-mono font-semibold text-accent-chrome">#{result.order.order_number}</span>{" "}
@@ -140,7 +144,10 @@ export default function CheckoutPage() {
 
     return (
       <div className="mx-auto max-w-xl px-4 py-24 text-center">
-        <MessageCircle className="mx-auto h-16 w-16 text-instock" />
+        <div className="relative mx-auto h-44 w-44 sm:h-52 sm:w-52">
+          <CheckoutSuccess3D />
+          <MessageCircle className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-12 w-12 -translate-x-1/2 -translate-y-1/2 text-instock drop-shadow-[0_2px_8px_rgba(95,174,135,0.45)]" />
+        </div>
         <h1 className="mt-4 font-serif text-2xl font-bold text-text-primary">Order request created!</h1>
         <p className="mt-2 text-text-muted">
           Order <span className="font-mono font-semibold text-accent-chrome">#{result.order?.order_number}</span>{" "}

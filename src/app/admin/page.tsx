@@ -78,18 +78,31 @@ export default function AdminPage() {
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
+  const adminName = profile?.full_name?.split(" ")[0] || profile?.email?.split("@")[0] || "Admin";
+  const adminInitial = (profile?.full_name?.[0] || profile?.email?.[0] || "A").toUpperCase();
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-text-primary">Admin Panel</h1>
-          <p className="mt-1 text-sm text-text-muted">
-            {profile.full_name || profile.email} · Store management
-          </p>
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-chrome font-mono text-lg font-bold text-bg shadow-lg shadow-accent-chrome/20">
+            {adminInitial}
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="font-serif text-3xl font-bold text-text-primary">Admin Panel</h1>
+              <span className="rounded-full border border-accent-chrome/40 bg-accent-chrome/15 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-accent-chrome">
+                Admin
+              </span>
+            </div>
+            <p className="mt-0.5 text-sm text-text-muted">
+              {adminName} · {profile?.email}
+            </p>
+          </div>
         </div>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-text-muted hover:border-red-500/50 hover:text-red-400"
+          className="flex items-center gap-2 rounded-xl border border-red-500/60 bg-red-500/15 px-4 py-2.5 text-sm font-bold text-red-400 shadow-sm shadow-red-500/20 transition duration-200 hover:border-red-500 hover:bg-red-500 hover:text-white hover:shadow-red-500/40 active:scale-[0.97]"
         >
           <LogOut className="h-4 w-4" /> Logout
         </button>

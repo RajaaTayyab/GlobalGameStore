@@ -44,36 +44,79 @@ export async function POST(req: Request) {
     const codes = rawCodes.filter(Boolean);
 
     if (codes.length === 0) {
-      return Response.json({ error: "No codes provided" }, { status: 400 });
+      return Response.json({ added: 0, purchased: { count: 0, codes: [] }, already_in_use: { count: 0, codes: [] } });
     }
 
     // Reject any that already exist (duplicate codes can never be used
     // again) — guarded at the DB level too by idx_codes_code_unique.
+    // We fetch the status so we can tell the admin apart "already in our
+    // inventory" from "already sold to a customer".
     const { data: existing } = await admin
       .from("codes")
-      .select("code")
+      .select("code, status")
       .in("code", codes);
-    const existingSet = new Set((existing ?? []).map((r) => r.code));
+    const statusByCode = new Map<string, string>();
+    for (const r of existing ?? []) statusByCode.set(r.code, r.status);
 
     const seen = new Set<string>();
-    const fresh = codes.filter((c) => {
-      if (existingSet.has(c) || seen.has(c)) return false;
+    const fresh: string[] = [];
+    const purchased: string[] = [];
+    const alreadyInUse: string[] = [];
+    for (const c of codes) {
+      if (seen.has(c) || statusByCode.has(c)) {
+        if (statusByCode.get(c) === "assigned") purchased.push(c);
+        else alreadyInUse.push(c);
+        seen.add(c);
+        continue;
+      }
       seen.add(c);
-      return true;
-    });
+      fresh.push(c);
+    }
 
     if (fresh.length === 0) {
-      return Response.json({ added: 0, duplicates: codes.length });
+      return Response.json({
+        added: 0,
+        purchased: { count: purchased.length, codes: purchased },
+        already_in_use: { count: alreadyInUse.length, codes: alreadyInUse },
+      });
     }
 
     const { data, error } = await admin
       .from("codes")
       .insert(fresh.map((code) => ({ variant_id: body.variant_id, code })))
       .select();
-    if (error) throw error;
+    if (error) {
+      // Race with another admin: the unique index rejected a code we thought
+      // was fresh. Re-check and surface a clean categorized response instead
+      // of a generic 500.
+      if ((error as { code?: string }).code === "23505") {
+        const { data: recheck } = await admin
+          .from("codes")
+          .select("code, status")
+          .in("code", fresh);
+        for (const r of recheck ?? []) {
+          purchased.push(r.code);
+        }
+        const { count: addedCount } = await admin
+          .from("codes")
+          .select("*", { count: "exact", head: true })
+          .eq("variant_id", body.variant_id)
+          .in("code", fresh);
+        return Response.json({
+          added: addedCount ?? 0,
+          purchased: { count: purchased.length, codes: purchased },
+          already_in_use: { count: alreadyInUse.length, codes: alreadyInUse },
+        });
+      }
+      throw error;
+    }
     revalidateTag("catalog", { expire: 0 });
     revalidateTag("stock", { expire: 0 });
-    return Response.json({ added: data.length, duplicates: codes.length - fresh.length });
+    return Response.json({
+      added: data.length,
+      purchased: { count: purchased.length, codes: purchased },
+      already_in_use: { count: alreadyInUse.length, codes: alreadyInUse },
+    });
   } catch (e) {
     return authError(e);
   }

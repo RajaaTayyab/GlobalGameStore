@@ -6,6 +6,7 @@ import { PackageCheck, Wallet, MessageCircle, ChevronRight, Gamepad2 } from "luc
 import { getProductBySlug, getAvailableCodeCounts } from "@/lib/products";
 import { getWhatsappNumber } from "@/lib/settings";
 import ProductBuy from "@/components/ProductBuy";
+import TiltCard from "@/components/TiltCard";
 import { getProductFamily } from "@/lib/product-families";
 
 export const dynamic = "force-dynamic";
@@ -60,21 +61,23 @@ export default async function ProductPage({ params }: Props) {
             stops cropping (fixed the Xbox mid-word crop bug); the white chip
             underneath keeps every source background (white/black/brand
             color) from clashing raw against the dark surface. */}
-        <div className="flex h-[420px] items-center justify-center overflow-hidden rounded-lg border border-border bg-surface p-8 sm:h-[480px]">
-          {product.image_url ? (
-            <div className="relative h-full w-full rounded-2xl bg-white p-6 shadow-xl">
-              <Image
-                src={product.image_url}
-                alt={productName}
-                fill
-                priority
-                className="object-contain p-6"
-              />
-            </div>
-          ) : (
-            <Gamepad2 className="h-24 w-24 text-border" />
-          )}
-        </div>
+        <TiltCard intensity={4} scale={1.02} glare className="h-[420px] sm:h-[480px]">
+          <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-lg border border-border bg-surface p-8">
+            {product.image_url ? (
+              <div className="relative h-full w-full rounded-2xl bg-white p-6 shadow-xl">
+                <Image
+                  src={product.image_url}
+                  alt={productName}
+                  fill
+                  priority
+                  className="object-contain p-6"
+                />
+              </div>
+            ) : (
+              <Gamepad2 className="h-24 w-24 text-border" />
+            )}
+          </div>
+        </TiltCard>
 
         {/* Info */}
         <div>

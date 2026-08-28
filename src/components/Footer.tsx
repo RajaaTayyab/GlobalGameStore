@@ -39,6 +39,7 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-text-muted">
             <li><Link href="/" className="transition-colors hover:text-accent-chrome">Home</Link></li>
             <li><Link href="/shop" className="transition-colors hover:text-accent-chrome">Shop</Link></li>
+            <li><Link href="/contact" className="transition-colors hover:text-accent-chrome">Contact</Link></li>
             <li><Link href="/cart" className="transition-colors hover:text-accent-chrome">Cart</Link></li>
             <li><Link href="/login" className="transition-colors hover:text-accent-chrome">My Account</Link></li>
           </ul>

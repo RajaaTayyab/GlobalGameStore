@@ -211,14 +211,43 @@ if (d.products) {
       body: JSON.stringify({ variant_id: variantId, codes: raw }),
     });
     const data = await res.json();
-    if ((data.added ?? 0) > 0 || data.duplicates) {
+    if (!res.ok) {
+      setError(data.error ?? "Failed to add codes");
+      return;
+    }
+    const added = data.added ?? 0;
+    const purchasedCount = data.purchased?.count ?? 0;
+    const alreadyInUseCount = data.already_in_use?.count ?? 0;
+    const purchasedCodes: string[] = data.purchased?.codes ?? [];
+    const alreadyInUseCodes: string[] = data.already_in_use?.codes ?? [];
+
+    if (added > 0 || purchasedCount > 0 || alreadyInUseCount > 0) {
       setCodesInput("");
+      const parts: string[] = [];
+      if (added > 0) parts.push(`${added} code(s) added`);
+      if (purchasedCount > 0) {
+        parts.push(
+          `${purchasedCount} code${purchasedCount === 1 ? "" : "s"} purchased already${
+            purchasedCount <= 3 ? `: ${purchasedCodes.join(", ")}` : ""
+          }`
+        );
+      }
+      if (alreadyInUseCount > 0) {
+        parts.push(
+          `${alreadyInUseCount} code${alreadyInUseCount === 1 ? "" : "s"} already in use${
+            alreadyInUseCount <= 3 ? `: ${alreadyInUseCodes.join(", ")}` : ""
+          }`
+        );
+      }
+      const message = parts.join(" · ");
+      if (added > 0) {
+        showNotice(message);
+      } else {
+        // Nothing was added — show as an error so it stands out (red), not a
+        // green success notice.
+        setError(message);
+      }
       load();
-      showNotice(
-        data.added > 0
-          ? `${data.added} code(s) added${data.duplicates ? `, ${data.duplicates} duplicate(s) skipped` : ""}`
-          : `${data.duplicates} duplicate(s) skipped — no new codes added`
-      );
     } else {
       setError(data.error ?? "Failed to add codes");
     }

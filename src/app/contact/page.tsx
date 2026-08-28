@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Mail, Globe } from "lucide-react";
 import ContactWhatsApp from "@/components/ContactWhatsApp";
+import ContactHero3D from "@/components/ContactHero3D";
 
 export const dynamic = "force-dynamic";
 
@@ -26,14 +27,20 @@ export default async function ContactPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
-      <div className="text-center">
-        <h1 className="font-serif text-3xl font-bold text-text-primary">Contact Us</h1>
-        <p className="mt-2 text-text-muted">
-          Questions about an order? Our team replies 24/7 on WhatsApp.
-        </p>
+      {/* 3D scene behind the heading — themed chat-bubble orbs */}
+      <div className="relative -mx-4 mb-10 h-64 overflow-hidden rounded-lg border border-border bg-bg sm:h-80">
+        <ContactHero3D />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--color-bg)_15%,transparent_70%)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-2/3 bg-gradient-to-b from-bg/90 via-bg/40 to-transparent" />
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
+          <h1 className="font-serif text-3xl font-bold text-text-primary">Contact Us</h1>
+          <p className="mt-2 text-text-muted">
+            Questions about an order? Our team replies 24/7 on WhatsApp.
+          </p>
+        </div>
       </div>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3">
         <ContactWhatsApp phone={storePhone} />
         <div className="rounded-lg border border-border bg-surface p-6 text-center transition duration-300 hover:-translate-y-1 hover:border-accent-chrome/40">
           <Mail className="mx-auto h-6 w-6 text-accent-chrome" />

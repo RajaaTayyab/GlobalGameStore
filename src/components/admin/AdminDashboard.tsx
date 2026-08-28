@@ -11,6 +11,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { formatPrice } from "@/lib/order";
+import TiltCard from "@/components/TiltCard";
 
 interface Stats {
   revenue: number;
@@ -59,13 +60,15 @@ export default function AdminDashboard() {
     <div className="space-y-8">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((c) => (
-          <div key={c.label} className="rounded-lg border border-border bg-surface p-5">
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-text-muted">{c.label}</p>
-              <c.icon className={`h-5 w-5 ${c.color}`} />
+          <TiltCard key={c.label} intensity={3} scale={1.015} glare={false}>
+            <div className="rounded-lg border border-border bg-surface p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-text-muted">{c.label}</p>
+                <c.icon className={`h-5 w-5 ${c.color}`} />
+              </div>
+              <p className="mt-2 font-mono text-2xl font-bold text-text-primary">{c.value}</p>
             </div>
-            <p className="mt-2 font-mono text-2xl font-bold text-text-primary">{c.value}</p>
-          </div>
+          </TiltCard>
         ))}
       </div>
 
