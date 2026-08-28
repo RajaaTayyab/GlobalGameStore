@@ -337,15 +337,6 @@ export default function PromoCarousel() {
               <h3 className="mt-2 font-serif text-2xl font-bold leading-tight text-text-primary sm:text-3xl">
                 {slide.title}
               </h3>
-              <div
-                className={`mt-4 inline-block rounded-lg px-4 py-2 font-mono text-sm font-bold ${
-                  slide.accent === "oxblood"
-                    ? "bg-accent-oxblood text-white"
-                    : "bg-accent-chrome text-bg"
-                }`}
-              >
-                {slide.badge}
-              </div>
               <p className="mt-3 text-sm text-text-muted">{slide.subtitle}</p>
               <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-text-primary">
                 Shop now

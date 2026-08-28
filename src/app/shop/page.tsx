@@ -33,6 +33,7 @@ export default async function ShopPage(props: { searchParams: Promise<{ q?: stri
         products={catalog.products}
         variantsByProduct={catalog.variantsByProduct}
         whatsappPhone={whatsappPhone}
+        hidePrice
       />
     </div>
   );

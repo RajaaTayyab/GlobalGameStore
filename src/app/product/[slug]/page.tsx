@@ -74,11 +74,7 @@ export default async function ProductPage({ params }: Props) {
 
         {/* Info */}
         <div>
-          <p className="font-mono text-xs font-semibold uppercase tracking-widest text-accent-chrome">
-            {product.category?.name ?? "Digital Product"}
-            {product.region ? ` · ${product.region.name}` : ""}
-          </p>
-          <h1 className="mt-2 flex items-center gap-3 font-serif text-3xl font-bold text-text-primary sm:text-4xl">
+          <h1 className="flex items-center gap-3 font-serif text-3xl font-bold text-text-primary sm:text-4xl">
             {product.name}
             {!!product.sold_out && (
               <span className="rounded-full bg-red-500/20 px-3 py-1 text-xs font-bold text-red-400">

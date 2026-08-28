@@ -6,7 +6,9 @@ import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { getRegionFromCookie } from "@/lib/region";
+import { getWhatsappNumber } from "@/lib/settings";
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
@@ -42,6 +44,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const initialRegion = await getRegionFromCookie();
+  const whatsappPhone = await getWhatsappNumber();
 
   return (
     <html
@@ -57,6 +60,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <main className="flex-1">{children}</main>
               <Footer />
               <CartDrawer />
+              <WhatsAppFloat phone={whatsappPhone} />
             </CartProvider>
           </RegionProvider>
         </div>

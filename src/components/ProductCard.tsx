@@ -95,10 +95,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight,
         </div>
 
         <div className="flex flex-1 flex-col p-4">
-          <p className="line-clamp-1 font-mono text-xs uppercase tracking-wider text-text-muted">
-            {product.category?.name ?? "Digital Product"}
-          </p>
-          <h3 className="mt-1 line-clamp-1 font-serif text-base font-semibold text-text-primary transition-colors duration-300 group-hover:text-accent-chrome">
+          <h3 className="line-clamp-1 font-serif text-base font-semibold text-text-primary transition-colors duration-300 group-hover:text-accent-chrome">
             {product.name}
           </h3>
           {/* Fixed-height price row (not just conditional content) so a
