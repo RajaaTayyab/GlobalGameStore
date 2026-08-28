@@ -50,11 +50,9 @@ interface CreateBody {
   name: string;
   description?: string;
   image_url?: string;
-  pre_loaded_account?: string;
   category_id?: string | null;
   region_id?: string | null;
   featured?: boolean;
-  active?: boolean;
   sold_out?: boolean;
   variants?: { name: string; price: number; original_price?: number | null; codes?: string[] }[];
 }
@@ -83,7 +81,6 @@ export async function POST(req: Request) {
         name: body.name.trim(),
         slug,
         description: body.description ?? null,
-        pre_loaded_account: body.pre_loaded_account ?? null,
         image_url: body.image_url ?? null,
         category_id: body.category_id || null,
         region_id: body.region_id || null,
@@ -96,7 +93,10 @@ export async function POST(req: Request) {
 
     if (error || !product) {
       console.error("create product error:", error);
-      return Response.json({ error: "Could not create product" }, { status: 500 });
+      return Response.json(
+        { error: `Could not create product: ${error?.message ?? "unknown"}` },
+        { status: 500 }
+      );
     }
 
     if (Array.isArray(body.variants)) {

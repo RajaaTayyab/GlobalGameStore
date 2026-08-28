@@ -19,7 +19,6 @@ export async function PUT(req: Request, ctx: RouteContext) {
     for (const key of [
       "name",
       "description",
-      "pre_loaded_account",
       "image_url",
       "category_id",
       "region_id",

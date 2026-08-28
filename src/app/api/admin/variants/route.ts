@@ -30,7 +30,10 @@ export async function POST(req: Request) {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error("create variant error:", error);
+      return Response.json({ error: error.message }, { status: 500 });
+    }
     revalidateTag("catalog", { expire: 0 });
     return Response.json({ variant: data });
   } catch (e) {

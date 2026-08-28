@@ -20,7 +20,6 @@ import type { Product, Region, Variant } from "@/lib/types";
 interface ProductRow extends Product {
   variants: (Variant & { available: number })[];
   available: number;
-  pre_loaded_account?: string;
 }
 
 export default function AdminProducts() {
@@ -38,7 +37,6 @@ export default function AdminProducts() {
   const [form, setForm] = useState({
     name: "",
     description: "",
-    pre_loaded_account: "",
     image_url: "",
     region_id: "",
     featured: false,
@@ -113,7 +111,7 @@ if (d.products) {
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ name: "", description: "", pre_loaded_account: "", image_url: "", region_id: "", featured: false, active: true, sold_out: false });
+    setForm({ name: "", description: "", image_url: "", region_id: "", featured: false, active: true, sold_out: false });
     setModalOpen(true);
   };
 
@@ -122,7 +120,6 @@ if (d.products) {
     setForm({
       name: p.name,
       description: p.description ?? "",
-      pre_loaded_account: p.pre_loaded_account ?? "",
       image_url: p.image_url ?? "",
       region_id: p.region_id ?? "",
       featured: p.featured,
@@ -673,10 +670,6 @@ if (d.products) {
             <div>
               <label className="mb-1.5 block text-sm text-text-muted">Description</label>
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className={inputCls} />
-            </div>
-            <div>
-              <label className="mb-1.5 block text-sm text-text-muted">Pre-loaded account note</label>
-              <textarea value={form.pre_loaded_account} onChange={(e) => setForm({ ...form, pre_loaded_account: e.target.value })} rows={2} placeholder="e.g. PUBG Mobile Pre-Loaded Account — price is contact WhatsApp for price" className={inputCls} />
             </div>
             <div>
               <label className="mb-1.5 block text-sm text-text-muted">Product image</label>

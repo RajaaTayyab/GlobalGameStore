@@ -39,9 +39,6 @@ export default async function ProductPage({ params }: Props) {
     },
     { icon: Wallet, text: "Store credit for one-click checkout" },
     { icon: MessageCircle, text: "Or order the whole cart on WhatsApp" },
-    ...(product.pre_loaded_account
-      ? [{ icon: Gamepad2, text: product.pre_loaded_account }]
-      : []),
   ];
 
   return (
