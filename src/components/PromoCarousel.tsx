@@ -241,32 +241,29 @@ export default function PromoCarousel() {
   const { region } = useRegion();
   const slides = useMemo(() => REGION_SLIDES[region] ?? REGION_SLIDES.global, [region]);
 
-  const [index, setIndex] = useState(0);
+  const [carousel, setCarousel] = useState({ region, index: 0 });
+  const index = carousel.region === region ? carousel.index : 0;
   const [paused, setPaused] = useState(false);
   const dragStartX = useRef<number | null>(null);
   const dragDeltaX = useRef(0);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  // Region can change client-side (geolocation resolves after first paint),
-  // which swaps the slide set always land back on slide 1 when that happens
-  // instead of pointing at an index that belonged to the old set.
-  useEffect(() => {
-    setIndex(0);
-  }, [region]);
-
   const goTo = useCallback(
     (i: number) => {
-      setIndex(((i % slides.length) + slides.length) % slides.length);
+      setCarousel({ region, index: ((i % slides.length) + slides.length) % slides.length });
     },
-    [slides.length]
+    [region, slides.length]
   );
 
   // Autoplay, paused on hover/drag/touch so it never fights the visitor.
   useEffect(() => {
     if (paused || slides.length <= 1) return;
-    const t = setInterval(() => setIndex((i) => (i + 1) % slides.length), AUTOPLAY_MS);
+    const t = setInterval(
+      () => setCarousel((current) => ({ region, index: (current.index + 1) % slides.length })),
+      AUTOPLAY_MS
+    );
     return () => clearInterval(t);
-  }, [paused, slides.length]);
+  }, [paused, region, slides.length]);
 
   const onPointerDown = (e: React.PointerEvent) => {
     dragStartX.current = e.clientX;

@@ -41,6 +41,7 @@ export interface Variant {
   sold_out?: boolean;
   price_on_request?: boolean;
   stock?: number;
+  region?: { code: RegionCode; name: string } | null;
 }
 
 export interface OrderItem {

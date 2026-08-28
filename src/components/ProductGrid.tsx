@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useRegion } from "@/context/RegionContext";
 import ProductCard from "./ProductCard";
 import type { Product, Variant } from "@/lib/types";
+import { getProductFamily, isHiddenFamilyMember } from "@/lib/product-families";
 
 interface Props {
   products: Product[];
@@ -40,7 +41,8 @@ export default function ProductGrid({
     return ranked.map((r) => r.p);
   }, [products, region]);
 
-  const visible = limit ? sorted.slice(0, limit) : sorted;
+  const grouped = sorted.filter((product) => !isHiddenFamilyMember(product.slug));
+  const visible = limit ? grouped.slice(0, limit) : grouped;
 
   if (visible.length === 0) {
     return (
@@ -57,6 +59,7 @@ export default function ProductGrid({
           <ProductCard
             product={p}
             variants={variantsByProduct[p.id] ?? []}
+            displayName={getProductFamily(p.slug)?.displayName}
             highlight={detected && p.region?.code === region}
             whatsappPhone={whatsappPhone}
             hidePrice={hidePrice}

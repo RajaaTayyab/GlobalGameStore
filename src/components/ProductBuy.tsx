@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Zap, Minus, Plus, MessageCircle } from "lucide-react";
 import { useCart } from "@/context/CartContext";
@@ -14,6 +14,7 @@ export interface BuyVariant {
   stock: number;
   soldOut?: boolean;
   priceOnRequest?: boolean;
+  region?: { code: string; name: string } | null;
 }
 
 interface Props {
@@ -41,6 +42,31 @@ export default function ProductBuy({
     () => variants.find((v) => !v.soldOut && !v.priceOnRequest) ?? variants[0] ?? null
   );
   const [qty, setQty] = useState(1);
+  const regions = useMemo(
+    () =>
+      [...new Map(
+        variants
+          .filter((variant) => variant.region)
+          .map((variant) => [variant.region!.code, variant.region!])
+      ).values()],
+    [variants]
+  );
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(() => selected?.region?.code ?? regions[0]?.code ?? null);
+  const activeRegion = regions.some((region) => region.code === selectedRegion)
+    ? selectedRegion
+    : regions[0]?.code ?? null;
+  const visibleVariants = activeRegion
+    ? variants.filter((variant) => variant.region?.code === activeRegion)
+    : variants;
+
+  const chooseRegion = (regionCode: string) => {
+    setSelectedRegion(regionCode);
+    const firstAvailable = variants.find(
+      (variant) => variant.region?.code === regionCode && !variant.soldOut && !variant.priceOnRequest
+    ) ?? variants.find((variant) => variant.region?.code === regionCode) ?? null;
+    setSelected(firstAvailable);
+    setQty(1);
+  };
 
   if (soldOut) {
     return (
@@ -96,9 +122,29 @@ export default function ProductBuy({
 
   return (
     <div className="mt-8 rounded-lg border border-border bg-surface p-6">
+      {regions.length > 1 && (
+        <div className="mb-6">
+          <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-text-muted">Choose your store region</p>
+          <div className="flex flex-wrap gap-2">
+            {regions.map((region) => (
+              <button
+                key={region.code}
+                onClick={() => chooseRegion(region.code)}
+                className={`rounded-lg border px-4 py-2 text-sm font-semibold transition duration-200 active:scale-[0.98] ${
+                  activeRegion === region.code
+                    ? "border-accent-chrome bg-accent-chrome text-bg"
+                    : "border-border text-text-muted hover:border-accent-chrome/50 hover:text-text-primary"
+                }`}
+              >
+                {region.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       <p className="mb-3 text-sm font-medium text-text-muted">Select amount:</p>
       <div className="flex flex-wrap gap-2">
-        {variants.map((v) =>
+        {visibleVariants.map((v) =>
           v.priceOnRequest && !v.soldOut ? (
             <a
               key={v.id}

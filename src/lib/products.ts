@@ -2,6 +2,7 @@ import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { createClient as createAnonClient } from "@supabase/supabase-js";
 import type { Category, Product, Region, Variant } from "./types";
+import { getProductFamily } from "./product-families";
 
 /**
  * Catalog reads are public data, so we use a static anon client instead of the
@@ -125,23 +126,33 @@ async function fetchProductBySlug(slug: string): Promise<{
   variants: Variant[];
 }> {
   if (!anonClient) return { product: null, variants: [] };
+  const family = getProductFamily(slug);
+  const productSlugs = family?.memberSlugs ?? [slug];
+  const canonicalSlug = family?.canonicalSlug ?? slug;
   const { data, error } = await anonClient
     .from("products")
     .select("*, category:categories(name), region:regions(code, name)")
-    .eq("slug", slug)
-    .maybeSingle();
-  if (error || !data) return { product: null, variants: [] };
+    .in("slug", productSlugs);
+  if (error || !data?.length) return { product: null, variants: [] };
+
+  const products = data as unknown as Product[];
+  const product = products.find((p) => p.slug === canonicalSlug) ?? products[0];
 
   const { data: variants } = await anonClient
     .from("product_variants")
     .select("*")
-    .eq("product_id", (data as Product).id)
+    .in("product_id", products.map((p) => p.id))
     .eq("active", true)
     .order("price");
 
+  const regionByProduct = new Map(products.map((p) => [p.id, p.region ?? null]));
+
   return {
-    product: data as unknown as Product,
-    variants: (variants ?? []) as Variant[],
+    product,
+    variants: (variants ?? []).map((variant) => ({
+      ...(variant as Variant),
+      region: regionByProduct.get(variant.product_id) ?? null,
+    })),
   };
 }
 

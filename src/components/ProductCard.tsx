@@ -15,9 +15,10 @@ interface Props {
   highlight?: boolean;
   whatsappPhone?: string;
   hidePrice?: boolean;
+  displayName?: string;
 }
 
-export default function ProductCard({ product, variants, regionBadge, highlight, whatsappPhone = "", hidePrice }: Props) {
+export default function ProductCard({ product, variants, regionBadge, highlight, whatsappPhone = "", hidePrice, displayName }: Props) {
   const { addItem } = useCart();
   const first = variants.find((v) => v.active) ?? variants[0];
   // Real availability: a variant with codes in stock ships instantly; one
@@ -96,7 +97,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight,
 
         <div className="flex flex-1 flex-col p-4">
           <h3 className="line-clamp-1 font-serif text-base font-semibold text-text-primary transition-colors duration-300 group-hover:text-accent-chrome">
-            {product.name}
+            {displayName ?? product.name}
           </h3>
           {/* Fixed-height price row (not just conditional content) so a
               product with no discount doesn't end up a different height

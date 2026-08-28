@@ -3,6 +3,7 @@ import { getCatalog } from "@/lib/products";
 import { getWhatsappNumber } from "@/lib/settings";
 import ProductGrid from "@/components/ProductGrid";
 import ShopControls from "@/components/ShopControls";
+import { isHiddenFamilyMember } from "@/lib/product-families";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +28,7 @@ export default async function ShopPage(props: { searchParams: Promise<{ q?: stri
         </p>
       </div>
 
-      <ShopControls search={q} total={catalog.products.length} />
+      <ShopControls search={q} total={catalog.products.filter((product) => !isHiddenFamilyMember(product.slug)).length} />
 
       <ProductGrid
         products={catalog.products}

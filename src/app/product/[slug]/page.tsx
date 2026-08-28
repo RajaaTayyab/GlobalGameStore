@@ -6,6 +6,7 @@ import { PackageCheck, Wallet, MessageCircle, ChevronRight, Gamepad2 } from "luc
 import { getProductBySlug, getAvailableCodeCounts } from "@/lib/products";
 import { getWhatsappNumber } from "@/lib/settings";
 import ProductBuy from "@/components/ProductBuy";
+import { getProductFamily } from "@/lib/product-families";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const { product } = await getProductBySlug(slug);
-  return { title: product?.name ?? "Product", description: product?.description ?? undefined };
+  return { title: getProductFamily(slug)?.displayName ?? product?.name ?? "Product", description: product?.description ?? undefined };
 }
 
 export default async function ProductPage({ params }: Props) {
@@ -24,6 +25,9 @@ export default async function ProductPage({ params }: Props) {
   const { product, variants } = await getProductBySlug(slug);
 
   if (!product) notFound();
+
+  const family = getProductFamily(slug);
+  const productName = family?.displayName ?? product.name;
 
   const stock = await getAvailableCodeCounts(variants.map((v) => v.id));
   const totalStock = Object.values(stock).reduce((sum, n) => sum + n, 0);
@@ -48,7 +52,7 @@ export default async function ProductPage({ params }: Props) {
         <ChevronRight className="h-3.5 w-3.5" />
         <Link href="/shop" className="transition-colors hover:text-accent-chrome">Shop</Link>
         <ChevronRight className="h-3.5 w-3.5" />
-        <span className="line-clamp-1 text-text-primary">{product.name}</span>
+        <span className="line-clamp-1 text-text-primary">{productName}</span>
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-2">
@@ -61,7 +65,7 @@ export default async function ProductPage({ params }: Props) {
             <div className="relative h-full w-full rounded-2xl bg-white p-6 shadow-xl">
               <Image
                 src={product.image_url}
-                alt={product.name}
+                alt={productName}
                 fill
                 priority
                 className="object-contain p-6"
@@ -75,7 +79,7 @@ export default async function ProductPage({ params }: Props) {
         {/* Info */}
         <div>
           <h1 className="flex items-center gap-3 font-serif text-3xl font-bold text-text-primary sm:text-4xl">
-            {product.name}
+            {productName}
             {!!product.sold_out && (
               <span className="rounded-full bg-red-500/20 px-3 py-1 text-xs font-bold text-red-400">
                 Sold Out
@@ -100,7 +104,7 @@ export default async function ProductPage({ params }: Props) {
           <ProductBuy
             productId={product.id}
             productSlug={product.slug}
-            productName={product.name}
+            productName={productName}
             productImage={product.image_url}
             soldOut={!!product.sold_out}
             whatsappPhone={whatsappPhone}
@@ -112,6 +116,7 @@ export default async function ProductPage({ params }: Props) {
               stock: stock[v.id] ?? 0,
               soldOut: !!v.sold_out,
               priceOnRequest: !!v.price_on_request,
+              region: v.region ?? null,
             }))}
           />
         </div>
