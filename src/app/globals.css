@@ -19,9 +19,9 @@
   --color-foreground: var(--color-text-primary);
 
   /* ============ Font roles ============ */
-  --font-sans: "Comic Sans MS", "Comic Sans", "Chalkboard SE", "Comic Neue", cursive, sans-serif;
-  --font-mono: "Comic Sans MS", "Comic Sans", "Chalkboard SE", "Comic Neue", cursive, monospace;
-  --font-serif: "Comic Sans MS", "Comic Sans", "Chalkboard SE", "Comic Neue", cursive, serif;
+  --font-sans: var(--font-karla), system-ui, sans-serif;
+  --font-mono: var(--font-spline-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
 
   /* ============ Motion ============ */
   --animate-fade-in: fade-in 0.4s ease-out both;
