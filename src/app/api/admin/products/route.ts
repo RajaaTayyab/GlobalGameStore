@@ -54,6 +54,7 @@ interface CreateBody {
   category_id?: string | null;
   region_id?: string | null;
   featured?: boolean;
+  active?: boolean;
   sold_out?: boolean;
   variants?: { name: string; price: number; original_price?: number | null; codes?: string[] }[];
 }
@@ -87,6 +88,7 @@ export async function POST(req: Request) {
         category_id: body.category_id || null,
         region_id: body.region_id || null,
         featured: !!body.featured,
+        active: body.active ?? true,
         sold_out: !!body.sold_out,
       })
       .select()
