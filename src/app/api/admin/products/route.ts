@@ -53,6 +53,7 @@ interface CreateBody {
   category_id?: string | null;
   region_id?: string | null;
   featured?: boolean;
+  active?: boolean;
   sold_out?: boolean;
   variants?: { name: string; price: number; original_price?: number | null; codes?: string[] }[];
 }
