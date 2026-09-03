@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import {
-  Loader2,
   ChevronDown,
   ChevronUp,
   Mail,
@@ -12,6 +11,7 @@ import {
 import { formatPrice } from "@/lib/order";
 import { ORDER_STATUS_LABELS } from "@/lib/constants";
 import type { Order } from "@/lib/types";
+import AdminSkeleton from "@/components/admin/AdminSkeleton";
 
 const STATUS_OPTIONS = ["pending", "paid", "completed", "cancelled"];
 
@@ -96,12 +96,7 @@ export default function AdminOrders() {
     return matchesSearch && matchesStatus;
   });
 
-  if (loading)
-    return (
-      <div className="flex justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-accent-chrome" />
-      </div>
-    );
+  if (loading) return <AdminSkeleton rows={5} />;
 
   return (
     <div className="space-y-4">

@@ -40,8 +40,11 @@ export default function CartDrawer() {
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {items.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center text-center">
-              <ShoppingCart className="h-12 w-12 text-text-muted" />
-              <p className="mt-3 text-text-muted">Your cart is empty</p>
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-chrome/15 text-accent-chrome">
+                <ShoppingCart className="h-6 w-6" />
+              </div>
+              <p className="font-serif text-base font-bold text-text-primary">Your cart is empty</p>
+              <p className="mt-1 text-xs text-text-muted">Add some game top-ups to get started.</p>
               <Link
                 href="/shop"
                 onClick={closeCart}

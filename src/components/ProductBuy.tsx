@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Zap, Minus, Plus, MessageCircle } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useToast } from "@/context/ToastContext";
 import { formatPrice, buildWhatsAppLink } from "@/lib/order";
 
 export interface BuyVariant {
@@ -38,6 +39,7 @@ export default function ProductBuy({
 }: Props) {
   const router = useRouter();
   const { addItem } = useCart();
+  const toast = useToast();
   const [selected, setSelected] = useState<BuyVariant | null>(
     () => variants.find((v) => !v.soldOut && !v.priceOnRequest) ?? variants[0] ?? null
   );
@@ -102,6 +104,11 @@ export default function ProductBuy({
       quantity: qty,
       stock: selected.stock,
     });
+    toast.success(
+      qty > 1
+        ? `${qty} × ${productName} (${selected.name}) added to cart`
+        : `${productName} added to cart`
+    );
   };
 
   const handleBuyNow = () => {

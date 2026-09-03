@@ -16,6 +16,10 @@ import {
 } from "lucide-react";
 import { formatPrice } from "@/lib/order";
 import type { Product, Region, Variant } from "@/lib/types";
+import AddCodesResultDialog, {
+  type AddCodesResult,
+} from "@/components/admin/AddCodesResultDialog";
+import AdminSkeleton from "@/components/admin/AdminSkeleton";
 
 interface ProductRow extends Product {
   variants: (Variant & { available: number })[];
@@ -70,6 +74,9 @@ export default function AdminProducts() {
   const [codesLoading, setCodesLoading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [addCodesResult, setAddCodesResult] = useState<AddCodesResult | null>(
+    null
+  );
 
 interface ApiVariant extends Variant {
   available?: number;
@@ -230,31 +237,18 @@ if (d.products) {
     const alreadyInUseCodes: string[] = data.already_in_use?.codes ?? [];
 
     if (added > 0 || purchasedCount > 0 || alreadyInUseCount > 0) {
-      setCodesInput("");
-      const parts: string[] = [];
-      if (added > 0) parts.push(`${added} code(s) added`);
-      if (purchasedCount > 0) {
-        parts.push(
-          `${purchasedCount} code${purchasedCount === 1 ? "" : "s"} purchased already${
-            purchasedCount <= 3 ? `: ${purchasedCodes.join(", ")}` : ""
-          }`
-        );
-      }
-      if (alreadyInUseCount > 0) {
-        parts.push(
-          `${alreadyInUseCount} code${alreadyInUseCount === 1 ? "" : "s"} already in use${
-            alreadyInUseCount <= 3 ? `: ${alreadyInUseCodes.join(", ")}` : ""
-          }`
-        );
-      }
-      const message = parts.join(" · ");
-      if (added > 0) {
-        showNotice(message);
-      } else {
-        // Nothing was added — show as an error so it stands out (red), not a
-        // green success notice.
-        setError(message);
-      }
+      if (added > 0) setCodesInput("");
+      // Pop up a centered result dialog so the breakdown (added / purchased
+      // already / already in use + the offending code chips) is the thing
+      // the admin actually sees, instead of an inline banner at the top.
+      setAddCodesResult({
+        added,
+        purchased: { count: purchasedCount, codes: purchasedCodes },
+        already_in_use: {
+          count: alreadyInUseCount,
+          codes: alreadyInUseCodes,
+        },
+      });
       load();
     } else {
       setError(data.error ?? "Failed to add codes");
@@ -393,12 +387,7 @@ if (d.products) {
     (p) => !q || p.name.toLowerCase().includes(q) || (p.region?.name ?? "").toLowerCase().includes(q)
   );
 
-  if (loading)
-    return (
-      <div className="flex justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-accent-chrome" />
-      </div>
-    );
+  if (loading) return <AdminSkeleton rows={5} />;
 
   return (
     <div className="space-y-6">
@@ -826,6 +815,11 @@ if (d.products) {
           </form>
         </div>
       )}
+
+      <AddCodesResultDialog
+        result={addCodesResult}
+        onClose={() => setAddCodesResult(null)}
+      />
     </div>
   );
 }

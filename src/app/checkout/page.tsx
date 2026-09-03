@@ -70,6 +70,10 @@ export default function CheckoutPage() {
       : method === "credits" && !canPayCredits
         ? "whatsapp"
         : method;
+  const detailsComplete = name.trim() !== "" && email.trim() !== "";
+  // 1 = details, 2 = payment, 3 = review. Derived from existing state so the
+  // stepper stays in sync without any extra handlers.
+  const currentStep = !detailsComplete ? 1 : !method ? 2 : 3;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -205,8 +209,9 @@ export default function CheckoutPage() {
   /* ---------------- Checkout form ---------------- */
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">
-      <h1 className="mb-8 font-serif text-3xl font-bold text-text-primary">Checkout</h1>
-      <form onSubmit={handleSubmit} className="grid gap-8 lg:grid-cols-3">
+      <h1 className="mb-6 font-serif text-3xl font-bold text-text-primary">Checkout</h1>
+      <CheckoutSteps currentStep={currentStep} />
+      <form onSubmit={handleSubmit} className="mt-8 grid gap-8 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           {/* Contact */}
           <div className="rounded-lg border border-border bg-surface p-6">
@@ -402,5 +407,60 @@ export default function CheckoutPage() {
         </div>
       </form>
     </div>
+  );
+}
+
+function CheckoutSteps({ currentStep }: { currentStep: 1 | 2 | 3 }) {
+  const steps = [
+    { n: 1, label: "Your details" },
+    { n: 2, label: "Payment" },
+    { n: 3, label: "Review" },
+  ];
+  return (
+    <ol className="flex items-center gap-3 sm:gap-4">
+      {steps.map((s, i) => {
+        const isActive = currentStep === s.n;
+        const isDone = currentStep > s.n;
+        return (
+          <li
+            key={s.n}
+            className="flex flex-1 items-center gap-3"
+            aria-current={isActive ? "step" : undefined}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className={`flex h-8 w-8 flex-none items-center justify-center rounded-full font-mono text-xs font-bold transition ${
+                  isDone
+                    ? "bg-instock text-white"
+                    : isActive
+                    ? "bg-accent-chrome text-bg shadow-lg shadow-accent-chrome/30"
+                    : "border border-border bg-bg text-text-muted"
+                }`}
+              >
+                {isDone ? "✓" : s.n}
+              </div>
+              <span
+                className={`text-sm font-semibold ${
+                  isActive
+                    ? "text-text-primary"
+                    : isDone
+                    ? "text-instock"
+                    : "text-text-muted"
+                }`}
+              >
+                {s.label}
+              </span>
+            </div>
+            {i < steps.length - 1 && (
+              <div
+                className={`h-px flex-1 transition ${
+                  isDone ? "bg-instock" : "bg-border"
+                }`}
+              />
+            )}
+          </li>
+        );
+      })}
+    </ol>
   );
 }

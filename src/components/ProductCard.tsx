@@ -4,9 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { ShoppingCart, Flame, Gamepad2, MessageCircle } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useToast } from "@/context/ToastContext";
 import { formatPrice, buildWhatsAppLink } from "@/lib/order";
 import type { Product, Variant } from "@/lib/types";
 import TiltCard from "./TiltCard";
+import SoldOutSeal3D from "./SoldOutSeal3D";
 
 interface Props {
   product: Product;
@@ -20,6 +22,7 @@ interface Props {
 
 export default function ProductCard({ product, variants, regionBadge, highlight, whatsappPhone = "", hidePrice, displayName }: Props) {
   const { addItem } = useCart();
+  const toast = useToast();
   const first = variants.find((v) => v.active) ?? variants[0];
   // Real availability: a variant with codes in stock ships instantly; one
   // with 0 stock is still buyable, just routed to a WhatsApp order instead
@@ -44,6 +47,7 @@ export default function ProductCard({ product, variants, regionBadge, highlight,
       quantity: 1,
       stock: first.stock,
     });
+    toast.success(`${product.name} added to cart`);
   };
 
   return (
@@ -88,8 +92,11 @@ export default function ProductCard({ product, variants, regionBadge, highlight,
           )}
           {product.sold_out && (
             <span className="absolute inset-0 z-20 flex items-center justify-center bg-bg/60 backdrop-blur-[2px]">
-              <span className="rounded-full bg-red-500 px-3 py-1 font-mono text-xs font-bold text-white shadow">
-                Sold Out
+              <span className="relative h-24 w-24">
+                <SoldOutSeal3D />
+                <span className="absolute inset-0 flex items-center justify-center rounded-full bg-red-500 px-3 py-1 font-mono text-xs font-bold text-white shadow">
+                  Sold Out
+                </span>
               </span>
             </span>
           )}

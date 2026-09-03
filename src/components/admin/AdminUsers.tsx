@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Plus, Minus, Loader2, Shield, Trash2 } from "lucide-react";
 import { formatPrice } from "@/lib/order";
 import type { CreditTransaction, Profile } from "@/lib/types";
+import AdminSkeleton from "@/components/admin/AdminSkeleton";
 
 type CreditMode = "add" | "remove";
 
@@ -86,12 +87,7 @@ export default function AdminUsers() {
     load();
   };
 
-  if (loading)
-    return (
-      <div className="flex justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-accent-chrome" />
-      </div>
-    );
+  if (loading) return <AdminSkeleton rows={5} />;
 
   return (
     <div className="space-y-6">

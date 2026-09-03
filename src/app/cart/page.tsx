@@ -3,9 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Plus, Minus, Trash2, ShoppingCart, ArrowRight, Gamepad2 } from "lucide-react";
+import { Plus, Minus, Trash2, ShoppingCart, ArrowRight, Gamepad2, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/order";
+import EmptyState from "@/components/EmptyState";
 
 export default function CartPage() {
   const router = useRouter();
@@ -13,16 +14,13 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-24 text-center">
-        <ShoppingCart className="mx-auto h-16 w-16 text-text-muted" />
-        <h1 className="mt-4 font-serif text-2xl font-bold text-text-primary">Your cart is empty</h1>
-        <p className="mt-2 text-text-muted">Add some game top-ups and gift cards.</p>
-        <Link
-          href="/shop"
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-accent-oxblood px-6 py-3 font-semibold text-white transition duration-200 hover:bg-accent-oxblood/90 active:scale-[0.98]"
-        >
-          Browse Products <ArrowRight className="h-4 w-4" />
-        </Link>
+      <div className="mx-auto max-w-7xl px-4 py-16">
+        <EmptyState
+          icon={ShoppingCart}
+          title="Your cart is empty"
+          description="Add some game top-ups and gift cards to get started. Codes are delivered instantly after payment."
+          action={{ href: "/shop", label: "Browse Products", primary: true }}
+        />
       </div>
     );
   }
@@ -37,11 +35,11 @@ export default function CartPage() {
           {items.map((item) => (
             <div
               key={item.variantId}
-              className="flex gap-4 rounded-lg border border-border bg-surface p-4"
+              className="group relative flex gap-4 rounded-lg border border-border bg-surface p-4"
             >
               <Link
                 href={`/product/${item.productSlug}`}
-                className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-surface"
+                className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-surface"
               >
                 {item.productImage ? (
                   <Image
@@ -56,6 +54,17 @@ export default function CartPage() {
                     <Gamepad2 className="h-8 w-8 text-border" />
                   </div>
                 )}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    removeItem(item.variantId);
+                  }}
+                  className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-bg/85 text-text-muted opacity-0 transition duration-200 hover:bg-red-500 hover:text-white group-hover:opacity-100"
+                  aria-label={`Remove ${item.productName} from cart`}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
               </Link>
               <div className="flex-1">
                 <Link
@@ -116,13 +125,26 @@ export default function CartPage() {
               </div>
             ))}
           </div>
-          <div className="mt-4 flex justify-between border-t border-border pt-4 text-base">
+          <div className="mt-4 space-y-1.5 border-t border-border pt-4 text-sm">
+            <div className="flex justify-between text-text-muted">
+              <span>Subtotal</span>
+              <span className="font-mono">{formatPrice(total)}</span>
+            </div>
+            <div className="flex justify-between text-text-muted">
+              <span>Taxes & fees</span>
+              <span className="font-mono">—</span>
+            </div>
+          </div>
+          <div className="mt-3 flex justify-between border-t border-border pt-3 text-base">
             <span className="font-semibold text-text-primary">Total</span>
             <span className="font-mono text-xl font-bold text-price">{formatPrice(total)}</span>
           </div>
+          <p className="mt-2 text-xs text-text-muted">
+            Codes are delivered instantly after payment.
+          </p>
           <button
             onClick={() => router.push("/checkout")}
-            className="mt-6 w-full rounded-xl bg-accent-oxblood py-3 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
+            className="mt-4 w-full rounded-xl bg-accent-oxblood py-3 font-bold text-white shadow-lg shadow-accent-oxblood/25 transition duration-200 hover:bg-accent-oxblood/90 hover:shadow-accent-oxblood/40 active:scale-[0.98]"
           >
             Proceed to Checkout
           </button>

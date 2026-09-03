@@ -24,6 +24,8 @@ import { formatPrice } from "@/lib/order";
 import { ORDER_STATUS_LABELS } from "@/lib/constants";
 import type { CreditTransaction, Order, Profile } from "@/lib/types";
 import TiltCard from "@/components/TiltCard";
+import EmptyState from "@/components/EmptyState";
+import OrderTimeline from "@/components/OrderTimeline";
 
 type Tab = "overview" | "orders" | "credits" | "profile";
 
@@ -292,12 +294,12 @@ export default function AccountPage() {
               )}
             </div>
             {orders.length === 0 ? (
-              <div className="p-10 text-center">
-                <p className="text-text-muted">No orders yet.</p>
-                <Link href="/shop" className="mt-3 inline-block text-sm font-semibold text-accent-chrome hover:underline">
-                  Start shopping
-                </Link>
-              </div>
+              <EmptyState
+                icon={Package}
+                title="No orders yet"
+                description="Your past orders will appear here. Codes are delivered instantly after payment."
+                action={{ href: "/shop", label: "Start shopping" }}
+              />
             ) : (
               <ul className="divide-y divide-border">
                 {orders.slice(0, 4).map((o) => (
@@ -328,12 +330,12 @@ export default function AccountPage() {
       {tab === "orders" && (
         <div className="space-y-4">
           {orders.length === 0 && (
-            <div className="rounded-lg border border-border bg-surface p-10 text-center">
-              <p className="text-text-muted">No orders yet.</p>
-              <Link href="/shop" className="mt-3 inline-block text-sm font-semibold text-accent-chrome hover:underline">
-                Start shopping
-              </Link>
-            </div>
+            <EmptyState
+              icon={Package}
+              title="No orders yet"
+              description="When you check out, your order history and delivered codes will live here."
+              action={{ href: "/shop", label: "Start shopping" }}
+            />
           )}
           {orders.map((o) => (
             <div key={o.id} className="rounded-lg border border-border bg-surface p-6">
@@ -366,6 +368,8 @@ export default function AccountPage() {
                   )}
                 </div>
               </div>
+
+              <OrderTimeline status={o.status} createdAt={o.created_at} />
 
               {(o.items?.length ?? 0) > 0 && (
                 <div className="mt-4 overflow-x-auto">

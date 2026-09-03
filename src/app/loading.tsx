@@ -1,4 +1,5 @@
 import Image from "next/image";
+import LoadingToken3D from "@/components/LoadingToken3D";
 
 const SKELETON_CARDS = Array.from({ length: 8 });
 
@@ -6,12 +7,16 @@ export default function Loading() {
   return (
     <div aria-busy="true">
       {/* Branded splash shown during route/page transitions. Logo with a
-          soft breathing glow and expanding pulse rings, on the site's own
-          dark surface so it never flashes a mismatched white screen. */}
+          soft breathing glow, an ambient 3D chrome token behind it, and
+          expanding pulse rings, on the site's own dark surface so it never
+          flashes a mismatched white screen. */}
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-5 bg-bg">
         <div className="relative flex h-28 w-28 items-center justify-center">
           <span className="splash-ring absolute inset-0 rounded-full border border-accent-chrome/40" />
           <span className="splash-ring splash-ring-delay absolute inset-0 rounded-full border border-accent-chrome/40" />
+          <div className="relative h-28 w-28">
+            <LoadingToken3D />
+          </div>
           <div className="animate-splash-bob relative h-20 w-20 overflow-hidden rounded-2xl bg-white p-2 shadow-xl shadow-accent-chrome/20">
             <Image
               src="/images/logo.png"

@@ -9,6 +9,7 @@ import CartDrawer from "@/components/CartDrawer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { getRegionFromCookie } from "@/lib/region";
 import { getWhatsappNumber } from "@/lib/settings";
+import { ToastProvider } from "@/context/ToastContext";
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
@@ -56,11 +57,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div className="relative z-10 flex w-full grow flex-col">
           <RegionProvider initialRegion={initialRegion}>
             <CartProvider>
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
-              <CartDrawer />
-              <WhatsAppFloat phone={whatsappPhone} />
+              <ToastProvider>
+                <Navbar />
+                <main className="flex-1">{children}</main>
+                <Footer />
+                <CartDrawer />
+                <WhatsAppFloat phone={whatsappPhone} />
+              </ToastProvider>
             </CartProvider>
           </RegionProvider>
         </div>

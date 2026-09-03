@@ -8,6 +8,7 @@ import {
   ShoppingBag,
   X,
 } from "lucide-react";
+import AdminSkeleton from "@/components/admin/AdminSkeleton";
 
 interface SoldCode {
   id: string;
@@ -87,13 +88,7 @@ export default function AdminSoldCodes() {
       })
     : codes;
 
-  if (loading) {
-    return (
-      <div className="flex justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-accent-chrome" />
-      </div>
-    );
-  }
+  if (loading) return <AdminSkeleton rows={4} />;
 
   return (
     <div className="space-y-4">

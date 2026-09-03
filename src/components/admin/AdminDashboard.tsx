@@ -7,11 +7,11 @@ import {
   Users,
   Package,
   AlertTriangle,
-  Loader2,
   ArrowRight,
 } from "lucide-react";
 import { formatPrice } from "@/lib/order";
 import TiltCard from "@/components/TiltCard";
+import { StatCardSkeleton } from "@/components/admin/AdminSkeleton";
 
 interface Stats {
   revenue: number;
@@ -40,12 +40,7 @@ export default function AdminDashboard() {
   }, []);
 
   if (error) return <p className="text-red-400">{error}</p>;
-  if (!stats)
-    return (
-      <div className="flex justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-accent-chrome" />
-      </div>
-    );
+  if (!stats) return <StatCardSkeleton count={6} />;
 
   const cards = [
     { label: "Revenue (paid)", value: formatPrice(stats.revenue), icon: Coins, color: "text-instock" },
