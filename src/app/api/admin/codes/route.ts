@@ -13,18 +13,65 @@ export async function GET(req: Request) {
     if (!variantId) {
       return Response.json({ error: "variant_id is required" }, { status: 400 });
     }
-    // Pull codes + the order they're tied to (sold codes carry an order_id).
-    // Left-joining orders so 'available' codes still come back with order=null.
-    const { data, error } = await admin
+    // `codes` has no FK to `orders` in the schema, so PostgREST can't
+    // resolve `order:orders(...)` here. Flat select on codes, then resolve
+    // the order number by joining order_codes → orders on the code string
+    // (order_codes stores the code as text, so this join is safe).
+    const { data: codes, error: cErr } = await admin
       .from("codes")
-      .select("id, code, status, created_at, order_id, order:orders(order_number)")
+      .select("id, code, status, created_at, order_id")
       .eq("variant_id", variantId)
       .order("created_at", { ascending: false })
       .limit(500);
-    if (error) throw error;
-    return Response.json({ codes: data ?? [] });
+    if (cErr) {
+      console.error("variant codes list error:", cErr);
+      return Response.json(
+        { error: `Could not load codes: ${cErr.message}` },
+        { status: 500 }
+      );
+    }
+
+    const soldCodes = (codes ?? []).filter((c) => c.status === "assigned");
+    const orderMap = new Map<string, string>();
+    if (soldCodes.length > 0) {
+      const codeStrs = soldCodes.map((c) => c.code);
+      const { data: ocRows, error: ocErr } = await admin
+        .from("order_codes")
+        .select("code, order:orders(order_number)")
+        .in("code", codeStrs);
+      if (ocErr) {
+        console.error("variant codes order_codes lookup error:", ocErr);
+        // Non-fatal: still return the code list, just without order numbers.
+      } else {
+        for (const r of ocRows ?? []) {
+          const orderRaw = r.order as unknown;
+          const order = Array.isArray(orderRaw) ? orderRaw[0] : orderRaw;
+          const num = (order as { order_number?: string } | null)?.order_number;
+          if (num && !orderMap.has(r.code)) orderMap.set(r.code, num);
+        }
+      }
+    }
+
+    const rows = (codes ?? []).map((c) => ({
+      id: c.id,
+      code: c.code,
+      status: c.status,
+      created_at: c.created_at,
+      order_id: c.order_id,
+      order: c.status === "assigned" && orderMap.has(c.code)
+        ? { order_number: orderMap.get(c.code)! }
+        : null,
+    }));
+    return Response.json({ codes: rows });
   } catch (e) {
-    return authError(e);
+    console.error("variant codes list error:", e);
+    if (e instanceof Error) {
+      return Response.json(
+        { error: `Could not load codes: ${e.message}` },
+        { status: 500 }
+      );
+    }
+    return Response.json({ error: "Something went wrong" }, { status: 500 });
   }
 }
 
