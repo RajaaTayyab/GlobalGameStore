@@ -13,9 +13,11 @@ export async function GET(req: Request) {
     if (!variantId) {
       return Response.json({ error: "variant_id is required" }, { status: 400 });
     }
+    // Pull codes + the order they're tied to (sold codes carry an order_id).
+    // Left-joining orders so 'available' codes still come back with order=null.
     const { data, error } = await admin
       .from("codes")
-      .select("id, code, status, created_at")
+      .select("id, code, status, created_at, order_id, order:orders(order_number)")
       .eq("variant_id", variantId)
       .order("created_at", { ascending: false })
       .limit(500);

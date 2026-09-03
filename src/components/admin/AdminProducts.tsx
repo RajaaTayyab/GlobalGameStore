@@ -58,7 +58,15 @@ export default function AdminProducts() {
   const [evSoldOut, setEvSoldOut] = useState(false);
   const [evPriceOnRequest, setEvPriceOnRequest] = useState(false);
   const [codesForVariant, setCodesForVariant] = useState<string | null>(null);
-  const [codesList, setCodesList] = useState<{ id: string; code: string; status: string; created_at: string }[]>([]);
+  const [codesFilter, setCodesFilter] = useState<"all" | "available" | "sold">("all");
+  const [codesList, setCodesList] = useState<{
+    id: string;
+    code: string;
+    status: string;
+    created_at: string;
+    order_id: string | null;
+    order: { order_number: string } | null;
+  }[]>([]);
   const [codesLoading, setCodesLoading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -612,22 +620,61 @@ if (d.products) {
                           <p className="text-xs text-text-muted">No codes for this variant.</p>
                         ) : (
                           <>
-                            <p className="mb-2 text-xs text-text-muted">
-                              {codesList.length} code{codesList.length === 1 ? "" : "s"} (showing latest {Math.min(codesList.length, 500)})
-                            </p>
-                            <ul className="max-h-48 space-y-1.5 overflow-y-auto">
-                              {codesList.map((c) => (
-                                <li key={c.id} className="flex items-center justify-between gap-2 rounded-lg bg-surface px-3 py-1.5">
-                                  <code className="min-w-0 truncate font-mono text-xs text-text-primary">{c.code}</code>
-                                  <span
-                                    className={`flex-none rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase ${
-                                      c.status === "available"
-                                        ? "bg-instock/15 text-instock"
-                                        : "bg-amber-500/15 text-amber-400"
+                            <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                              <p className="text-xs text-text-muted">
+                                {codesList.length} code{codesList.length === 1 ? "" : "s"}
+                                {codesList.length > 500 ? ` (showing latest 500)` : ""}
+                                {" · "}
+                                <span className="text-instock">{codesList.filter((c) => c.status === "available").length} available</span>
+                                {" · "}
+                                <span className="text-amber-400">{codesList.filter((c) => c.status === "assigned").length} sold</span>
+                              </p>
+                              <div className="flex gap-1 rounded-lg border border-border bg-bg p-0.5 font-mono text-[10px] font-bold uppercase">
+                                {(["all", "available", "sold"] as const).map((f) => (
+                                  <button
+                                    key={f}
+                                    onClick={() => setCodesFilter(f)}
+                                    className={`rounded-md px-2 py-1 transition ${
+                                      codesFilter === f
+                                        ? "bg-accent-chrome text-bg"
+                                        : "text-text-muted hover:text-text-primary"
                                     }`}
                                   >
-                                    {c.status}
-                                  </span>
+                                    {f}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            <ul className="max-h-48 space-y-1.5 overflow-y-auto">
+                              {codesList
+                                .filter((c) =>
+                                  codesFilter === "all"
+                                    ? true
+                                    : codesFilter === "sold"
+                                    ? c.status === "assigned"
+                                    : c.status === "available"
+                                )
+                                .map((c) => (
+                                <li key={c.id} className="flex items-center justify-between gap-2 rounded-lg bg-surface px-3 py-1.5">
+                                  <code className="min-w-0 truncate font-mono text-xs text-text-primary">{c.code}</code>
+                                  {c.status === "assigned" && c.order ? (
+                                    <span
+                                      className="flex-none rounded-full bg-amber-500/15 px-2 py-0.5 font-mono text-[10px] font-bold text-amber-400"
+                                      title={`Sold on order #${c.order.order_number}`}
+                                    >
+                                      Sold · #{c.order.order_number}
+                                    </span>
+                                  ) : (
+                                    <span
+                                      className={`flex-none rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase ${
+                                        c.status === "available"
+                                          ? "bg-instock/15 text-instock"
+                                          : "bg-amber-500/15 text-amber-400"
+                                      }`}
+                                    >
+                                      {c.status === "available" ? "Available" : c.status}
+                                    </span>
+                                  )}
                                   <button
                                     onClick={() => deleteCode(c.id)}
                                     className="flex-none rounded-md p-1 text-text-muted hover:text-red-400"
